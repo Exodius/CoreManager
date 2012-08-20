@@ -1,6 +1,7 @@
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -82,6 +83,22 @@ function showHide(id,force)
   if(st.display == '' && o.offsetWidth != undefined && o.offsetHeight != undefined)
     st.display = (o.offsetWidth != 0 && o.offsetHeight != 0) ? 'table' : 'none';
   st.display = (st.display == '' || st.display == 'table') ? 'none' : 'table';
+}
+
+
+//####################################################################################################
+// ACP: get value for new Ultra Vendor disable, and redirect
+//####################################################################################################
+
+function admin_extratools_disable()
+{
+  var link = document.getElementById("link");
+  var newdisable = document.getElementById("new_dis");
+
+  var url = document.URL;
+
+  if ( newdisable.value.length > 0 )
+    window.location = url + "&newdisable=" + newdisable.value;
 }
 
 

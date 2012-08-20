@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -711,6 +712,16 @@ while ( $misc_row = $sqlm->fetch_assoc($misc) )
     case "URL_Path":
     {
       $url_path = $misc_row["Value"];
+      break;
+    }
+    case "Ultra_Vendor_Max_Item_Level":
+    {
+      $ultra_vendor_max_item_level = $misc_row["Value"];
+      break;
+    }
+    case "Ultra_Vendor_Max_Item_Req_Level":
+    {
+      $ultra_vendor_max_item_req_level = $misc_row["Value"];
       break;
     }
   }
