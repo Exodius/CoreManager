@@ -1,6 +1,7 @@
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -29,9 +30,9 @@ html, body
 {
   background-color: /body_background_color/;
   background-image: /body_background_image/;
-  background-image: /body_background_repeat/;
-  background-image: /body_background_attachment/;
-  background-image: /body_background_image/;
+  background-repeat: /body_background_repeat/;
+  background-attachment: /body_background_attachment/;
+  background-position: /body_background_position/;
   height: 100%;
   padding: 0px; /* required for Opera to have 0 margin */
   margin: 0;
