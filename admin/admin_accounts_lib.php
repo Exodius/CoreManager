@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -139,7 +139,7 @@ function accounts()
           </table>';
 
     $output .= '
-          <a href="admin.php?section=accounts&amp;order_by='.$order_by.'&amp;start='.$start.'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&perpage='.$accts_per_page.'">'.lang("admin", "clearsearch").'</a>
+          <a href="admin.php?section=accounts&amp;order_by='.$order_by.'&amp;start='.$start.'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;perpage='.$accts_per_page.'">'.lang("admin", "clearsearch").'</a>
           <br />
           <br />';
 
@@ -196,6 +196,9 @@ function accounts()
                 <th width="15%">
                   <a href="admin.php?section=accounts&amp;order_by=WebAdmin&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'WebAdmin' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "acpaccess").'</a>
                 </th>
+                <th width="15%">
+                  <a href="admin.php?section=accounts&amp;order_by=TempPassword&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'TempPassword' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "confirm_account").'</a>
+                </th>
               </tr>';
     $color = "#EEEEEE";
     while ( $acct = $sqll->fetch_assoc($result) )
@@ -236,6 +239,21 @@ function accounts()
                   <center>
                     <img src="img/'.( ( $acct["WebAdmin"] ) ? 'up' : 'down' ).'.gif" alt="" />
                   </center>
+                </td>
+                <td style="background-color:'.$color.'">';
+
+      if ( $acct["TempPassword"] != "" )
+        $output .= '
+                  <center>
+                    <a href="register.php?action=do_activate&amp;key='.$acct["TempPassword"].'&amp;redirect=1" onmouseover="oldtoolTip(\''.lang("admin", "confirm_account_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                      <img src="img/aff_tick.png" alt="" />
+                    </a>
+                  </center>';
+      else
+        $output .= '
+                  &nbsp;';
+
+      $output .= '
                 </td>
               </tr>';
       $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 function general()
 {
-  global $output, $corem_db, $core;
+  global $output, $corem_db, $world_db, $core;
 
   // we need $core to be set
   if ( $core == 0 )
@@ -27,6 +27,9 @@ function general()
 
   $sqlm = new SQL;
   $sqlm->connect($corem_db["addr"], $corem_db["user"], $corem_db["pass"], $corem_db["name"], $corem_db["encoding"]);
+
+  $sqlw = new SQL;
+  $sqlw->connect($world_db[1]["addr"], $world_db[1]["user"], $world_db[1]["pass"], $world_db[1]["name"], $world_db[1]["encoding"]);
 
   $subsection = ( ( isset($_GET["subsection"]) ) ? $sqlm->quote_smart($_GET["subsection"]) : 1 );
 
@@ -871,6 +874,18 @@ function general()
     {
       if ( !$sub_action )
       {
+        if ( isset($_GET["newdisable"]) )
+        {
+          $query = "INSERT IGNORE INTO ultravendor_disables VALUE ('".$_GET["newdisable"]."')";
+          $result = $sqlm->query($query);
+        }
+
+        if ( isset($_GET["delete"]) )
+        {
+          $query = "DELETE FROM ultravendor_disables WHERE itemid='".$_GET["delete"]."'";
+          $result = $sqlm->query($query);
+        }
+
         $quest_item_vendor_level_mul = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Quest_Item_Vendor_Level_Mul'"));
         $quest_item_vendor_rew_mul = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Quest_Item_Vendor_Rew_Mul'"));
         $ultra_vendor_mult_0 = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Mult_0'"));
@@ -882,6 +897,12 @@ function general()
         $ultra_vendor_mult_6 = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Mult_6'"));
         $ultra_vendor_mult_7 = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Mult_7'"));
         $ultra_vendor_base = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Base'"));
+        $ultra_vendor_max_item_level = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Max_Item_Level'"));
+        $ultra_vendor_max_item_req_level = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Ultra_Vendor_Max_Item_Req_Level'"));
+
+        $dis_query = "SELECT * FROM ultravendor_disables";
+        $dis_result = $sqlm->query($dis_query);
+
         $output .= '
         <form name="form" action="admin.php" method="get">
           <input type="hidden" name="section" value="general" />
@@ -986,9 +1007,81 @@ function general()
                 <input type="text" name="ultravendorbase" value="'.$ultra_vendor_base["Value"].'" />
               </td>
             </tr>
+            <tr>
+              <td class="help">
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "ultravendormaxitemlevel_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "ultravendormaxitemlevel").'</a>:
+              </td>
+              <td>
+                <input type="text" name="ultravendormaxitemlevel" value="'.$ultra_vendor_max_item_level["Value"].'" />
+              </td>
+            </tr>
+            <tr>
+              <td class="help">
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "ultravendormaxitemreqlevel_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "ultravendormaxitemreqlevel").'</a>:
+              </td>
+              <td>
+                <input type="text" name="ultravendormaxitemreqlevel" value="'.$ultra_vendor_max_item_req_level["Value"].'" />
+              </td>
+            </tr>
           </table>
           <input type="submit" name="save" value="'.lang("admin", "save").'" />
-        </form>';
+        </form>
+        <br />
+        <div>
+          <span>'.lang("admin", "disabledinfo").':</span>
+          <table class="simple">
+            <tr>
+              <th class="disabled_remove_item_th">&nbsp;</th>
+              <th class="disabled_item_th">'.lang("admin", "disableditem").'</th>
+              <th>&nbsp;</th>
+            </tr>';
+
+        while ( $row = $sqlm->fetch_assoc($dis_result) )
+        {
+          if ( $core == 1 )
+            $item_query = "SELECT name1, name FROM items
+                             LEFT JOIN itemnames ON itemnames.entry=items.entry
+                           WHERE entry='".$row["itemid"]."'";
+          else
+            $item_query = "SELECT 0 AS name1, name FROM item_template
+                           WHERE entry='".$row["itemid"]."'";
+
+          $item_result = $sqlw->query($item_query);
+          $item_result = $sqlw->fetch_assoc($item_result);
+
+          // Trinity and MaNGOS will always follow the else
+          // (at least until we add locales_item support here)
+          if ( $item_result["name1"] != 0 )
+            $item_name = $item_result["name1"];
+          else
+            $item_name = $item_result["name"];
+
+          $output .= '
+            <tr>
+              <td class="disabled_item_id_td">
+                <a href="admin.php?section=general&subsection=extratools&delete='.$row["itemid"].'">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
+              </td>
+              <td class="disabled_item_id_td">'.$row["itemid"].'</td>
+              <td>'.$item_name.'</td>
+            </tr>';
+        }
+
+        $output .= '
+            <tr>
+              <td colspan="2">
+                <a id="link" href="#" onclick="admin_extratools_disable()">
+                  <img src="img/add.png" alt="" />
+                  <span>'.lang("admin", "disabledadd").':</span>
+                </a>
+              </td>
+              <td>
+                <input type="text" id="new_dis" />
+              </td>
+            </tr>
+          </table>
+        </div>';
       }
       else
       {
@@ -1003,6 +1096,8 @@ function general()
         $ultra_vendor_mult_6 = $sqlm->quote_smart($_GET["ultravendormult6"]);
         $ultra_vendor_mult_7 = $sqlm->quote_smart($_GET["ultravendormult7"]);
         $ultra_vendor_base = $sqlm->quote_smart($_GET["ultravendorbase"]);
+        $ultra_vendor_max_item_level = $sqlm->quote_smart($_GET["ultravendormaxitemlevel"]);
+        $ultra_vendor_max_item_req_level = $sqlm->quote_smart($_GET["ultravendormaxitemreqlevel"]);
 
         $result = $sqlm->query("UPDATE config_misc SET Value='".$quest_item_vendor_level_mul."' WHERE `Key`='Quest_Item_Vendor_Level_Mul'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$quest_item_vendor_rew_mul."' WHERE `Key`='Quest_Item_Vendor_Rew_Mul'");
@@ -1015,6 +1110,8 @@ function general()
         $result = $sqlm->query("UPDATE config_misc SET Value='".$ultra_vendor_mult_6."' WHERE `Key`='Ultra_Vendor_Mult_6'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$ultra_vendor_mult_7."' WHERE `Key`='Ultra_Vendor_Mult_7'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$ultra_vendor_base."' WHERE `Key`='Ultra_Vendor_Base'");
+        $result = $sqlm->query("UPDATE config_misc SET Value='".$ultra_vendor_max_item_level."' WHERE `Key`='Ultra_Vendor_Max_Item_Level'");
+        $result = $sqlm->query("UPDATE config_misc SET Value='".$ultra_vendor_max_item_req_level."' WHERE `Key`='Ultra_Vendor_Max_Item_Req_Level'");
 
         redirect("admin.php?section=general&subsection=extratools");
       }

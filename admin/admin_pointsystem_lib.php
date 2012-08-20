@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -454,6 +454,14 @@ function pointsystem()
             {
               $coupon = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM point_system_coupons WHERE `entry`='".$coupon_id."'"));
 
+              // if money is negative, we make a note of that and make it positive
+              $neg_money = false;
+              if ( $coupon["money"] < 0 )
+              {
+                $neg_money = true;
+                $coupon["money"] = $coupon["money"] * -1;
+              }
+
               // extract gold/silver/copper from single gold number
               $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
               $coupon_g = substr($coupon["money"],  0, -4);
@@ -542,7 +550,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "coupon_credits").'</a>: </td>
+                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_credits_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_credits").'</a>: </td>
                         <td>
                           <input type="text" name="coupon_credits" value="'.$coupon["credits"].'" class="admin_edit_coupon_fields" />
                         </td>
@@ -550,16 +558,22 @@ function pointsystem()
                       <tr>
                         <td>'.lang("admin", "coupon_money").': </td>
                         <td>
-                          <input type="text" name="coupon_money_gold" value="'.$coupon_g.'" maxlength="6" size="6"/>
+                          <input type="text" name="coupon_money_gold" value="'.$coupon_g.'" maxlength="6" size="6" />
                           <img src="../img/gold.gif" alt="gold" />
-                          <input type="text" name="coupon_money_silver" value="'.$coupon_s.'" maxlength="2" size="6"/>
+                          <input type="text" name="coupon_money_silver" value="'.$coupon_s.'" maxlength="2" size="3" />
                           <img src="../img/silver.gif" alt="gold" />
-                          <input type="text" name="coupon_money_copper" value="'.$coupon_c.'" maxlength="2" size="6"/>
+                          <input type="text" name="coupon_money_copper" value="'.$coupon_c.'" maxlength="2" size="3" />
                           <img src="../img/copper.gif" alt="gold" />
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_item").':</td>
+                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_cost_money_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_cost_money").'</a>:</td>
+                        <td>
+                          <input type="checkbox" name="coupon_neg_money" value="-1" size="12"'.( ( $neg_money ) ? ' checked="checked"' : '' ).' />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_item").'</a>:</td>
                         <td>
                           <input type="text" name="coupon_item" value="'.$coupon["item_id"].'" class="admin_edit_coupon_fields" />
                         </td>
@@ -634,6 +648,7 @@ function pointsystem()
               $coupon_money_gold = $sqlm->quote_smart($_GET["coupon_money_gold"]);
               $coupon_money_silver = $sqlm->quote_smart($_GET["coupon_money_silver"]);
               $coupon_money_copper = $sqlm->quote_smart($_GET["coupon_money_copper"]);
+              $coupon_neg_money = ( ( isset($_GET["coupon_neg_money"]) ) ? $sqlm->quote_smart($_GET["coupon_neg_money"]) : 1 );
               $coupon_item = $sqlm->quote_smart($_GET["coupon_item"]);
               $coupon_count = $sqlm->quote_smart($_GET["coupon_count"]);
               $coupon_raffle_id = $sqlm->quote_smart($_GET["coupon_raffle_id"]);
@@ -648,6 +663,9 @@ function pointsystem()
 
               // combine
               $coupon_money = $coupon_money_gold.$coupon_money_silver.$coupon_money_copper;
+
+              // if the Coupon costs money then it'll be saved negative
+              $coupon_money = $coupon_money * $coupon_neg_money;
 
               if ( $coupon_old_creation == "0000-00-00 00:00:00" )
                 $coupon_not_enabled = 1;
@@ -1125,8 +1143,9 @@ function pointsystem()
               <th width="1%"></th>
               <th width="1%"></th>
               <th width="4%">'.lang("admin", "bag_id").'</th>
-              <th width="47%">'.lang("admin", "bag_slots").'</th>
-              <th width="47%">'.lang("admin", "bag_owner").'</th>
+              <th width="37%">'.lang("admin", "bag_slots").'</th>
+              <th width="37%">'.lang("admin", "bag_owner").'</th>
+              <th width="20%">'.lang("admin", "bag_template").'</th>
             </tr>';
         $color = "#EEEEEE";
         while ( $bag = $sqlm->fetch_assoc($result) )
@@ -1170,6 +1189,19 @@ function pointsystem()
               </td>
               <td style="background-color:'.$color.'">
                 <center>'.$owner.'</center>
+              </td>
+              <td style="background-color:'.$color.'">';
+
+        if ( $bag["is_template"] )
+          $output .= '
+                <center>
+                  <img src="img/star.png" alt="" />
+                </center>';
+        else
+          $output .= '
+                &nbsp;';
+
+        $output .= '
               </td>
             </tr>';
 
@@ -1232,6 +1264,12 @@ function pointsystem()
                       <tr>
                         <td>'.lang("admin", "bag_owner").': </td>
                         <td>'.$owner.'</td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "bag_template").': </td>
+                        <td>
+                          <input type="checkbox" name="is_template" value="1"'.( ( $bag["is_template"] ) ? ' checked="checked"' : '' ).' />
+                        </td>
                       </tr>
                       <tr>
                         <td colspan="2">
@@ -1345,6 +1383,7 @@ function pointsystem()
               // save prize bag & items
               $bag_id = $_GET["sel_bag"];
               $slots = $_GET["slots"];
+              $is_template = ( ( isset($_GET["is_template"]) ) ? 1 : 0 );
 
               $items = array();
               $item_counts = array();
@@ -1358,7 +1397,7 @@ function pointsystem()
               }
 
               // update bag
-              $query = "UPDATE point_system_prize_bags SET slots='".$slots."' WHERE entry='".$bag_id."'";
+              $query = "UPDATE point_system_prize_bags SET slots='".$slots."', is_template='".$is_template."' WHERE entry='".$bag_id."'";
               $sqlm->query($query);
               
 
