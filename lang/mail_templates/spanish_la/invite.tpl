@@ -1,11 +1,11 @@
-Subject: You've been invited to join <title>!
-<username> has invited you to join our <core> Server at <a href="http://<base_url>"><base_url></a>.
+Subject: Usted ha sido invitado a Jugar en  <title>!
+<username> has sido invitado en nuestra core  <core> Servidor dedicado en la web  <a href="http://<base_url>"><base_url></a>.
 
-Click on this link to create your account: <a href="http://<base_url>/register.php?by=<char>&key=<key>">Register!</a>
+Clica en este Link para poder crear tu cuenta: <a href="http://<base_url>/register.php?by=<char>&key=<key>">Registrate Aqui!</a>
 
-If that link does not work, place this URL into your browser's address box:
+Si ese vínculo no funciona, coloque la siguiente dirección URL en la caja de direcciones del navegador:
 http://<base_url>/register.php?by=<char>&key=<key>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 -------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

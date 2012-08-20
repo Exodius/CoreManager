@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1390,6 +1391,8 @@ $GLOBALS['lang_ultra'] = array
   'and_credits' => 'and',
   'submit_money' => 'Use Money',
   'submit_credits' => 'Use Credits',
+  'denied_legend' => 'Sale Denied',
+  'denied' => 'Server configuration prevents the sale of this item.',
 );
   
 // ----- ULTRA_VENDOR.PHP -----
@@ -1783,6 +1786,8 @@ $GLOBALS['lang_admin'] = array
   'screenname' => '显示名称',
   'acpaccess' => '网站管理员',
   'acpaccess_tip' => '允许此用户使用 ACP 。',
+  'confirm_account' => 'Confirm',
+  'confirm_account_tip' => 'Manually Confirm this account.',
   'by_id' => '依据帐号ID',
   'by_name' => 'by Login',
   'by_sn' => '依据显示名称',
@@ -1870,7 +1875,7 @@ $GLOBALS['lang_admin'] = array
   'adminemail' => '管理员电子邮件',
   'adminemail_tip' => '在页脚显示的 Email 地址。',
   'mailertype' => '邮件服务器类型',
-  'mailertype_tip' => '发送 email 的方式。<br />Mail<br />SendMail<br />SMTP<br />Gmail SMTP',
+  'mailertype_tip' => '发送 email 的方式。<br />Mail<br />SendMail<br />SMTP<br />Gmail SMTP<br />(Note: The Mail and Sendmail options may <b>not</b> work on Windows hosts)',
   'sendmail' => '发送邮件',
   'smtp' => 'SMTP',
   'gmailsmtp' => 'Gmail SMTP',
@@ -1997,6 +2002,13 @@ $GLOBALS['lang_admin'] = array
   'ultravendormult7_tip' => '传家宝物品的倍率',
   'ultravendorbase' => '倍率：默认的',
   'ultravendorbase_tip' => '无法术或售价物品的倍率',
+  'ultravendormaxitemlevel' => 'Max Item Level',
+  'ultravendormaxitemlevel_tip' => 'Maximum Item Level allowed.<br />Note: Use -1 to allow all levels.',
+  'ultravendormaxitemreqlevel' => 'Max Item Required Level',
+  'ultravendormaxitemreqlevel_tip' => 'Maximum Item Required Level allowed.<br />Note: Use -1 to allow all levels.',
+  'disabledinfo' => 'These items will not be available in Ultra Vendor',
+  'disableditem' => 'Item',
+  'disabledadd' => 'Disable Item',
 
   'internal_map' => '内建的玩家地图',
   'gmshowonlineonlygmoff' => 'GM Show Online Only GM Off',
@@ -2069,7 +2081,10 @@ $GLOBALS['lang_admin'] = array
   'coupon_expiration_tip' => 'Format: YYYY-MM-DD HH:MM:SS',
   'coupon_prize' => 'Redemption Values',
   'coupon_credits' => 'Credits',
+  'coupon_credits_tip' => 'Use negative numbers for Coupons that cost Credits to use.<br />Example: -1 would cost 1 Credit.',
   'coupon_money' => 'Money',
+  'coupon_cost_money' => 'Costs Money',
+  'coupon_cost_money_tip' => 'Enable for Coupons that <b>cost</b> In-Game Money.<br />Disable for Coupons which <b>reward</b> In-Game Money.',
   'coupon_item' => 'Item ID',
   'coupon_item_tip' => "To include a Prize Bag instead of a single item, use -1 times the Prize Bag\'s ID. (Item Count will be disregarded)<br />Example: For Prize Bag ID 2 use Item ID -2",
   'coupon_count' => 'Item Count',
@@ -2082,7 +2097,7 @@ $GLOBALS['lang_admin'] = array
   'coupon_text' => 'Text',
   'coupon_usage' => 'Usage',
   'coupon_usage_limit' => 'Usage Limit',
-  'coupon_usage_limit_tip' => 'Maximum number of times the coupon can be used.',
+  'coupon_usage_limit_tip' => 'Maximum number of times the coupon can be used.<br />Use -1 for Unlimited usage.',
   'raffles' => 'Raffles',
   'addraffle' => 'Add New Raffle',
   'raffle_id' => 'ID',
@@ -2114,6 +2129,7 @@ $GLOBALS['lang_admin'] = array
   'bag_id' => 'ID',
   'bag_slots' => 'Slots',
   'bag_owner' => 'Owner',
+  'bag_template' => 'Template',
   'bag_no_owner' => 'Not Owned',
   'bag_simulation' => 'Simulation',
   'bag_slot' => 'Slot',
@@ -2449,8 +2465,17 @@ $GLOBALS['lang_points'] = array
   'or_raffle' => '... or purchase a Raffle ticket.',
   'coupon_credits' => 'Credits',
   'coupon_credit' => 'Credit',
+  // translation note: %1 will be replaced with the credit cost of the coupon
+  'coupon_cost_credits' => 'Using this Coupon costs %1 Credits.',
+  // translation note: %1 will be replaced with the credit cost of the coupon
+  //                   %2 will be replaced with either Credit or Credits, as appropriate
+  'coupon_cost_credits2' => 'Using this Coupon costs %1 %2.',
+  // translation note: %1 will be replaced with the in-game money cost of the coupon.
+  'coupon_cost_money' => 'Using this Coupon costs %1.',
   'choose_char_money' => 'Choose Character to recieve this Money',
   'choose_char_item' => 'Choose Character to recieve this Item',
+  'coupon_cost' => 'Cost',
+  'choose_char_neg_money' => 'Choose Character to pay this Money',
   'mail_subject' => 'Coupon Redemption Value',
   'mail_body' => 'You redeemed a Coupon.',
   'mail_subject_bag' => 'Prize Bag Item',
@@ -2467,6 +2492,7 @@ $GLOBALS['lang_points'] = array
   'raffle_credit' => 'Credit',
   'balance' => 'Credit Balance',
   'insufficient_funds' => 'You do not have enough Credits to purchase a Ticket for this Raffle.',
+  'insufficient_credits' => 'You do not have enough Credits to purchase this Coupon.',
   'unlimited' => 'You have Unlimited Credits.',
   'choose_char_use_money' => 'Choose Character to provide this Money',
   'insufficient_funds_gold' => 'That Character does not have enough Money to purchase a Ticket for this Raffle.',

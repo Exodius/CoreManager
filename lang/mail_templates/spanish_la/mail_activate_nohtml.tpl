@@ -1,17 +1,17 @@
-Subject: Welcome to <title>.
+Subject: Bienvenido a <title>.
 
-Thank you for registering for our <core> Server at <base_url>.
+Gracias por registrate en <core> tu dedicado en <base_url>.
 
-We require that all new accounts confirm their email for activation.
+Es necesario que todas las nuevas cuentas se confirmen por correo electrónico para confirmar su activación.
 
-Use this URL to activate your account:
+Usa esta URL para activar tu Cuenta:
 http://<base_url>/register.php?action=do_activate&key=<key>
 
-Your account details are:
-Username: <username>
-Screen Name: <screenname>
-Password: <password>
+Los detalles de tu cuenta son::
+Nombre de Cuenta: <username>
+Nombre de Web: <screenname>
+Clave: <password>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 -------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

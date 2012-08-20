@@ -1,9 +1,9 @@
-Subject: You've been invited to join <title>!
-<username> has invited you to join our <core> Server at <base_url>.
+Subject: Usted ha sido invitado a Jugar en  <title>!
+<username> has sido invitado en nuestra core  <core> Servidor dedicado en la web  <base_url>.
 
-Use this URL to activate your account:
+Usa esta URL para activar tu cuenta:
 http://<base_url>/register.php?by=<char>&key=<key>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 -------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

@@ -1,11 +1,11 @@
-Subject: Welcome to <title>
-Thank you for registering for our <core> Server at <base_url>.
+Subject: Bienvenido a  <title>
+Gracias por registrate en <core> Server at <base_url>.
 
-Your account details are:
-Username: <username>
-Screen Name: <screenname>
-Password: <password>
+Los detalles de tu cuenta son::
+Nombre de Cuenta: <username>
+Nombre de Web: <screenname>
+Clave: <password>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 -------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

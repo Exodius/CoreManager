@@ -1,13 +1,13 @@
-Subject: Email address change requested
-Hello <username>,
+Subject: Cambio de Email
+Hola <username>,
 
-A change of email request has been made for your account at <title>.
+Una solicitud de cambio de correo electronico se ha hecho de su cuenta en <title>.
 
-The new email is: <email>
+Tu nuevo Email es: <email>
 
-Use this URL to confirm this change:
+Usa esta URL para confirmar el cambio:
 http://<base_url>/edit.php?action=confirm_email&key=<key>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 ------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

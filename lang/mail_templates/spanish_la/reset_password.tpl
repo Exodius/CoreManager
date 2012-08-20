@@ -1,10 +1,10 @@
-Subject: Password reset requested
-Hello <username>,
+Subject: Nueva Clave requerida
+Hola <username>,
 
-You have requested to reset your password at <a href="http://<base_url>"><title></a>.
+Ha solicitado restablecer su Clave en <a href="http://<base_url>"><title></a>.
 
-Your new password is: <password>
+Tu nueva Clave es: <password>
 
-For more information please visit our website.
+Para mas informacion visite nuestra web.
 ------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)

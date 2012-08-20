@@ -1,11 +1,11 @@
-Subject: Password recovery requested
-Hello <username>,
+Subject: Tu Clave
+Hola <username>,
 
-You have requested to recieve your password at <title>.
-If you didn't this request you can just ignore this message.
+Has solicitado para recibir su contraseña  en  <title>.
+Si no hizo esta peticion  puede pasar por alto este mensaje.
 
-Your password is: <password>
+Tu Clave es: <password>
 
-For more information please visit our website. 
+Para mas informacion visite nuestra web. 
 ------------------------------
-(Do not reply to this message)
+(No responder este mensaje.)
