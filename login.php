@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,7 +31,7 @@ function dologin()
   if ( empty($_POST["login"]) || empty($_POST["password"]) )
     redirect('login.php?error=2');
 
-  $user_name  = $sql["mgr"]->quote_smart($_POST["login"]);
+  $user_name  = $sql["mgr"]->quote_smart($_POST["true_login"]);
   $user_pass  = $sql["mgr"]->quote_smart($_POST["password"]);
 
   if ( ( strlen($user_name) > 255 ) || ( strlen($user_pass) > 255 ) )
@@ -44,43 +45,26 @@ function dologin()
     $arc_encrypted = $sql["logon"]->num_rows($pass_result);
   }
 
-  // Users may log in using either their username or screen name
   // check for matching login
   if ( $core == 1 )
   {
     if ( $arc_encrypted )
-      $query = "SELECT * FROM accounts WHERE login='".$user_name."' AND encrypted_password='".$user_pass."'";
+      $query = "SELECT *, encrypted_password AS passData FROM accounts WHERE login='".$user_name."'";
     else
-      $query = "SELECT * FROM accounts WHERE login='".$user_name."' AND SHA(CONCAT(UPPER(login), ':', UPPER(password)))='".$user_pass."'";
+      $query = "SELECT *, SHA(CONCAT(UPPER(login), ':', UPPER(password))) AS passData FROM accounts WHERE login='".$user_name."'";
   }
   else
-  {
-    //$pass_hash = sha1(strtoupper($user_name.":".$user_pass));
-    $pass_hash = $user_pass;
-    $query = "SELECT * FROM account WHERE username='".$user_name."' AND sha_pass_hash='".$pass_hash."'";
-  }
+    $query = "SELECT *, sha_pass_hash AS passData FROM account WHERE username='".$user_name."'";
 
   $name_result = $sql["logon"]->query($query);
-  if ( !$sql["logon"]->num_rows($name_result) )
-  {
-    // if we didn't find one, check for matching screen name
-    $query = "SELECT * FROM config_accounts WHERE ScreenName='".$user_name."'";
-    $name_result = $sql["mgr"]->query($query);
-    if ($sql["mgr"]->num_rows($name_result))
-    {
-      $name = $sql["mgr"]->fetch_assoc($name_result);
-      $user_name = $name["Login"];
-    }
-  }
-  else
-  {
-    // we'll still need the screen name if we have one
-    $query = "SELECT * FROM config_accounts WHERE Login='".$user_name."'";
-    $name_result = $sql["mgr"]->query($query);
-    $name = $sql["mgr"]->fetch_assoc($name_result);
-  }
-  // if we didn't find the name given for either entries, then the name will come up bad below
+  $name_result = $sql["logon"]->fetch_assoc($name_result);
 
+  $pass_data = $name_result["passData"];
+
+  if ( $_POST["password"] == sha1(strtoupper($pass_data).$_SESSION["pub_key"]) )
+    $user_pass = $pass_data;
+
+  // final check for proper login
   if ( $core == 1 )
   {
     if ( $arc_encrypted )
@@ -89,11 +73,7 @@ function dologin()
       $query = "SELECT * FROM accounts WHERE login='".$user_name."' AND SHA(CONCAT(UPPER(login), ':', UPPER(password)))='".$user_pass."'";
   }
   else
-  {
-    //$pass_hash = sha1(strtoupper($user_name.":".$user_pass));
-    $pass_hash = $user_pass;
-    $query = "SELECT * FROM account WHERE username='".$user_name."' AND sha_pass_hash='".$pass_hash."'";
-  }
+    $query = "SELECT * FROM account WHERE username='".$user_name."' AND sha_pass_hash='".$user_pass."'";
 
   $result = $sql["logon"]->query($query);
   $s_result = $sql["mgr"]->query("SELECT SecurityLevel AS gm FROM config_accounts WHERE Login='".$user_name."'");
@@ -182,8 +162,39 @@ function login()
               // <![CDATA[
                 function dologin ()
                 {
-                  document.form.password.value = hex_sha1(document.form.login.value.toUpperCase()+":"+document.form.login_pass.value.toUpperCase());
+                  passhash = hex_sha1(document.form.true_login.value.toUpperCase()+":"+document.form.login_pass.value.toUpperCase()).toUpperCase();
+                  document.form.password.value = hex_sha1(passhash + document.form.pub_key.value);
+
                   do_submit();
+                }
+
+                function get_username()
+                {
+                  user = document.form.login.value;
+
+                  if ( user != "" )
+                  {
+                    login = "";
+                    obj = new XMLHttpRequest();
+                    obj.onreadystatechange = function()
+                    {
+                      if ( obj.readyState == 4 )
+                      {
+                        eval("result = " + obj.responseText);
+                        login = result["result"];
+
+                        document.form.true_login.value = login;
+                      }
+                    }
+                    obj.open("GET", "libs/get_username_lib.php?username=" + user, true);
+                    obj.send(null);
+                  }
+                }
+
+                function got_focus()
+                {
+                  document.form.login.select();
+                  get_username();
                 }
               // ]]>
             </script>
@@ -191,6 +202,8 @@ function login()
               <span class="legend">'.lang("login", "login").'</span>
               <form method="post" action="login.php?action=dologin" name="form" onsubmit="return dologin()">
                 <input type="hidden" name="password" value="" maxlength="256" />
+                <input type="hidden" name="pub_key" value="'.$_SESSION["pub_key"].'" />
+                <input type="hidden" name="true_login" value="" />
                 <table class="hidden" id="login_table">
                   <tr>
                     <td colspan="3">
@@ -201,7 +214,7 @@ function login()
                     <td align="right" valign="top" style="width: 35%;">'.lang("login", "username").' :</td>
 										<td>&nbsp;</td>
                     <td align="left">
-                      <input type="text" name="login" size="24" maxlength="16" onfocus="this.select()" />
+                      <input type="text" name="login" size="24" maxlength="16" onfocus="got_focus();" onchange="get_username();" />
                       <br />
                       '.lang("login", "or_screenname").'
                     </td>

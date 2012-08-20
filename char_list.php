@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -300,7 +301,7 @@ function browse_chars()
   $all_record = $sql["char"]->result($query_1,0);
   unset($query_1);
 
-  $this_page = $sql["char"]->num_rows($query) or die(error(lang("global", "err_no_result")));
+  $this_page = $sql["char"]->num_rows($query);
 
   //==========================top tage navigaion starts here========================
   $output .= '

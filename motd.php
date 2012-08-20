@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -421,7 +422,7 @@ function do_edit_motd()
     $target = $target["acct"];
   }
 
-  if ( empty($_GET["min_sec_level"]) )
+  if ( !isset($_GET["min_sec_level"]) )
     $min_sec_level = -1;
   else
     $min_sec_level = $sql["mgr"]->quote_smart($_GET["min_sec_level"]);

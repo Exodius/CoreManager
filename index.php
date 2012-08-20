@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -421,7 +422,7 @@ function main()
                 <td align="left">
                   <span>'.lang("index", "coupon_value").':</span>';
 
-            if ( $coupon["credits"] != 0 )
+            if ( $coupon["credits"] > 0 )
             {
               if ( $coupon["credits"] > 1 )
                 $tip = lang("index", "coupon_credits");
@@ -435,7 +436,7 @@ function main()
                   <span>'.$tip.'</span>';
             }
 
-            if ( $coupon["money"] != 0 )
+            if ( $coupon["money"] > 0 )
             {
               // extract gold/silver/copper from single gold number
               $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
@@ -580,6 +581,46 @@ function main()
 
             $output .= '
                   </td>
+                </tr>';
+          }
+
+          if ( $coupon["credits"] < 0 )
+          {
+            $message = lang("points", "coupon_cost_credits");
+            $message = str_replace("%1", ($coupon["credits"] * -1), $message);
+
+            $output .= '
+                <tr>
+                  <td align="right">'.$message.'</td>
+                </tr>';
+        }
+
+          if ( $coupon["money"] < 0 )
+          {
+            $coupon["money"] = $coupon["money"] * -1;
+
+            $coupon_money = $coupon["money"];
+            $coupon_money = str_pad($coupon_money, 4, "0", STR_PAD_LEFT);
+            $cg = substr($coupon_money,  0, -4);
+            if ( $cg == '' )
+              $cg = 0;
+            $cs = substr($coupon_money, -4,  2);
+            if ( ( $cs == '' ) || ( $cs == '00' ) )
+              $cs = 0;
+            $cc = substr($coupon_money, -2);
+            if ( ( $cc == '' ) || ( $cc == '00' ) )
+              $cc = 0;
+
+            $coupon_money_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
+                        .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
+                        .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+
+            $message = lang("points", "coupon_cost_money");
+            $message = str_replace("%1", $coupon_money_display, $message);
+
+            $output .= '
+                <tr>
+                  <td align="right">'.$message.'</td>
                 </tr>';
           }
 

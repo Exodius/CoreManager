@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -283,10 +284,14 @@ function char_quest()
             $query1 = $sql["char"]->query("SELECT *, questlevel, Title AS Title1 FROM `".$world_db[$realmid]['name']."`.quests "
                   .( ( $locales_search_option != 0 ) ? "LEFT JOIN `".$world_db[$realmid]['name']."`.quests_localized ON (quests_localized.entry=quests.entry AND language_code='".$locales_search_option."' ) " : " " ).
                 "WHERE quests.entry='".$quest["quest_id"]."'");
-          else
+          elseif ( $core == 2 )
             $query1 = $sql["char"]->query("SELECT *, QuestLevel AS questlevel, Title AS Title1 FROM `".$world_db[$realmid]['name']."`.quest_template "
                   .( ( $locales_search_option != 0 ) ? "LEFT JOIN `".$world_db[$realmid]['name']."`.locales_quest ON locales_quest.entry=quest_template.entry " : " " ).
                 "WHERE quest_template.entry='".$quest["quest_id"]."'");
+          else
+            $query1 = $sql["char"]->query("SELECT *, Level AS questlevel, Title AS Title1 FROM `".$world_db[$realmid]['name']."`.quest_template "
+                  .( ( $locales_search_option != 0 ) ? "LEFT JOIN `".$world_db[$realmid]['name']."`.locales_quest ON locales_quest.entry=quest_template.Id " : " " ).
+                "WHERE quest_template.Id='".$quest["quest_id"]."'");
 
           $quest_info = $sql["char"]->fetch_assoc($query1);
 

@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1057,7 +1058,12 @@ function do_activate()
   }
 
   if ( $u_result )
-    redirect('login.php?error=7');
+  {
+    if ( !isset($_GET["redirect"]) )
+      redirect("login.php?error=7");
+    else
+      redirect("admin.php?section=accounts");
+  }
 }
 
 

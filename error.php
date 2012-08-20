@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -56,6 +57,10 @@ else
         please copy <code>\'configs/config.dist.php\'</code> to
         <code>\'configs/config.php\'</code> and make appropriate changes.');
 
+//---------------------Current Filename----------------------------------------
+$cur_filename = "error.php";
+
+//---------------------Loading Libraries---------------------------------------
 require_once("libs/config_lib.php");
 require_once("libs/global_lib.php");
 require_once("lang/".$lang.".php");

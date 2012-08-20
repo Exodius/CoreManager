@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -103,6 +104,36 @@ require_once "libs/global_lib.php";
 require_once "libs/lang_lib.php";
 require_once "libs/get_lib.php";
 
+//---------------------------Improved Login Security---------------------------
+// Originally login sent the sha1(name + pass) and we compared that with our
+// records.  But, if that data was intercepted then an acceptable (but fake)
+// login could be made.
+// So, we implement a Public Key system.
+// Each Session should have a unique Public Key. (I say 'should', as the key
+// is 32 characters chosen 'randomly' from the list below, and 32^62 is quite a
+// range of possible outcomes)
+// Now login will send sha1(sha1(name+pass) + public key) which should nearly
+// eliminate that security flaw.
+
+// if necessary, generate a Public Key for Login
+if ( !isset($_SESSION["pub_key"]) )
+{
+  $symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  $login_public_key = "";
+
+  while ( strlen($login_public_key) < 32 )
+  {
+    // randomly select a symbol to append
+    $rnd = rand(0, 61);
+
+    // append
+    $login_public_key .= $symbols[$rnd];
+  }
+
+  $_SESSION["pub_key"] = $login_public_key;
+}
+//-----------------------------------------------------------------------------
+
 //---------------------Cache Expiration Date Offset----------------------------
 //$expire_offset = 60 * 60 * 24 * 3;
 
@@ -137,8 +168,14 @@ $output .= '
 $output .= '
   </head>';
 
+if ( $cur_filename == "login.php" )
+  $output .= '
+  <body onload="get_username();">';
+else
+  $output .= '
+  <body onload="dynamicLayout();">';
+
 $output .= '
-  <body onload="dynamicLayout();">
     <center>
       <div class="table_top">
         <div class="header_logo">';
@@ -157,11 +194,14 @@ $output .= '
 
 // check for host php script execution time limit,
 //  warn user if it is not high enough for CoreManager to run
-if ( ini_get("max_execution_time") < 1800 )
+
+// this_is_junk: I guess it's time to acknowledge that no part of CoreManager should need to run longer than
+// php's default max_execution_time of 30 seconds
+/*if ( ini_get("max_execution_time") < 1800 )
 {
   if ( !ini_set("max_execution_time", 0) )
     error('Error - max_execution_time not set.<br /> Please set it manually to 0, in php.ini for full functionality.');
-}
+}*/
 
 //---------------------Guest login Predefines----------------------------------
 if ( $allow_anony && empty($_SESSION["logged_in"]) )
@@ -170,6 +210,7 @@ if ( $allow_anony && empty($_SESSION["logged_in"]) )
   $_SESSION["gm_lvl"] = "-1";
   $_SESSION["login"] = $anony_uname;
   $_SESSION["user_id"] = -1;
+  // realm id is REQUIRED by many things, so if the user isn't logged in, we use the configured default
   $_SESSION["realm_id"] = $anony_realm_id;
   $_SESSION["client_ip"] = ( ( isset($_SERVER["REMOTE_ADDR"]) ) ? $_SERVER["REMOTE_ADDR"] : getenv("REMOTE_ADDR") );
 }

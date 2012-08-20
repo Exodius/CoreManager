@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -314,12 +315,12 @@ function char_talent()
         $output .= '
               <font class="bold">'.lang("char", "talentspec").': <a href="char_talent.php?id='.$id.'&amp;realm='.$realm_id.'&amp;curspec='.$opp_spec.'">'.$opp_spec.'</a>&nbsp;'.$cur_spec.'</font><br />';
 
-      $output .= '
+      if ( count($talents) > 1 )
+      {
+        $output .= '
               <table class="lined" id="ch_tal_main">
                 <tr valign="top" align="center">';
 
-      if ( count($talents) > 1 )
-      {
         $talent_rate = ( ( isset($server[$realmid]["talent_rate"]) ) ? $server[$realmid]["talent_rate"] : 1 );
         $talent_points = ($char["level"] - 9) * $talent_rate;
         $talent_points_left = $char["talent_points"];
@@ -520,13 +521,13 @@ function char_talent()
         }
         unset($glyphs);
         $output .='
-                  </td>';
+                  </td>
+                </tr>
+              </table>';
       }
       //---------------Page Specific Data Ends here----------------------------
       //---------------Character Tabs Footer-----------------------------------
       $output .= '
-                </tr>
-              </table>
             </div>
             <br />
             <table class="hidden">

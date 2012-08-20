@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -281,9 +282,9 @@ function read_mail()
     {
       $output .= '
           <center>
-            <div id="tab">
+            <div class="tab">
               <ul>
-                <li id="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>
+                <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>
                 <li><a href="char_inv.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "inventory").'</a></li>
                 '.( ( $char["level"] < 10 ) ? '' : '<li><a href="char_talent.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "talents").'</a></li>' ).'
                 <li><a href="char_achieve.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "achievements").'</a></li>
@@ -291,23 +292,27 @@ function read_mail()
                 <li><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "friends").'</a></li>
                </ul>
             </div>
-            <div id="tab_content">
-              <div id="tab">
+            <div class="tab_content">
+              <div class="tab">
                 <ul>
                   <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
+
         if ( char_get_class_name($char["class"]) === 'Hunter' )
           $output .= '
                   <li><a href="char_pets.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "pets").'</a></li>';
+
         $output .= '
                   <li><a href="char_rep.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "reputation").'</a></li>
                   <li><a href="char_skill.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "skills").'</a></li>';
+
         if ( ( $owner_name == $user_name ) || ( $user_lvl >= get_page_permission("insert", "char_mail.php") ) )
           $output .= '
-                  <li id="selected"><a href="char_mail.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "mail").'</a></li>';
+                  <li class="selected"><a href="char_mail.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "mail").'</a></li>';
+
         $output .= '
                 </ul>
               </div>
-              <div id="tab_content2">
+              <div class="tab_content2">
                 <font class="bold">
                   '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                   <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
@@ -350,8 +355,8 @@ function read_mail()
                     </tr>
                     <tr>
                       <td></td>
-                    </tr>
-                    <tr>';
+                    </tr>';
+
         if ( $mail["money"] <> 0 )
         {
           $attgold = str_pad($mail["money"], 4, "0", STR_PAD_LEFT);
@@ -367,13 +372,16 @@ function read_mail()
           if ( ( $pc == '' ) || ( $pc == '00' ) )
             $pc = 0;
           $pc = $pc * 1;
+
           $output .= '
+                    <tr>
                       <td colspan="3">'.lang("char", "messagehas").' '.
                         ( ( $pg ) ? $pg.'<img src="img/gold.gif" alt="" align="middle" />' : '' ).
                         ( ( $ps ) ? $ps.'<img src="img/silver.gif" alt="" align="middle" />' : '' ).
                         ( ( $pc ) ? $pc.'<img src="img/copper.gif" alt="" align="middle" />' : '' ).
                       ' '.lang("char", "attached").'.</td>';
         }
+
         if ( $mail["cod"] <> 0 )
         {
           $codgold = str_pad($mail["cod"], 4, "0", STR_PAD_LEFT);
@@ -389,23 +397,30 @@ function read_mail()
           if ( ( $pc == '' ) || ( $pc == '00' ) )
             $pc = 0;
           $pc = $pc * 1;
+
           $output .= '
                       <td colspan="3">'.lang("char", "cod").'; '.
                         ( ( $pg ) ? $pg.'<img src="img/gold.gif" alt="" align="middle" />' : '' ).
                         ( ( $ps ) ? $ps.'<img src="img/silver.gif" alt="" align="middle" />' : '' ).
                         ( ( $pc ) ? $pc.'<img src="img/copper.gif" alt="" align="middle" />' : '' ).
                       ' '.lang("char", "isdue").'.</td>';
-        };
+        }
+
         if ( $mail["attached_item_guids"] <> 0 )
         {
           $items = $mail["attached_item_guids"];
           $items = explode(',', $items);
           $i_count = count($items);
+
           $output .= '
                       <td colspan="3">'.lang("char", "messagehas").' '.$i_count.' '.lang("char", "itemsattached").'.</td>';
         }
+
+        if ( ( $mail["money"] <> 0 ) || ( $mail["cod"] <> 0 ) || ( $mail["attached_item_guids"] <> 0 ) )
+          $output .= '
+                    </tr>';
+
         $output .= '
-                    </tr>
                   </table>
                 </div>
                 <br />';

@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -1212,7 +1213,7 @@ function cancel_email_change()
 function send_invite($resend = false)
 {
   global $lang, $GMailSender, $smtp_cfg, $title, $format_mail_html, $user_name, $user_id,
-    $url_path, $sql, $core;
+    $url_path, $mailer_type, $sql, $core;
 
   if ( !$resend )
   {
@@ -1380,6 +1381,9 @@ function send_invite($resend = false)
     $body = str_replace("<core>", core_name($core), $body);
 
     $server_addr = ( ( $_SERVER["SERVER_PORT"] != 80 ) ? $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"] : $_SERVER["SERVER_NAME"] );
+
+    // if we aren't installed in / then append the path to $server_addr
+    $server_addr .= ( ( $url_path != "" ) ? $url_path : "" );
 
     $body = str_replace("<base_url>", $server_addr, $body);
 

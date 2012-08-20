@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -206,7 +207,7 @@ function select_quantity()
 {
   global $world_db, $characters_db, $realm_id, $user_name, $output, $action_permission, $user_lvl,
     $locales_search_option, $ultra_mult, $ultra_base, $uv_credits, $uv_money, $credits_fractional,
-    $sql, $core;
+    $ultra_vendor_max_item_level, $ultra_vendor_max_item_req_level, $sql, $core;
 
   valid_login($action_permission["view"]);
 
@@ -214,7 +215,7 @@ function select_quantity()
     redirect("ultra_vendor.php?error=1");
 
   if ( $core == 1 )
-    $iquery = "SELECT * FROM items "
+    $iquery = "SELECT *, itemlevel AS ItemLevel, requiredlevel AS RequiredLevel FROM items "
                 .( ( $locales_search_option != 0 ) ? "LEFT JOIN items_localized ON (items_localized.entry=items.entry AND language_code='".$locales_search_option."') " : " " ).
               "WHERE items.entry='".$_GET["myItem"]."'";
   else
@@ -226,50 +227,75 @@ function select_quantity()
   $iresult = $sql["world"]->query($iquery);
   $item = $sql["world"]->fetch_assoc($iresult);
 
-  // Localization
-  if ( $locales_search_option != 0 )
+  $continue_sale = true;
+  // check if the item's level exceeds the configured limits
+  if ( $ultra_vendor_max_item_level > -1 )
   {
+    if ( $item["ItemLevel"] > $ultra_vendor_max_item_level )
+      $continue_sale = false;
+  }
+
+  // check if the item's required level exceeds the configured limits
+  if ( $ultra_vendor_max_item_req_level > -1 )
+  {
+    if ( $item["RequiredLevel"] > $ultra_vendor_max_item_req_level )
+      $continue_sale = false;
+  }
+
+  // check if the item is on the disabled list
+  $d_query = "SELECT itemid FROM ultravendor_disables WHERE itemid='".$item["entry"]."'";
+  $d_result = $sql["mgr"]->query($d_query);
+
+  if ( $sql["mgr"]->num_rows($d_result) )
+    $continue_sale = false;
+
+  // if we weren't blocked by any of the tests above...
+  if ( $continue_sale )
+  {
+    // Localization
+    if ( $locales_search_option != 0 )
+    {
+      if ( $core == 1 )
+        $item["name1"] = $item["name"];
+      else
+        $item["name1"] = $item["name_loc".$locales_search_option];
+    }
+    else
+      $item["name1"] = $item["name1"];
+
     if ( $core == 1 )
-      $item["name1"] = $item["name"];
+      $cquery = "SELECT guid, level, gold FROM characters WHERE name='".$_GET["charname"]."'";
     else
-      $item["name1"] = $item["name_loc".$locales_search_option];
-  }
-  else
-    $item["name1"] = $item["name1"];
+      $cquery = "SELECT guid, level, money AS gold FROM characters WHERE name='".$_GET["charname"]."'";
+    $cresult = $sql["char"]->query($cquery);
+    $char = $sql["char"]->fetch_assoc($cresult);
 
-  if ( $core == 1 )
-    $cquery = "SELECT guid, level, gold FROM characters WHERE name='".$_GET["charname"]."'";
-  else
-    $cquery = "SELECT guid, level, money AS gold FROM characters WHERE name='".$_GET["charname"]."'";
-  $cresult = $sql["char"]->query($cquery);
-  $char = $sql["char"]->fetch_assoc($cresult);
+    $chargold = $char["gold"];
+    $chargold = str_pad($chargold, 4, "0", STR_PAD_LEFT);
+    $pg = substr($chargold,  0, -4);
+    if ( $pg == '' )
+      $pg = 0;
+    $ps = substr($chargold, -4,  2);
+    if ( ( $ps == '' ) || ( $ps == '00' ) )
+      $ps = 0;
+    $pc = substr($chargold, -2);
+    if ( ( $pc == '' ) || ( $pc == '00' ) )
+      $pc = 0;
 
-  $chargold = $char["gold"];
-  $chargold = str_pad($chargold, 4, "0", STR_PAD_LEFT);
-  $pg = substr($chargold,  0, -4);
-  if ( $pg == '' )
-    $pg = 0;
-  $ps = substr($chargold, -4,  2);
-  if ( ( $ps == '' ) || ( $ps == '00' ) )
-    $ps = 0;
-  $pc = substr($chargold, -2);
-  if ( ( $pc == '' ) || ( $pc == '00' ) )
-    $pc = 0;
+    $mul = $ultra_mult[$item["quality"]];
+    $qual = quality($item["quality"]);
 
-  $mul = $ultra_mult[$item["quality"]];
-  $qual = quality($item["quality"]);
-
-  if ( $item["sellprice"] <> 0 )
-    $base_price = $item["sellprice"];
-  else
-  {
-    if ( $item["buyprice"] == 0 )
-      $base_price = $ultra_base;
+    if ( $item["sellprice"] <> 0 )
+      $base_price = $item["sellprice"];
     else
-      $base_price = $item["buyprice"];
-  }
+    {
+      if ( $item["buyprice"] == 0 )
+        $base_price = $ultra_base;
+      else
+        $base_price = $item["buyprice"];
+    }
 
-  $output .= '
+    $output .= '
           <table class="top_hidden">
             <tr>
               <td>
@@ -277,121 +303,121 @@ function select_quantity()
                   <div class="half_frame fieldset_border">
                     <span class="legend">'.lang("ultra", "selectquantity").'</span>';
 
-  $gold = $mul * $base_price;
-  $gold = str_pad($gold, 4, "0", STR_PAD_LEFT);
-  $cg = substr($gold,  0, -4);
-  if ( $cg == '' )
-    $cg = 0;
-  $cs = substr($gold, -4,  2);
-  if ( ( $cs == '' ) || ( $cs == '00' ) )
-    $cs = 0;
-  $cc = substr($gold, -2);
-  if ( ( $cc == '' ) || ( $cc == '00' ) )
-    $cc = 0;
-  $gold = $mul * $base_price;
+    $gold = $mul * $base_price;
+    $gold = str_pad($gold, 4, "0", STR_PAD_LEFT);
+    $cg = substr($gold,  0, -4);
+    if ( $cg == '' )
+      $cg = 0;
+    $cs = substr($gold, -4,  2);
+    if ( ( $cs == '' ) || ( $cs == '00' ) )
+      $cs = 0;
+    $cc = substr($gold, -2);
+    if ( ( $cc == '' ) || ( $cc == '00' ) )
+      $cc = 0;
+    $gold = $mul * $base_price;
 
-  $base_gold = $base_price;
-  $base_gold = str_pad($base_gold, 4, "0", STR_PAD_LEFT);
-  $bg = substr($base_gold,  0, -4);
-  if ( $bg == '' )
-    $bg = 0;
-  $bs = substr($base_gold, -4,  2);
-  if ( ( $bs == '' ) || ( $bs == '00' ) )
-    $bs = 0;
-  $bc = substr($base_gold, -2);
-  if ( ( $bc == '' ) || ( $bc == '00' ) )
-    $bc = 0;
+    $base_gold = $base_price;
+    $base_gold = str_pad($base_gold, 4, "0", STR_PAD_LEFT);
+    $bg = substr($base_gold,  0, -4);
+    if ( $bg == '' )
+      $bg = 0;
+    $bs = substr($base_gold, -4,  2);
+    if ( ( $bs == '' ) || ( $bs == '00' ) )
+      $bs = 0;
+    $bc = substr($base_gold, -2);
+    if ( ( $bc == '' ) || ( $bc == '00' ) )
+      $bc = 0;
 
-  // Localization
-  $isranked = lang("ultra", "isranked");
-  $isranked = str_replace("%1", '<b>'.$item["name1"].'</b>', $isranked);
-  $isranked = str_replace("%2", '<b>"'.$qual.'"</b>', $isranked);
+    // Localization
+    $isranked = lang("ultra", "isranked");
+    $isranked = str_replace("%1", '<b>'.$item["name1"].'</b>', $isranked);
+    $isranked = str_replace("%2", '<b>"'.$qual.'"</b>', $isranked);
 
-  $output .= $isranked;
-  $output .= '
+    $output .= $isranked;
+    $output .= '
                     <br />';
 
-  // Localization
-  $willcost = lang("ultra", "willcost");
-  $willcost = str_replace("%1", '<span id="uv_mul">'.$mul.'</span>', $willcost);
-  $cost_display = $bg.'<img src="img/gold.gif" alt="" align="middle" />'
-                    .$bs.'<img src="img/silver.gif" alt="" align="middle" />'
-                    .$bc.'<img src="img/copper.gif" alt="" align="middle" />';
-  $willcost = str_replace("%2", $cost_display, $willcost);
+    // Localization
+    $willcost = lang("ultra", "willcost");
+    $willcost = str_replace("%1", '<span id="uv_mul">'.$mul.'</span>', $willcost);
+    $cost_display = $bg.'<img src="img/gold.gif" alt="" align="middle" />'
+                      .$bs.'<img src="img/silver.gif" alt="" align="middle" />'
+                      .$bc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $willcost = str_replace("%2", $cost_display, $willcost);
 
-  $output .= $willcost;
-  $output .= '
+    $output .= $willcost;
+    $output .= '
                     <br />';
 
-  // Localization
-  $orcost = lang("ultra", "or");
-  $or_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
-                .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
-                .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
-  $orcost = str_replace("%1", $or_display, $orcost);
+    // Localization
+    $orcost = lang("ultra", "or");
+    $or_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
+                  .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
+                  .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $orcost = str_replace("%1", $or_display, $orcost);
 
-  $output .= $orcost;
-  $output .= '
+    $output .= $orcost;
+    $output .= '
                     <br />
                     <br />';
 
-  // Localization
-  $charhas = lang("ultra", "has");
-  $charhas = str_replace("%1", '<b>'.$_GET["charname"].'</b>', $charhas);
-  $money_display = $pg.'<img src="img/gold.gif" alt="" align="middle" />'
-                  .$ps.'<img src="img/silver.gif" alt="" align="middle" />'
-                  .$pc.'<img src="img/copper.gif" alt="" align="middle" />';
-  $charhas = str_replace("%2", $money_display, $charhas);
+    // Localization
+    $charhas = lang("ultra", "has");
+    $charhas = str_replace("%1", '<b>'.$_GET["charname"].'</b>', $charhas);
+    $money_display = $pg.'<img src="img/gold.gif" alt="" align="middle" />'
+                    .$ps.'<img src="img/silver.gif" alt="" align="middle" />'
+                    .$pc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $charhas = str_replace("%2", $money_display, $charhas);
 
-  $output .= $charhas;
-  $output .= '
+    $output .= $charhas;
+    $output .= '
                     <br />
                     <br />';
 
-  // credits
-  if ( $uv_money > 0 )
-  {
-    // get our credit balance
-    $query = "SELECT Credits FROM config_accounts WHERE Login='".$user_name."'";
-    $result = $sql["mgr"]->query($query);
-    $result = $sql["mgr"]->fetch_assoc($result);
-    $credits = $result["Credits"];
-
-    if ( $credits < 0 )
+    // credits
+    if ( $uv_money > 0 )
     {
-      // unlimited credits
-      $output .= lang("global", "credits_unlimited");
-      $output .= '
+      // get our credit balance
+      $query = "SELECT Credits FROM config_accounts WHERE Login='".$user_name."'";
+      $result = $sql["mgr"]->query($query);
+      $result = $sql["mgr"]->fetch_assoc($result);
+      $credits = $result["Credits"];
+
+      if ( $credits < 0 )
+      {
+        // unlimited credits
+        $output .= lang("global", "credits_unlimited");
+        $output .= '
                     <br />
                     <br />';
+      }
+      elseif ( $credits >= 0 )
+      {
+        $credit_cost = $uv_credits * ($gold / $uv_money);
+
+        // if Allow Fractional Credits is disabled then cost must be a whole number
+        $credit_cost = ( ( !$credits_fractional ) ? ceil($credit_cost) : $credit_cost );
+
+        $credits_per_item = lang("ultra", "credits_peritem");
+        $credits_per_item = str_replace("%1", '<b>'.$credit_cost.'</b>', $credits_per_item);
+        $credits_per_item = str_replace("%2", '<b>'.$item["name1"].'</b>', $credits_per_item);
+
+        $output .= $credits_per_item;
+        $output .= '
+                    <br />
+                    <br />';
+
+        $credits_avail = lang("ultra", "credits_avail");
+        $credits_avail = str_replace("%1", '<b>'.(float)$credits.'</b>', $credits_avail);
+
+        $output .= $credits_avail;
+        $output .= '
+                    <br />
+                    <br />';
+      }
     }
-    elseif ( $credits >= 0 )
-    {
-      $credit_cost = $uv_credits * ($gold / $uv_money);
 
-      // if Allow Fractional Credits is disabled then cost must be a whole number
-      $credit_cost = ( ( !$credits_fractional ) ? ceil($credit_cost) : $credit_cost );
-
-      $credits_per_item = lang("ultra", "credits_peritem");
-      $credits_per_item = str_replace("%1", '<b>'.$credit_cost.'</b>', $credits_per_item);
-      $credits_per_item = str_replace("%2", '<b>'.$item["name1"].'</b>', $credits_per_item);
-
-      $output .= $credits_per_item;
-      $output .= '
-                    <br />
-                    <br />';
-
-      $credits_avail = lang("ultra", "credits_avail");
-      $credits_avail = str_replace("%1", '<b>'.(float)$credits.'</b>', $credits_avail);
-
-      $output .= $credits_avail;
-      $output .= '
-                    <br />
-                    <br />';
-    }
-  }
-
-  $output .= '
+    $output .= '
                     <br />
                     <br />
                     <form method="get" action="ultra_vendor.php" name="form">
@@ -406,12 +432,16 @@ function select_quantity()
                       <table>
                         <tr>
                           <td>';
-  makebutton(lang("ultra", "submit"), "javascript:do_submit()\" type=\"def",180);
-  $output .= '
+
+    makebutton(lang("ultra", "submit"), "javascript:do_submit()\" type=\"def", 180);
+
+    $output .= '
                           </td>
                           <td>';
-  makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def",130);
-  $output .= '
+
+    makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
+
+    $output .= '
                           </td>
                         </tr>
                       </table>
@@ -421,6 +451,36 @@ function select_quantity()
               </td>
             </tr>
           </table>';
+  }
+  else
+  {
+
+    $output .= '
+          <table class="top_hidden">
+            <tr>
+              <td>
+                <center>
+                  <div class="half_frame fieldset_border">
+                    <span class="legend">'.lang("ultra", "denied_legend").'</span>
+                    <span>'.lang("ultra", "denied").'</span>
+                      <br />
+                      <br />
+                      <table>
+                        <tr>
+                          <td>';
+
+    makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
+
+    $output .= '
+                          </td>
+                        </tr>
+                      </table>
+                  </div>
+                </center>
+              </td>
+            </tr>
+          </table>';
+  }
 }
 
 

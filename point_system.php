@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -104,22 +104,62 @@ function redeem_coupon()
                         <div>
                           <div class="coupon_parts">'.lang("points", "coupon_value_claim").':</div>';
 
-            if ( $coupon["credits"] != 0 )
+            $neg_credits = false;
+            if ( $coupon["credits"] < 0 )
             {
-              if ( $coupon["credits"] > 1 )
-                $tip = lang("points", "coupon_credits");
+              $neg_credits = true;
+
+              $coupon["credits"] = $coupon["credits"] * -1;
+            }
+
+            if ( $coupon["credits"] > 0 )
+            {
+              if ( !$neg_credits )
+              {
+                if ( $coupon["credits"] > 1 )
+                  $tip = lang("points", "coupon_credits");
+                else
+                  $tip = lang("points", "coupon_credit");
+              }
               else
-                $tip = lang("points", "coupon_credit");
+              {
+                if ( $coupon["credits"] > 1 )
+                  $word = lang("points", "coupon_credits");
+                else
+                  $word = lang("points", "coupon_credit");
+
+                $tip = str_replace("%1", $coupon["credits"], lang("points", "coupon_cost_credits2"));
+                $tip = str_replace("%2", $word, $tip);
+              }
 
               $output .= '
-                          <div class="coupon_parts">
-                            <input type="checkbox" name="claim_credits" checked="checked"/>
-                            <span>'.$coupon["credits"].'</span>
+                          <div class="coupon_parts">';
+
+              if ( !$neg_credits )
+                $output .= '
+                            <input type="checkbox" name="claim_credits" checked="checked" />
+                            <span>'.$coupon["credits"].'</span>';
+              else
+                $output .= '
+                            <input type="hidden" name="claim_credits" value="1" />';
+
+              $output .= '
                             <span>'.$tip.'</span>
                           </div>';
             }
 
-            if ( $coupon["money"] != 0 )
+            $neg_money = false;
+            if ( $coupon["money"] < 0 )
+            {
+              $neg_money = true;
+
+              $output .= '
+                          <input type="hidden" name="neg_money" value="1" />';
+
+              $coupon["money"] = $coupon["money"] * -1;
+            }
+
+            if ( $coupon["money"] > 0 )
             {
               // extract gold/silver/copper from single gold number
               $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
@@ -135,8 +175,17 @@ function redeem_coupon()
 
               $output .= '
                           <div class="coupon_parts">
-                            <hr />
-                            <input type="checkbox" name="claim_money" checked="checked"/>
+                            <hr />';
+
+              if ( !$neg_money )
+                $output .= '
+                            <input type="checkbox" name="claim_money" checked="checked" />';
+
+              if ( $neg_money )
+                $output .= '
+                            <span>'.lang("points", "coupon_cost").': </span>';
+
+              $output .= '
                             <span>'.$coupon_g.'</span>
                             <img src="img/gold.gif" alt="gold" />
                             <span>'.$coupon_s.'</span>
@@ -145,9 +194,15 @@ function redeem_coupon()
                             <img src="img/copper.gif" alt="gold" />
                           </div>';
 
-              $output .= '
+              if ( !$neg_money )
+                $output .= '
                           <div class="coupon_part_title">
                             <span>'.lang("points", "choose_char_money").':</span>
+                          </div>';
+              else
+                $output .= '
+                          <div class="coupon_part_title">
+                            <span>'.lang("points", "choose_char_neg_money").':</span>
                           </div>';
 
               for ( $i = 0; $i < count($char_list); $i++ )
@@ -390,7 +445,7 @@ function redeem_coupon()
 
 function do_redeem()
 {
-  global  $output, $bag_id, $coupon_id, $user_name, $user_id, $sql, $core;
+  global  $output, $characters_db, $bag_id, $coupon_id, $user_name, $user_id, $sql, $core;
 
   // get our coupon
   $query = "SELECT * FROM point_system_coupons WHERE entry='".$coupon_id."'";
@@ -459,6 +514,10 @@ function do_redeem()
       $result = $sql["mgr"]->query($query);
       $result = $sql["mgr"]->fetch_assoc($result);
       $credits = $result["Credits"];
+
+      // if we don't have enough credits, we need to have an error
+      if ( ( $credits >= 0 ) && ( $credits < ($coupon["credits"]*-1) ) )
+        redirect("point_system.php?action=redeem_coupon".( ( $coupon_id != 0 ) ? "&coupon_id=".$coupon_id : "" ).( ( $bag_id != 0 ) ? "&bag_id=".$bag_id : "" ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' )."&error=7");
 
       // if we have unlimited credits, keep it that way
       // else, add the coupons credits to ours
@@ -580,11 +639,77 @@ function do_redeem()
       }
       else
       {
-        // the 'item' is a prize bag, assign ownership
-        $own_bag_query = "UPDATE point_system_prize_bags SET owner='".$user_id."' WHERE entry='".($coupon["item_id"] * -1)."'";
-        $sql["mgr"]->query($own_bag_query);
+        // the 'item' is a prize bag, assign ownership, or duplicate if it's a template
+        $bag_query = "SELECT * FROM point_system_prize_bags WHERE entry='".($coupon["item_id"] * -1)."'";
+        $bag_result = $sql["mgr"]->query($bag_query);
+        $bag_result = $sql["mgr"]->fetch_assoc($bag_result);
+
+        if ( $bag_result["is_template"] == 0 )
+        {
+          // assign ownership
+          $own_bag_query = "UPDATE point_system_prize_bags SET owner='".$user_id."' WHERE entry='".($coupon["item_id"] * -1)."'";
+          $sql["mgr"]->query($own_bag_query);
+        }
+        else
+        {
+          // duplicate and assign ownership
+          $bag_query = "INSERT INTO point_system_prize_bags (slots, owner) VALUES ('".$bag_result["slots"]."', '".$user_id."')";
+          $sql["mgr"]->query($bag_query);
+
+          // get last insert's index
+          $id_query = "SELECT LAST_INSERT_ID() AS id FROM point_system_prize_bags;";
+          $id_result = $sql["mgr"]->query($id_query);
+          $id_result = $sql["mgr"]->fetch_assoc($id_result);
+          $ins_id = $id_result["id"];
+
+          // load the items
+          $items_query = "SELECT * FROM point_system_prize_bag_items WHERE bag='".($coupon["item_id"] * -1)."'";
+          $items_result = $sql["mgr"]->query($items_query);
+
+          // duplicate
+          while ( $row = $sql["mgr"]->fetch_assoc($items_result) )
+          {
+            $ins_query = "INSERT INTO point_system_prize_bag_items (bag, slot, item_id, item_count) VALUES ('".$ins_id."', '".$row["slot"]."', '".$row["item_id"]."', '".$row["item_count"]."')";
+            $sql["mgr"]->query($ins_query);
+          }
+        }
       }
     }
+  }
+
+  if ( isset($_GET["neg_money"]) )
+  {
+    // use correct realm
+    $sqlc = new SQL;
+    $sqlc->connect($characters_db[$money_realm_id]["addr"], $characters_db[$money_realm_id]["user"], $characters_db[$money_realm_id]["pass"], $characters_db[$money_realm_id]["name"], $characters_db[$money_realm_id]["encoding"]);
+
+    // get character who will pay for the coupon
+    $money_temp = explode("-", $_GET["money_character"]);
+    $money_realm_id = $money_temp[0];
+    $money_receiver = $money_temp[1];
+    $money_to = $money_temp[2];
+
+    $char_query = "SELECT * FROM characters WHERE guid='".$money_receiver."'";
+    $char_result = $sqlc->query($char_query);
+    $char = $sqlc->fetch_assoc($char_result);
+
+    // invert money
+    $coupon["money"] = $coupon["money"] * -1;
+
+    // error if the character is too poor
+    if ( $core == 1 )
+      if ( $char["gold"] < $coupon["money"] )
+        redirect("point_system.php?error=5");
+    else
+      if ( $char["money"] < $coupon["money"] )
+        redirect("point_system.php?error=5");
+
+    // pay the man
+    if ( $core == 1 )
+      $charge_query = "UPDATE characters SET gold=gold-'".$coupon["money"]."' WHERE guid='".$money_receiver."'";
+    else
+      $charge_query = "UPDATE characters SET money=money-'".$coupon["money"]."' WHERE guid='".$money_receiver."'";
+    $sqlc->query($charge_query);
   }
 
   // make an entry for our usage
@@ -637,7 +762,7 @@ function coupons()
                 <td align="left">
                   <span>'.lang("points", "coupon_value").':</span>';
 
-          if ( $coupon["credits"] != 0 )
+          if ( $coupon["credits"] > 0 )
           {
             if ( $coupon["credits"] > 1 )
               $tip = lang("index", "coupon_credits");
@@ -651,7 +776,7 @@ function coupons()
                   <span>'.$tip.'</span>';
           }
 
-          if ( $coupon["money"] != 0 )
+          if ( $coupon["money"] > 0 )
           {
             // extract gold/silver/copper from single gold number
             $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
@@ -796,6 +921,46 @@ function coupons()
 
           $output .= '
                   </td>
+                </tr>';
+        }
+
+        if ( $coupon["credits"] < 0 )
+        {
+          $message = lang("points", "coupon_cost_credits");
+          $message = str_replace("%1", ($coupon["credits"] * -1), $message);
+
+          $output .= '
+                <tr>
+                  <td align="right">'.$message.'</td>
+                </tr>';
+        }
+
+        if ( $coupon["money"] < 0 )
+        {
+          $coupon["money"] = $coupon["money"] * -1;
+
+          $coupon_money = $coupon["money"];
+          $coupon_money = str_pad($coupon_money, 4, "0", STR_PAD_LEFT);
+          $cg = substr($coupon_money,  0, -4);
+          if ( $cg == '' )
+            $cg = 0;
+          $cs = substr($coupon_money, -4,  2);
+          if ( ( $cs == '' ) || ( $cs == '00' ) )
+            $cs = 0;
+          $cc = substr($coupon_money, -2);
+          if ( ( $cc == '' ) || ( $cc == '00' ) )
+            $cc = 0;
+
+          $coupon_money_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
+                      .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
+                      .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+
+          $message = lang("points", "coupon_cost_money");
+          $message = str_replace("%1", $coupon_money_display, $message);
+
+          $output .= '
+                <tr>
+                  <td align="right">'.$message.'</td>
                 </tr>';
         }
 
@@ -1744,16 +1909,19 @@ function do_purchase()
   global  $output, $characters_db, $raffle_id, $user_name, $user_id, $sql, $core;
 
   // make sure the money character (if provided) is not an injection
-  $money_character = explode("-", $_GET["money_character"]);
-  $char_choice = $money_character[1];
-  $char_choice = ( ( isset($_GET["money_character"]) ) ? $char_choice : NULL );
-  $char_choice = ( ( is_numeric($char_choice) ) ? $char_choice : 0 );
-  $char_realm = $money_character[0];
-  $char_realm = ( ( is_numeric($char_realm) ) ? $char_realm : 0 );
+  if ( isset($_GET["money_character"]) )
+  {
+    $money_character = explode("-", $_GET["money_character"]);
+    $char_choice = $money_character[1];
+    $char_choice = ( ( isset($_GET["money_character"]) ) ? $char_choice : NULL );
+    $char_choice = ( ( is_numeric($char_choice) ) ? $char_choice : 0 );
+    $char_realm = $money_character[0];
+    $char_realm = ( ( is_numeric($char_realm) ) ? $char_realm : 0 );
 
-  // check that the realm id is at least a number
-  if ( $char_realm == 0 )
-    error(lang("global", "err_invalid_input"));
+    // check that the realm id is at least a number
+    if ( $char_realm == 0 )
+      error(lang("global", "err_invalid_input"));
+  }
 
   // get our raffle
   $query = "SELECT * FROM point_system_raffles WHERE entry='".$raffle_id."'";
@@ -1911,6 +2079,12 @@ switch ( $err )
     $output .= '
           <h1>
             <font class="error">'.lang("points", "character_online").'</font>
+          </h1>';
+    break;
+  case 7:
+    $output .= '
+          <h1>
+            <font class="error">'.lang("points", "insufficient_credits").'</font>
           </h1>';
     break;
   default: //no error

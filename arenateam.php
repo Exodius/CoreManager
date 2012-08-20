@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -344,7 +345,7 @@ function browse_teams()
                 </table>
               </td>
               <td align="right">';
-  $output .= generate_pagination("arenateam.php?order_by=".$order_by.( ( $search_value && $search_by ) ? "&amp;search_by=".$search_by."&amp;search_value=".$search_value : "" )."&amp;dir=".!$dir, $all_record, $itemperpage, $start);
+  $output .= generate_pagination("arenateam.php?order_by=".$order_by.( ( $search_value && $search_by ) ? "&amp;search_by=".$search_by."&amp;search_value=".$search_value : "" )."&amp;dir=".( ($dir) ? 0 : 1 ), $all_record, $itemperpage, $start);
   $output .= '
               </td>
             </tr>

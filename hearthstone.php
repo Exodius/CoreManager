@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2011  CoreManager Project
+    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -289,8 +290,8 @@ function saveloc()
     $query = "SELECT *,
       characters.map AS mapId, characters.zone AS zoneId,
       character_homebind.mapId AS bindmapId, character_homebind.zoneId AS bindzoneId,
-      character_homebind.position_x AS bindpositionX, character_homebind.position_y AS bindpositionY,
-      character_homebind.position_z AS bindpositionZ
+      character_homebind.posX AS bindpositionX, character_homebind.posY AS bindpositionY,
+      character_homebind.posZ AS bindpositionZ
       FROM characters LEFT JOIN character_homebind ON characters.guid=character_homebind.guid WHERE characters.guid='".$guid."'";
 
   $char = $sql["char"]->fetch_assoc($sql["char"]->query($query));
