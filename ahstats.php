@@ -333,7 +333,7 @@ function browse_auctions()
   if ( $core == 1 )
     // this_is_junk: the guid in auction is stored raw, so we have to subtract 4611686018427387904 to get the matching guid stored in playeritems :/
     $query = "SELECT characters.name AS owner_name, owner, playeritems.entry AS item_entry,
-      item-4611686018427387904 AS item, buyout, time-UNIX_TIMESTAMP() AS time, bidder, bid
+      item-4611686018427387904 AS item, buyout, time, UNIX_TIMESTAMP() AS now, bidder, bid
       FROM auctions
         LEFT JOIN characters ON auctions.owner=characters.guid
         LEFT JOIN playeritems ON auctions.item-4611686018427387904=playeritems.guid
@@ -342,7 +342,7 @@ function browse_auctions()
   elseif ( $core == 2 )
     $query = "SELECT characters.name AS owner_name, auction.item_template AS item_entry,
       auction.itemowner AS owner, item_template.name AS itemname, itemguid AS item,
-      auction.buyoutprice AS buyout, auction.time-UNIX_TIMESTAMP() AS time,
+      auction.buyoutprice AS buyout, auction.time AS time, UNIX_TIMESTAMP() AS now,
       c2.name AS bidder_name, auction.buyguid AS bidder, auction.lastbid AS bid, auction.startbid,
       SUBSTRING_INDEX(SUBSTRING_INDEX(item_instance.data, ' ',15), ' ',-1) AS qty,
       characters.race AS seller_race, c2.race AS buyer_race
@@ -355,7 +355,7 @@ function browse_auctions()
   else
     $query = "SELECT characters.name AS owner_name, item_instance.itemEntry AS item_entry,
       auctionhouse.itemowner AS owner, item_template.name AS itemname, itemguid AS item,
-      auctionhouse.buyoutprice AS buyout, auctionhouse.time-unix_timestamp() AS time,
+      auctionhouse.buyoutprice AS buyout, auctionhouse.time AS time, UNIX_TIMESTAMP() AS now,
       c2.name AS bidder_name, auctionhouse.buyguid AS bidder, auctionhouse.lastbid AS bid, auctionhouse.startbid,
       item_instance.count AS qty,
       characters.race AS seller_race, c2.race AS buyer_race
@@ -514,7 +514,7 @@ function browse_auctions()
     $buyout = $g.'<img src="./img/gold.gif" alt="" /> '.$s.'<img src="./img/silver.gif" alt="" /> '.$c.'<img src="./img/copper.gif" alt="" /> ';
     
     // calculate the remaining time
-    $tot_time = $rows["time"];
+    $tot_time = $rows["time"] - $rows["now"];
     $total_days = (int)($tot_time/86400);
     $tot_time = $tot_time - ($tot_days*86400);
     $total_hours = (int)($tot_time/3600);
