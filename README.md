@@ -12,6 +12,9 @@ All credits go to the CoreManager Assembla repository Owner, Members and the res
 
 CoreManager Team:
 (Owner)  this_is_junk  : https://www.assembla.com/profile/this_is_junk
+
 (Member) Djhenghiz     : https://www.assembla.com/profile/Djhenghiz
+
 (Member) drama         : https://www.assembla.com/profile/drama
+
 (Member) luisalvaradox : https://www.assembla.com/profile/luisalvaradox
