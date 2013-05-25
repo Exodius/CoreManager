@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once("header.php");
-require_once("libs/char_lib.php");
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 global $output, $characters_db, $realm_id, $itemperpage, $core, $site_encoding;
@@ -66,34 +67,33 @@ $output .= '
           answerbox.btn_ok="'.lang("global", "yes_low").'";
           answerbox.btn_cancel="'.lang("global", "no").'";
         </script>
-        <center>
-          <div class="fieldset_border honor_faction">
-            <span class="honor_faction_icon"><img src="img/alliance.gif" alt="" /></span>
-            <table class="lined" id="honor_alliance_ranks">
-              <tr class="bold">
-                <td colspan="11" class="hidden">'.lang("honor", "allied").' '.lang("honor", "browse_honor").'</td>
-              </tr>
-              <tr>
-                <th width="20%">'.lang("honor", "guid").'</th>
-                <th width="7%">'.lang("honor", "race").'</th>
-                <th width="7%">'.lang("honor", "class").'</th>
-                <th width="7%">
-                  <a href="honor.php?order_by=level&amp;dir='.$dir.'"'.( ( $order_by == 'level' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "level").'</a>
-                </th>
-                <th width="7%">
-                  <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor").'</a>
-                </th>
-                <th width="11%">
-                  <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor_points").'</a>
-                </th>
-                <th width="7%">
-                  <a href="honor.php?order_by=kills&amp;dir='.$dir.'"'.( ( $order_by == 'kills' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "kills").'</a>
-                </th>
-                <th width="11%">
-                  <a href="honor.php?order_by=arena&amp;dir='.$dir.'"'.( ( $order_by == 'arena' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "arena_points_short").'</a>
-                </th>
-                <th width="24%">'.lang("honor", "guild")."</th>
-              </tr>";
+        <div class="fieldset_border honor_faction">
+          <span class="honor_faction_icon"><img src="img/alliance.gif" alt="" /></span>
+          <table class="lined" id="honor_alliance_ranks">
+            <tr class="bold">
+              <td colspan="11" class="hidden">'.lang("honor", "allied").' '.lang("honor", "browse_honor").'</td>
+            </tr>
+            <tr>
+              <th style="width: 20%;">'.lang("honor", "guid").'</th>
+              <th style="width: 7%;">'.lang("honor", "race").'</th>
+              <th style="width: 7%;">'.lang("honor", "class").'</th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=level&amp;dir='.$dir.'"'.( ( $order_by == "level" ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "level").'</a>
+              </th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == "honor" ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor").'</a>
+              </th>
+              <th style="width: 11%;">
+                <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == "honor" ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor_points").'</a>
+              </th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=kills&amp;dir='.$dir.'"'.( ( $order_by == "kills" ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "kills").'</a>
+              </th>
+              <th style="width: 11%;">
+                <a href="honor.php?order_by=arena&amp;dir='.$dir.'"'.( ( $order_by == "arena" ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "arena_points_short").'</a>
+              </th>
+              <th style="width: 24%;">'.lang("honor", "guild")."</th>
+            </tr>";
 
 while ( $char = $sql["char"]->fetch_assoc($query) ) 
 {
@@ -110,36 +110,35 @@ while ( $char = $sql["char"]->fetch_assoc($query) )
   }
 
   $output .= '
-              <tr>
-                <td>
-                  <a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a>
-                </td>
-                <td>
-                  <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                </td>
-                <td>
-                  <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                </td>
-                <td>'.char_get_level_color($char["level"]).'</td>
-                <td>
-                  <span onmouseover="oldtoolTip(\''.char_get_pvp_rank_name($char["honor"], char_get_side_id($char["race"])).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" class="honor_tooltip">
-                    <img src="img/ranks/rank'.char_get_pvp_rank_id($char["honor"], char_get_side_id($char["race"])).'.gif" alt="" />
-                  </span>
-                </td>
-                <td>'.$char["honor"].'</td>
-                <td>'.$char["kills"].'</td>
-                <td>'.$char["arena"].'</td>
-                <td>
-                  <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$char["GNAME"].'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
-                </td>
-              </tr>';
+            <tr>
+              <td>
+                <a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a>
+              </td>
+              <td>
+                <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+              </td>
+              <td>
+                <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+              </td>
+              <td>'.char_get_level_color($char["level"]).'</td>
+              <td>
+                <span onmouseover="oldtoolTip(\''.char_get_pvp_rank_name($char["honor"], char_get_side_id($char["race"])).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" class="honor_tooltip">
+                  <img src="img/ranks/rank'.char_get_pvp_rank_id($char["honor"], char_get_side_id($char["race"])).'.gif" alt="" />
+                </span>
+              </td>
+              <td>'.$char["honor"].'</td>
+              <td>'.$char["kills"].'</td>
+              <td>'.$char["arena"].'</td>
+              <td>
+                <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$char["GNAME"].'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
+              </td>
+            </tr>';
 }
 
 $output .= '
-            </table>
-            <br />
-          </div>
-        </center>
+          </table>
+          <br />
+        </div>
         <br />';
 
 if ( $core == 1 )
@@ -170,34 +169,33 @@ $output .= '
           answerbox.btn_ok="'.lang("global", "yes_low").'";
           answerbox.btn_cancel="'.lang("global", "no").'";
         </script>
-        <center>
-          <div class="fieldset_border honor_faction">
-            <span class="honor_faction_icon"><img src="img/horde.gif" alt="" /></span>
-            <table class="lined" id="honor_horde_ranks">
-              <tr class="bold">
-                <td colspan="11" class="hidden">'.lang("honor", "horde")." ".lang("honor", "browse_honor").'</td>
-              </tr>
-              <tr>
-                <th width="20%">'.lang("honor", "guid").'</th>
-                <th width="7%">'.lang("honor", "race").'</th>
-                <th width="7%">'.lang("honor", "class").'</th>
-                <th width="7%">
-                  <a href="honor.php?order_by=level&amp;dir='.$dir.'"'.( ( $order_by == 'level' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "level").'</a>
-                </th>
-                <th width="7%">
-                  <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor").'</a>
-                </th>
-                <th width="11%">
-                  <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor_points").'</a>
-                </th>
-                <th width="7%">
-                  <a href="honor.php?order_by=kills&amp;dir='.$dir.'"'.( ( $order_by == 'kills' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "kills").'</a>
-                </th>
-                <th width="11%">
-                  <a href="honor.php?order_by=arena&amp;dir='.$dir.'"'.( ( $order_by == 'arena' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "arena_points_short").'</a>
-                </th>
-                <th width="24%">'.lang("honor", "guild").'</th>
-              </tr>';
+        <div class="fieldset_border honor_faction">
+          <span class="honor_faction_icon"><img src="img/horde.gif" alt="" /></span>
+          <table class="lined" id="honor_horde_ranks">
+            <tr class="bold">
+              <td colspan="11" class="hidden">'.lang("honor", "horde")." ".lang("honor", "browse_honor").'</td>
+            </tr>
+            <tr>
+              <th style="width: 20%;">'.lang("honor", "guid").'</th>
+              <th style="width: 7%;">'.lang("honor", "race").'</th>
+              <th style="width: 7%;">'.lang("honor", "class").'</th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=level&amp;dir='.$dir.'"'.( ( $order_by == 'level' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "level").'</a>
+              </th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor").'</a>
+              </th>
+              <th style="width: 11%;">
+                <a href="honor.php?order_by=honor&amp;dir='.$dir.'"'.( ( $order_by == 'honor' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "honor_points").'</a>
+              </th>
+              <th style="width: 7%;">
+                <a href="honor.php?order_by=kills&amp;dir='.$dir.'"'.( ( $order_by == 'kills' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "kills").'</a>
+              </th>
+              <th style="width: 11%;">
+                <a href="honor.php?order_by=arena&amp;dir='.$dir.'"'.( ( $order_by == 'arena' ) ? ( ( $dir ) ? ' class="DESC"' : ' class="ASC"' ) : '' ).'>'.lang("honor", "arena_points_short").'</a>
+              </th>
+              <th style="width: 24%;">'.lang("honor", "guild").'</th>
+            </tr>';
 
 while ( $char = $sql["char"]->fetch_assoc($query) ) 
 {
@@ -213,35 +211,34 @@ while ( $char = $sql["char"]->fetch_assoc($query) )
   }
 
   $output .= '
-              <tr>
-                <td>
-                  <a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a>
-                </td>
-                <td>
-                  <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                </td>
-                <td>
-                  <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                </td>
-                <td>'.char_get_level_color($char["level"]).'</td>
-                <td>
-                  <span onmouseover="oldtoolTip(\''.char_get_pvp_rank_name($char["honor"], char_get_side_id($char["race"])).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" class="honor_tooltip">
-                    <img src="img/ranks/rank'.char_get_pvp_rank_id($char["honor"], char_get_side_id($char["race"])).'.gif" alt="" />
-                  </span>
-                </td>
-                <td>'.$char["honor"].'</td>
-                <td>'.$char["kills"].'</td>
-                <td>'.$char["arena"].'</td>
-                <td>
-                  <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$char["GNAME"].'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
-                </td>
-              </tr>';
+            <tr>
+              <td>
+                <a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a>
+              </td>
+              <td>
+                <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+              </td>
+              <td>
+                <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+              </td>
+              <td>'.char_get_level_color($char["level"]).'</td>
+              <td>
+                <span onmouseover="oldtoolTip(\''.char_get_pvp_rank_name($char["honor"], char_get_side_id($char["race"])).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" class="honor_tooltip">
+                  <img src="img/ranks/rank'.char_get_pvp_rank_id($char["honor"], char_get_side_id($char["race"])).'.gif" alt="" />
+                </span>
+              </td>
+              <td>'.$char["honor"].'</td>
+              <td>'.$char["kills"].'</td>
+              <td>'.$char["arena"].'</td>
+              <td>
+                <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$char["GNAME"].'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
+              </td>
+            </tr>';
 }
 
 $output .= '
-            </table>
-          </div>
-        </center>';
+          </table>
+        </div>';
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

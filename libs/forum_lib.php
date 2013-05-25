@@ -31,8 +31,8 @@ function bbcode_editor_js()
         if ( document.selection && document.selection.createRange )
         {
           sel = document.selection.createRange();
-          if ( sel.parentElement()==obj )
-          sel.text = sel.text+txt;
+          if ( sel.parentElement() == obj )
+          sel.text = sel.text + txt;
         }
         elseif ( String(typeof obj.selectionStart) != "undefined" )
         {
@@ -40,7 +40,7 @@ function bbcode_editor_js()
           obj.value = (obj.value).substring(0,sel) + txt + (obj.value).substring(sel,obj.value.length);
         }
         else
-          obj.value+=txt;
+          obj.value += txt;
         obj.focus();
       }
       function ajtBBCode(Tag, fTag)
@@ -51,7 +51,7 @@ function bbcode_editor_js()
         {
           sel = document.selection.createRange();
           if ( sel.parentElement() == obj )
-            sel.text = Tag+sel.text+fTag;
+            sel.text = Tag+sel.text + fTag;
         }
         elseif ( String(typeof obj.selectionStart) != "undefined" )
         {
@@ -60,10 +60,10 @@ function bbcode_editor_js()
           var selEnd = obj.selectionEnd;
           if ( ( selEnd == 2 ) || ( selEnd == 1 ) )
             selEnd = longueur;
-          obj.value = (obj.value).substring(0, selStart)+Tag+(obj.value).substring(selStart, selEnd)+fTag+(obj.value).substring(selEnd, longueur);
+          obj.value = (obj.value).substring(0, selStart) + Tag + (obj.value).substring(selStart, selEnd) + fTag + (obj.value).substring(selEnd, longueur);
         }
         else
-          obj.value += Tag+fTag;
+          obj.value += Tag + fTag;
         obj.focus();
       }
     </script>';
@@ -74,8 +74,9 @@ function bbcode_callbacks_wow($item)
   global $base_datasite, $item_datasite;
 
   wowhead_tt();
-  require_once("scripts/id_tab.php");
-  require_once("scripts/get_lib.php");
+  require_once "scripts/id_tab.php";
+  require_once "scripts/get_lib.php";
+
   return '
     <a href="'.$base_datasite.$item_datasite.$item[1].'" target="_blank" onmouseover="oldtoolTip(\''.addslashes(get_item_tooltip($item[1])).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">
       <img src="'.get_item_icon($item[1]).'" class="icon_border" alt="" />
@@ -183,9 +184,9 @@ function get_side()
   global $user_id, $characters_db, $realm_id, $sql, $core;
 
   if ( $core == 1 )
-    $result = $sql["char"]->query("SELECT race FROM `characters` WHERE acct = '$user_id';");
+    $result = $sql["char"]->query("SELECT race FROM `characters` WHERE acct='".$user_id."'");
   else
-    $result = $sql["char"]->query("SELECT race FROM `characters` WHERE account = '$user_id';");
+    $result = $sql["char"]->query("SELECT race FROM `characters` WHERE account='".$user_id."'");
   if ( !$sql["char"]->num_rows($result) )
     return "NO";
   $a = 0;
@@ -209,12 +210,12 @@ function get_side()
 
 function gen_avatar_panel($level, $sex, $race, $class, $info = 1, $gm = 0, $edit_user = 0)
 {
-  require_once("libs/char_lib.php");
+  require_once "libs/char_lib.php";
 
   $return = '
-                <div '.( ( $edit_user == 0 ) ? 'border="0" cellpadding="0" cellspacing="0" ' : '' ).'style="background: transparent url(';
+                <div class="center" style="background: transparent url(';
   $return .= char_get_avatar_img($level, $sex, $race, $class, $gm);
-  $return .= ') repeat scroll 0%; width: 64px; height: 64px;">';
+  $return .= ') repeat scroll 0%; width: 64px; height: 64px;'.( ( $edit_user == 0 ) ? ' border: 0px;' : '' ).'">';
 
   $return .= '
                   <div style="background: transparent url(img/avatars/frame/full'.( ( $gm ) ? 'gm' : '' ).'.gif) repeat scroll 0%; position: relative; left: 0px; top: 0px; width: 64px; height: 64px;">
@@ -229,7 +230,7 @@ function gen_avatar_panel($level, $sex, $race, $class, $info = 1, $gm = 0, $edit
 
   if ( $gm > 0 )
   {
-    require_once("libs/get_lib.php");
+    require_once "libs/get_lib.php";
     $return .= 
                 id_get_gm_level($gm).'
                 <br />';

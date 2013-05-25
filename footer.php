@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -178,7 +178,7 @@
     if ( ( 1 < $show_version["show"] ) && ( $user_lvl >= $show_version["svnrev_lvl"] ) )
     {
       $show_version["svnrev"] = '';
-      // if file exists and readable
+      // get our current revision
       if ( is_readable('.svn/entries') )
       {
         $file_obj = new SplFileObject('.svn/entries');
@@ -231,31 +231,51 @@
     case 1:
     {
       $output .= '
-                  <a href="http://www.arcemu.org/" target="_blank"><img src="img/logo-arcemu.png" class="logo_border" alt="arcemu" /></a>';
+                  <a href="http://www.arcemu.org/" rel="external">
+                    <img src="img/logo-arcemu.png" class="logo_border" alt="arcemu" />
+                  </a>';
       break;
     }
     case 2:
     {
       $output .= '
-                  <a href="http://getmangos.com/" target="_blank"><img src="img/logo-mangos.png" class="logo_border" alt="mangos" /></a>';
+                  <a href="http://getmangos.com/" rel="external">
+                    <img src="img/logo-mangos.png" class="logo_border" alt="mangos" />
+                  </a>';
       break;
     }
     case 3:
     {
       $output .= '
-                  <a href="http://www.trinitycore.org/" target="_blank"><img src="img/logo-trinity.png" class="logo_border" alt="trinity" /></a>';
+                  <a href="http://www.trinitycore.org/" rel="external">
+                    <img src="img/logo-trinity.png" class="logo_border" alt="trinity" />
+                  </a>';
       break;
     }
   }
   $output .= '
-                  <a href="http://www.php.net/" target="_blank"><img src="img/logo-php.png" class="logo_border" alt="php" /></a>
-                  <a href="http://www.mysql.com/" target="_blank"><img src="img/logo-mysql.png" class="logo_border" alt="mysql" /></a>
-                  <!-- a href="http://validator.w3.org/check?uri=referer" target="_blank"><img src="img/logo-css.png" class="logo_border" alt="w3" /></a -->
+                  <a href="http://www.php.net/" rel="external">
+                    <img src="img/logo-php.png" class="logo_border" alt="php" />
+                  </a>
+                  <a href="http://www.mysql.com/" rel="external">
+                    <img src="img/logo-mysql.png" class="logo_border" alt="mysql" />
+                  </a>
+                  <!-- a href="http://validator.w3.org/check?uri=referer" rel="external">
+                    <img src="img/logo-css.png" class="logo_border" alt="w3" />
+                  </a -->
                   <br />
-                  <a href="http://www.mozilla.com/" target="_blank"><img src="img/logo-firefox.png" class="logo_border" alt="firefox" /></a>
-                  <a href="http://www.google.com/chrome?hl=en&amp;brand=CHMI" target="_blank"><img src="img/logo-chrome.png" class="logo_border" alt="firefox" /></a>
-                  <a href="http://www.apple.com/safari/" target="_blank"><img src="img/logo-safari.png" class="logo_border" alt="firefox" /></a>
-                  <a href="http://www.opera.com/" target="_blank"><img src="img/logo-opera.png" class="logo_border" alt="opera" /></a>
+                  <a href="http://www.mozilla.com/" rel="external">
+                    <img src="img/logo-firefox.png" class="logo_border" alt="firefox" />
+                  </a>
+                  <a href="http://www.google.com/chrome?hl=en&amp;brand=CHMI" rel="external">
+                    <img src="img/logo-chrome.png" class="logo_border" alt="firefox" />
+                  </a>
+                  <a href="http://www.apple.com/safari/" rel="external">
+                    <img src="img/logo-safari.png" class="logo_border" alt="firefox" />
+                  </a>
+                  <a href="http://www.opera.com/" rel="external">
+                    <img src="img/logo-opera.png" class="logo_border" alt="opera" />
+                  </a>
                 </p>
               </td>
               <td class="table_bottom_right"></td>
@@ -318,6 +338,5 @@
 
         </div><!-- body_bottom -->
       </div><!-- body_main -->
-    </center>
   </body>
 </html>

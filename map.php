@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,9 +18,10 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/map_zone_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/map_zone_lib.php";
+
 valid_login($action_permission["view"]);
 
 function show_map()
@@ -269,8 +270,8 @@ function show_map()
           <div class="map_map">
             <br />
             <img src="img/map/'.$mapfilename.'1.png" class="map_image" alt="" />
-            <img src="img/map/'.$mapfilename.'2.png" class="map_image" alt="" />
-            <img src="img/map/'.$mapfilename.'3.png" class="map_image" alt="" />';
+            <img src="img/map/'.$mapfilename.'2.png" class="map_image" alt="" style="top: -2px;" />
+            <img src="img/map/'.$mapfilename.'3.png" class="map_image" alt="" style="top: -4px;" />';
 
   // generate the queries based on which map we're viewing
   // GM status here is based on the core's opinion of who is a GM, NOT on CoreManager's Security Level
@@ -603,6 +604,6 @@ show_map();
 unset($action);
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 ?>

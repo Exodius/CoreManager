@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -24,28 +24,29 @@
 */
 
 
-require_once 'header.php';
-require_once("libs/data_lib.php");
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/data_lib.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 function char_racegender($race, $gender)
 {
   $char_race = array(
-    1 => 'human',
-    2 => 'orc',
-    3 => 'dwarf',
-    4 => 'nightelf',
-    5 => 'scourge',
-    6 => 'tauren',
-    7 => 'gnome',
-    8 => 'troll',
-    10 => 'bloodelf',
-    11 => 'draenei');
+     1 => "human",
+     2 => "orc",
+     3 => "dwarf",
+     4 => "nightelf",
+     5 => "scourge",
+     6 => "tauren",
+     7 => "gnome",
+     8 => "troll",
+    10 => "bloodelf",
+    11 => "draenei");
         
   $char_gender = array(
-    0 => 'male',
-    1 => 'female');
+    0 => "male",
+    1 => "female");
 
   return $char_race[$race].$char_gender[$gender];
 }
@@ -403,12 +404,11 @@ function char_view()
     
     // this_is_junk: style hard coded just to hide box around 3D display.
     $output .= '
-          <center>
             <script type="text/javascript">
               // <![CDATA[
                 function wrap()
                 {
-                  if (getBrowserWidth() > 1024)
+                  if ( getBrowserWidth() > 1024 )
                   document.write(\'</table></td><td><table class="lined" id="ch_fri_large_screen">\');
                 }
               // ]]>
@@ -534,13 +534,13 @@ function char_view()
                 <li class="selected"><a href="char_view.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "view").'</a></li>
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">
+            <div class="tab_content center center_text">
+              <span class="bold">
                 '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                 <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-              </font>
-              <div id="model_scene" align="center">
+              </span>
+              <div id="model_scene" class="center">
                 <object id="wowhead" type="application/x-shockwave-flash"
                     data="http://static.wowhead.com/modelviewer/ModelView.swf"
                     height="400px" width="400px" style="outline:none;">
@@ -601,7 +601,7 @@ function char_view()
               </div>
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -640,8 +640,7 @@ function char_view()
                 </td>
               </tr>
             </table>
-            <br />
-          </center>';
+            <br />';
   }
   else
     error(lang("char", "no_permission"));
@@ -659,7 +658,7 @@ char_view();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

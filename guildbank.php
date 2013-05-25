@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/item_lib.php';
+require_once "header.php";
+require_once "libs/item_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -83,20 +84,19 @@ function guild_bank()
           <div class="top">
             <h1>'.$guild_name.' '.lang("guildbank", "guildbank").'</h1>
           </div>
-          <center>
-            <div class="tab">
-              <ul>';
+          <div class="tab">
+            <ul>';
     for( $i = 0; $i < 6; ++$i )
     {
       if ( isset($tabs[$i]) )
       {
         $output .= '
-                <li'.( ( $current_tab == $i ) ? ' class="selected"' : '' ).'>
-                  <a href="guildbank.php?id='.$guild_id.'&amp;tab='.$i.'&amp;realm='.$realmid.'">';
+              <li'.( ( $current_tab == $i ) ? ' class="selected"' : '' ).'>
+                <a href="guildbank.php?id='.$guild_id.'&amp;tab='.$i.'&amp;realm='.$realmid.'">';
         if ( $tabs[$i]['TabIcon'] == '' )
         {
           $output .= '
-                    <img src="img/INV/INV_blank_32.gif" class="icon_border_0"';
+                  <img src="img/INV/INV_blank_32.gif" class="icon_border_0"';
         }
         else
         {
@@ -108,24 +108,24 @@ function guild_bank()
 
           if ( file_exists($item_icons."/".$tabs[$i]["TabIcon"].".png") )
             $output .= '
-                    <img src="'.$item_icons."/".$tabs[$i]["TabIcon"].'.png" class="icon_border_0"';
+                  <img src="'.$item_icons."/".$tabs[$i]["TabIcon"].'.png" class="icon_border_0"';
           else
             $output .= '
-                    <img src="img/INV/INV_blank_32.gif" class="icon_border_0"';
+                  <img src="img/INV/INV_blank_32.gif" class="icon_border_0"';
         }
         if ( $tabs[$i]['TabName'] == '' )
-          $output .= ' onmousemove="oldtoolTip(\''.lang("guildbank", "tab").($i+1).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />';
+          $output .= ' onmousemove="oldtoolTip(\''.lang("guildbank", "tab").($i + 1).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />';
         else
           $output .= ' onmousemove="oldtoolTip(\''.$tabs[$i]['TabName'].'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />';
         $output .= '
-                  </a>
-                </li>';
+                </a>
+              </li>';
       }
     }
     $output .= '
-              </ul>
-            </div>
-            <div class="tab_content">';
+            </ul>
+          </div>
+          <div class="tab_content center">';
 
     if ( $core == 1 )
       $result = $sql["char"]->query("SELECT gbi.SlotId, gbi.itemGuid, ii.entry,
@@ -153,10 +153,10 @@ function guild_bank()
 
     // this_is_junk: style left hardcoded because it's calculated.
     $output .= '
-              <table id="guildbank_tabs">
-                <tr>
-                  <td align="center">
-                    <div class="bag" style="width:'.((14*43)+2).'px; height:'.(7*41).'px;">';
+            <table id="guildbank_tabs">
+              <tr>
+                <td align="center">
+                  <div class="bag" style="width:'.((14*43)+2).'px; height:'.(7*41).'px;">';
 
     $item_position = 0;
     for ( $i = 0; $i < 7; ++$i )
@@ -170,44 +170,43 @@ function guild_bank()
           $stack = ( $gb_slots[$item_position]["stack_count"] == 1 ? '' : $gb_slots[$item_position]["stack_count"] );
           // this_is_junk: style left hardcoded because it's calculated.
           $output .= '
-                      <div class="bag_slot" style="left:'.(($j*43)+4).'px; top:'.(($i*41)+4).'px;">
-                        <a class="guildbank_padding" href="'.$base_datasite.$item_datasite.$gb_item_id.'">
-                          <img src="'.get_item_icon($gb_item_id).'" class="inv_icon" alt="" />
-                        </a>
-                        <div class="guildbank_quantity_shadow">'.$stack.'</div>
-                        <div class="guildbank_quantity">'.$stack.'</div>
-                      </div>';
+                    <div class="bag_slot" style="left:'.(($j*43)+4).'px; top:'.(($i*41)+4).'px;">
+                      <a class="guildbank_padding" href="'.$base_datasite.$item_datasite.$gb_item_id.'">
+                        <img src="'.get_item_icon($gb_item_id).'" class="inv_icon" alt="" />
+                      </a>
+                      <div class="guildbank_quantity_shadow">'.$stack.'</div>
+                      <div class="guildbank_quantity">'.$stack.'</div>
+                    </div>';
         }
       }
     }
     $output .= '
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="hidden" align="right">
-                    '.substr($bank_gold,  0, -4).'<img src="img/gold.gif" alt="" align="middle" />
-                    '.substr($bank_gold, -4,  2).'<img src="img/silver.gif" alt="" align="middle" />
-                    '.substr($bank_gold, -2).'<img src="img/copper.gif" alt="" align="middle" />
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <br />
-            <table class="hidden">
+                  </div>
+                </td>
+              </tr>
               <tr>
-                <td>';
-    makebutton(lang("guildbank", "guild"), 'guild.php?action=view_guild&amp;realm='.$realmid.'&amp;error=3&amp;id='.$guild_id.'', 130);
-    $output .= '
+                <td class="hidden" align="right">
+                  '.substr($bank_gold,  0, -4).'<img src="img/gold.gif" alt="" style="position: relative; bottom: -6px;" />
+                  '.substr($bank_gold, -4,  2).'<img src="img/silver.gif" alt="" style="position: relative; bottom: -6px;" />
+                  '.substr($bank_gold, -2).'<img src="img/copper.gif" alt="" style="position: relative; bottom: -6px;" />
                 </td>
               </tr>
             </table>
-            <br />
-          </center>';
+          </div>
+          <br />
+          <table class="hidden center">
+            <tr>
+              <td>';
+    makebutton(lang("guildbank", "guild"), "guild.php?action=view_guild&amp;realm=".$realmid."&amp;error=3&amp;id=".$guild_id, 130);
+    $output .= '
+              </td>
+            </tr>
+          </table>
+          <br />';
     unset($bank_gold);
   }
   else
-    redirect('error.php?err='.lang("guildbank", "notfound"));
+    redirect("error.php?err=".lang("guildbank", "notfound"));
 }
 
 
@@ -229,7 +228,7 @@ guild_bank();
 unset($action_permission);
 //unset($lang_guildbank);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -29,13 +29,13 @@ function dologin()
   global $corem_db, $sql, $core;
 
   if ( empty($_POST["login"]) || empty($_POST["password"]) )
-    redirect('login.php?error=2');
+    redirect("login.php?error=2");
 
   $user_name  = $sql["mgr"]->quote_smart($_POST["true_login"]);
   $user_pass  = $sql["mgr"]->quote_smart($_POST["password"]);
 
   if ( ( strlen($user_name) > 255 ) || ( strlen($user_pass) > 255 ) )
-    redirect('login.php?error=1');
+    redirect("login.php?error=1");
 
   // ArcEmu: Detect whether account uses clear or encrypted password
   if ( $core == 1 )
@@ -156,146 +156,155 @@ function login()
     $override_remember_me = 1;
 
   $output .= '
-          <center>
-            <script type="text/javascript" src="libs/js/sha1.js"></script>
-            <script type="text/javascript">
-              // <![CDATA[
-                function dologin ()
+          <script type="text/javascript" src="libs/js/sha1.js"></script>
+          <script type="text/javascript">
+            // <![CDATA[
+              function dologin ()
+              {
+                var myForm = document.getElementById("form");
+
+                passhash = hex_sha1(myForm.true_login.value.toUpperCase()+":" + myForm.login_pass.value.toUpperCase()).toUpperCase();
+                myForm.password.value = hex_sha1(passhash + myForm.pub_key.value);
+
+                do_submit();
+              }
+
+              function get_username()
+              {
+                var myForm = document.getElementById("form");
+
+                user = myForm.login.value;
+
+                if ( user != "" )
                 {
-                  passhash = hex_sha1(document.form.true_login.value.toUpperCase()+":"+document.form.login_pass.value.toUpperCase()).toUpperCase();
-                  document.form.password.value = hex_sha1(passhash + document.form.pub_key.value);
-
-                  do_submit();
-                }
-
-                function get_username()
-                {
-                  user = document.form.login.value;
-
-                  if ( user != "" )
+                  login = "";
+                  obj = new XMLHttpRequest();
+                  obj.onreadystatechange = function()
                   {
-                    login = "";
-                    obj = new XMLHttpRequest();
-                    obj.onreadystatechange = function()
+                    if ( obj.readyState == 4 )
                     {
-                      if ( obj.readyState == 4 )
-                      {
-                        eval("result = " + obj.responseText);
-                        login = result["result"];
+                      eval("result = " + obj.responseText);
+                      login = result["result"];
 
-                        document.form.true_login.value = login;
-                      }
+                      myForm.true_login.value = login;
                     }
-                    obj.open("GET", "libs/get_username_lib.php?username=" + user, true);
-                    obj.send(null);
                   }
+                  obj.open("GET", "libs/get_username_lib.php?username=" + user, true);
+                  obj.send(null);
                 }
+              }
 
-                function got_focus()
-                {
-                  document.form.login.select();
-                  get_username();
-                }
-              // ]]>
-            </script>
-            <div class="half_frame fieldset_border">
-              <span class="legend">'.lang("login", "login").'</span>
-              <form method="post" action="login.php?action=dologin" name="form" onsubmit="return dologin()">
+              function got_focus()
+              {
+                document.getElementById("form").login.select();
+                get_username();
+              }
+            // ]]>
+          </script>
+          <div class="half_frame fieldset_border center">
+            <span class="legend">'.lang("login", "login").'</span>
+            <form method="post" action="login.php?action=dologin" id="form" onsubmit="return dologin()">
+              <div>
                 <input type="hidden" name="password" value="" maxlength="256" />
                 <input type="hidden" name="pub_key" value="'.$_SESSION["pub_key"].'" />
                 <input type="hidden" name="true_login" value="" />
-                <table class="hidden" id="login_table">
-                  <tr>
-                    <td colspan="3">
-                      <hr />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="right" valign="top" style="width: 35%;">'.lang("login", "username").' :</td>
-										<td>&nbsp;</td>
-                    <td align="left">
-                      <input type="text" name="login" size="24" maxlength="16" onfocus="got_focus();" onchange="get_username();" />
-                      <br />
-                      '.lang("login", "or_screenname").'
-                    </td>
-                  </tr>
-                  <tr>
-                    <td align="right">'.lang("login", "password").' :</td>
-										<td>&nbsp;</td>
-                    <td align="left">
-                      <input type="password" name="login_pass" size="24" maxlength="40" />
-                    </td>
-                  </tr>';
+              </div>
+              <table class="hidden" id="login_table">
+                <tr>
+                  <td colspan="3">
+                    <hr />
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right" valign="top" style="width: 35%;">'.lang("login", "username").' :</td>
+                  <td>&nbsp;</td>
+                  <td align="left">
+                    <input type="text" name="login" size="24" maxlength="16" onfocus="got_focus();" onchange="get_username();" />
+                    <br />
+                    '.lang("login", "or_screenname").'
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right">'.lang("login", "password").' :</td>
+                  <td>&nbsp;</td>
+                  <td align="left">
+                    <input type="password" name="login_pass" size="24" maxlength="40" />
+                  </td>
+                </tr>';
 
   $result = $sql["mgr"]->query('SELECT `Index` AS id, Name AS name FROM config_servers LIMIT 10');
 
   if ( ( $sql["mgr"]->num_rows($result) > 1 ) && ( count($server) > 1 ) && ( count($characters_db) > 1 ) )
   {
     $output .= '
-                  <tr align="right">
-                    <td>'.lang("login", "select_realm").' :</td>
-										<td>&nbsp;</td>
-                    <td align="left">
-                      <select name="realm" id="login_realm">';
+                <tr align="right">
+                  <td>'.lang("login", "select_realm").' :</td>
+                  <td>&nbsp;</td>
+                  <td align="left">
+                    <select name="realm" id="login_realm">';
+
     while ( $realm = $sql["mgr"]->fetch_assoc($result) )
       if ( isset($server[$realm["id"]]) )
         $output .= '
-                        <option value="'.$realm["id"].'" '.( $_SESSION["realm_id"] == $realm["id"] ? 'selected="selected"' : '' ).'>'.htmlentities($realm["name"], ENT_COMPAT, $site_encoding).'</option>';
+                      <option value="'.$realm["id"].'" '.( $_SESSION["realm_id"] == $realm["id"] ? 'selected="selected"' : '' ).'>'.htmlentities($realm["name"], ENT_COMPAT, $site_encoding).'</option>';
+                      
     $output .= '
-                      </select>
-                    </td>
-                  </tr>';
+                    </select>
+                  </td>
+                </tr>';
   }
   else
     $output .= '
-                  <!-- input type="hidden" name="realm" value="1" / -->
-                  <input type="hidden" name="realm" value="'.$sql["mgr"]->result($result, 0, 'id').'" />';
+                <tr>
+                  <td style="display: none;">
+                    <input type="hidden" name="realm" value="'.$sql["mgr"]->result($result, 0, "id").'" />
+                  </td>
+                </tr>';
+
   $output .= '
-                  <!-- tr>
-                    <td>
-                    </td>
-                  </tr -->
-                  <tr>
-                    <td align="right">'.lang("login", "remember_me").' : </td>
-										<td>&nbsp;</td>
-                    <td align="left"><input type="checkbox" name="remember" value="1"';
-  if ( $remember_me_checked && $override_remember_me )
-    $output .= ' checked="checked"';
-  // this_is_junk: the hardcoded CSS here is for an input doing nothing.
-  $output .= ' /></td>
-                  </tr>
-                  <tr>
-                    <td colspan="3"></td>
-                  </tr>
-                  <tr align="center">
-                    <td colspan="3">
+                <tr>
+                  <td align="right">'.lang("login", "remember_me").' : </td>
+                  <td>&nbsp;</td>
+                  <td align="left">
+                    <input type="checkbox" name="remember" value="1"'.( ( $remember_me_checked && $override_remember_me ) ? ' checked="checked"' : '' ).' />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3"></td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <div style="width: 290px;" class="center">
                       <input type="submit" value="" style="display:none" />';
+
   makebutton(lang("login", "not_registrated"), 'register.php" type="wrn', 130);
   makebutton(lang("login", "login"), 'javascript:dologin()" type="def', 130);
+
   $output .= '
-                    </td>
-                  </tr>
-                  <tr align="center">
-                    <td colspan="3">
-                      <a href="register.php?action=pass_recovery">'.lang("login", "pass_recovery").'</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">
-                      <hr />
-                    </td>
-                  </tr>
-                </table>
-                <script type="text/javascript">
-                  // <![CDATA[
-                    document.form.login.focus();
-                  // ]]>
-                </script>
-              </form>
-              <br />
-            </div>
-            <br /><br />
-          </center>';
+                    </div>
+                  </td>
+                </tr>
+                <tr align="center">
+                  <td colspan="3">
+                    <a href="register.php?action=pass_recovery">'.lang("login", "pass_recovery").'</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <hr />
+                  </td>
+                </tr>
+              </table>
+              <script type="text/javascript">
+                // <![CDATA[
+                  document.getElementById("form").login.focus();
+                // ]]>
+              </script>
+            </form>
+            <br />
+          </div>
+          <br />
+          <br />';
 }
 
 
@@ -443,14 +452,14 @@ $output .= '
 
 if ( $err == 1 )
   $output .=  '
-            <h1><font class="error">'.lang("login", "bad_pass_user").'</font></h1>';
+            <h1><span class="error">'.lang("login", "bad_pass_user").'</span></h1>';
 elseif ( $err == 2 )
   $output .=  '
-            <h1><font class="error">'.lang("login", "missing_pass_user").'</font></h1>';
+            <h1><span class="error">'.lang("login", "missing_pass_user").'</span></h1>';
 elseif ( $err == 3 )
 {
   $output .=  '
-            <h1><font class="error">'.lang("login", "banned_acc").'</font></h1>';
+            <h1><span class="error">'.lang("login", "banned_acc").'</span></h1>';
   if ( isset($info) )
   {
     $info = htmlspecialchars($info);
@@ -461,29 +470,29 @@ elseif ( $err == 3 )
 elseif ( $err == 5 )
 {
   $output .=  '
-            <h1><font class="error">'.lang("login", "no_permision").'</font></h1>';
+            <h1><span class="error">'.lang("login", "no_permision").'</span></h1>';
   if ( isset($info) )
-    $output .= '<h1><font class="error">'.lang("login", "req_permision").': '.$info.'</font></h1>';
+    $output .= '<h1><span class="error">'.lang("login", "req_permision").': '.$info.'</span></h1>';
 }
 elseif ( $err == 6 )
 {
   $output .=  '
-            <h1><font class="error">'.lang("login", "after_registration").'</font></h1>';
+            <h1><span class="error">'.lang("login", "after_registration").'</span></h1>';
   if ( isset($info) )
-    $output .= '<h1><font class="error">'.lang("register", "referrer_not_found").'</font></h1>';
+    $output .= '<h1><span class="error">'.lang("register", "referrer_not_found").'</span></h1>';
 }
 elseif ( $err == 7 )
   $output .=  '
-            <h1><font class="error">'.lang("login", "after_activation").'</font></h1>';
+            <h1><span class="error">'.lang("login", "after_activation").'</span></h1>';
 elseif ( $err == 8 )
 {
   $output .=  '
-            <h1><font class="error">'.lang("login", "confirm_sent").'</font></h1>';
+            <h1><span class="error">'.lang("login", "confirm_sent").'</span></h1>';
   if ( isset($info) )
-    $output .= '<h1><font class="error">'.lang("register", "referrer_not_found").'</font></h1>';
+    $output .= '<h1><span class="error">'.lang("register", "referrer_not_found").'</span></h1>';
 }
 elseif ( $err == 9 )
-  $output .= '<h1><font class="error">'.lang("register", "recovery_mail_sent".( ( $core == 1 ) ? "A" : "MT" )).'</font></h1>';
+  $output .= '<h1><span class="error">'.lang("register", "recovery_mail_sent".( ( $core == 1 ) ? "A" : "MT" )).'</span></h1>';
 else
   $output .=  '
             <h1>'.lang("login", "enter_valid_logon").'</h1>';

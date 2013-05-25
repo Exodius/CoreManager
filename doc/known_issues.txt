@@ -13,7 +13,7 @@ function.
 The Character Sheet Page on Trinity Servers will display "ERR" for some stats.
 (see below for list)
 
-The Arena Team Banner for 5 vs 5 is one row lower than it should be.
+MaNGOS support is limited to MaNGOS 2.  Other versions may not work.
 
 
 THINGS COREMANAGER CAN DO THAT SERVERS DON'T SUPPORT:
@@ -28,6 +28,3 @@ do not save these.
 
 MaNGOS doesn't store Player Latency so Average Latency & Player Latency are
 unavailable.
-
-ArcEmu's method of storing Arena Team Members is a nightmare.  So, ArcEmu
-can't show everything in the Character PvP Tab.

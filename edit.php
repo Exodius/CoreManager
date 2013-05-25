@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,11 +19,12 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/item_lib.php';
-require_once 'libs/forum_lib.php';
-require_once("libs/bb2html_lib.php");
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/item_lib.php";
+require_once "libs/forum_lib.php";
+require_once "libs/bb2html_lib.php";
+
 valid_login($action_permission["view"]);
 
 //##############################################################################################################
@@ -68,36 +69,38 @@ function edit_user()
     }
 
     $output .= '
-          <center>
             <script type="text/javascript" src="libs/js/sha1.js"></script>
             <script type="text/javascript">
               // <![CDATA[
                 function do_submit_data ()
-                {';
+                {
+                  var myForm = document.getElementById("form")';
     if ( $core == 1 )
     {
       if ( $arc_encrypted )
         $output .= '
-                  document.form.pass.value = hex_sha1("'.strtoupper($user_name).':"+document.form.user_pass.value.toUpperCase());';
+                  myForm.pass.value = hex_sha1("'.strtoupper($user_name).':" + myForm.user_pass.value.toUpperCase());';
       else
         $output .= '
-                  document.form.pass.value = document.form.user_pass.value;';
+                  myForm.pass.value = myForm.user_pass.value;';
     }
     else
       $output .= '
-                  document.form.pass.value = hex_sha1("'.strtoupper($user_name).':"+document.form.user_pass.value.toUpperCase());';
+                  myForm.pass.value = hex_sha1("'.strtoupper($user_name).':" + myForm.user_pass.value.toUpperCase());';
 
     $output .= '
-                  document.form.pass.value = document.form.pass.value.toUpperCase();
+                  myForm.pass.value = myForm.pass.value.toUpperCase();
                   do_submit();
                 }
               // ]]>
             </script>
-            <div id="edit_fieldset" class="fieldset_border">
+            <div id="edit_fieldset" class="fieldset_border center">
               <span class="legend">'.lang("edit", "edit_acc").'</span>
-              <form method="post" action="edit.php?action=doedit_user" name="form">
-                <input type="hidden" name="pass" value="" maxlength="256" />
-                <table class="flat">
+              <form method="post" action="edit.php?action=doedit_user" id="form">
+                <div>
+                  <input type="hidden" name="pass" value="" maxlength="256" />
+                </div>
+                <table class="flat" id="edit_fieldset_table">
                   <tr>
                     <td>'.lang("edit", "id").':</td>
                     <td colspan="2">'.htmlspecialchars($user_id).'</td>
@@ -127,7 +130,7 @@ function edit_user()
                     <td>'.lang("edit", "password").':</td>
                     <td colspan="2">
                       <input type="text" name="user_pass" size="39" maxlength="40" value="******" />
-                      <img src="img/information.png" onmousemove="oldtoolTip(\''.lang("edit", "pass_warning").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" />
+                      <img src="img/information.png" onmousemove="oldtoolTip(\''.lang("edit", "pass_warning").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                     </td>
                   </tr>
                   <tr>
@@ -136,7 +139,7 @@ function edit_user()
       $output .= '
                     <td colspan="2">
                       <a href="edit.php?action=cancel_email_change" >
-                        <img src="img/aff_warn.gif" onmousemove="oldtoolTip(\''.lang("edit", "email_changed").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" />
+                        <img src="img/aff_warn.gif" onmousemove="oldtoolTip(\''.lang("edit", "email_changed").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                       </a>
                       <input type="text" name="mail" size="39" maxlength="225" value="'.$acc["email"].'" />
                     </td>';
@@ -266,7 +269,7 @@ function edit_user()
                       <td>
                         <a href="char.php?id='.$char["guid"].'&amp;realm='.$realm["id"].'">'.$char["name"].'</a> -
                         <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                        <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
+                        <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
                       </td>
                       <td>'.$lastseen.'</td>
                     </tr>';
@@ -339,10 +342,12 @@ function edit_user()
               </form>
             </div>
             <br />
-            <div id="edit_theme_fieldset" class="fieldset_border">
+            <div id="edit_profile_fieldset" class="fieldset_border center">
               <span class="legend">'.lang("edit", "profile_options").'</span>
-              <form action="edit.php" method="get" name="form3">
-                <input type="hidden" name="action" value="profile_set" />
+              <form action="edit.php" method="get" id="form3">
+                <div>
+                  <input type="hidden" name="action" value="profile_set" />
+                </div>
                 <table class="hidden" id="edit_profile_table">
                   <tr>
                     <td align="left" colspan="3">'.lang("edit", "profile_info").'</td>
@@ -485,7 +490,7 @@ function edit_user()
       foreach ( $classes as $class )
       {
         $output .= '
-                          <option value="'.$class[0].'" '.( ( $screen_name["avatarclass"] == $class[0] ) ? 'selected="selected"' : '' ).' >'.$class[1].'</option>';
+                        <option value="'.$class[0].'" '.( ( $screen_name["avatarclass"] == $class[0] ) ? 'selected="selected"' : '' ).' >'.$class[1].'</option>';
       }
 
       $output .= '
@@ -504,7 +509,7 @@ function edit_user()
       $output .= '
                   <tr>
                     <td id="forum_topic_avatar" rowspan="4">
-                      <center>'.gen_avatar_panel($screen_name["avatarlevel"], $screen_name["avatarsex"], $screen_name["avatarrace"], $screen_name["avatarclass"], 0, $screen_name["SecurityLevel"]).'</center>
+                      <div>'.gen_avatar_panel($screen_name["avatarlevel"], $screen_name["avatarsex"], $screen_name["avatarrace"], $screen_name["avatarclass"], 0, $screen_name["SecurityLevel"]).'</div>
                     </td>
                     <td>'.lang("edit", "gender").':</td>
                     <td>'.lang("edit", "unavailable").'</td>
@@ -654,15 +659,17 @@ function edit_user()
                 </table>
               </form>
             </div>
-            <div id="edit_theme_fieldset" class="fieldset_border">
+            <div id="edit_invites_fieldset" class="fieldset_border center">
               <span class="legend">'.lang("edit", "invite_options").'</span>
-              <table class="hidden" id="edit_theme_table">
+              <table class="hidden" id="edit_invites_table">
                 <tr>
                   <td align="left">'.lang("edit", "invite_email").': </td>
                   <td align="right">
-                    <form action="edit.php" method="get" name="form4">
-                      <input type="hidden" name="action" value="send_invite" />
-                      <input type="text" name="invite_email" value="" size="30" />
+                    <form action="edit.php" method="get" id="form4">
+                      <div>
+                        <input type="hidden" name="action" value="send_invite" />
+                        <input type="text" name="invite_email" value="" size="30" />
+                      </div>
                     </form>
                   </td>
                 </tr>
@@ -682,9 +689,9 @@ function edit_user()
                   <td colspan="2">
                     <table class="lined" id="active_invites_table">
                       <tr>
-                        <th width="15%">Delete</th>
+                        <th style="width: 15%;">Delete</th>
                         <th>Email</th>
-                        <th width="15%">Resend</th>
+                        <th style="width: 15%">Resend</th>
                       </tr>';
 
     $invites_query = "SELECT * FROM invitations WHERE issuer_acct_id='".$user_id."'";
@@ -715,17 +722,19 @@ function edit_user()
               </table>
             </div>
             <br />
-            <div id="edit_theme_fieldset" class="fieldset_border">
+            <div id="edit_prizebags_fieldset" class="fieldset_border center">
               <span class="legend">'.lang("edit", "my_bags").'</span>
-              <table class="hidden" id="edit_theme_table">';
+              <table class="hidden" id="edit_prizebags_table">';
 
     // 
     $bag_query = "SELECT * FROM point_system_prize_bags WHERE owner='".$user_id."'";
     $bag_result = $sql["mgr"]->query($bag_query);
 
+    $output_temp = '<tr><td style="display: none;"></td></tr>';
+
     while ( $bag = $sql["mgr"]->fetch_assoc($bag_result) )
     {
-      $output .= '
+      $output_temp .= '
                 <tr>
                   <td align="right">
                     <a href="point_system.php?action=view_bag&amp;bag_id='.$bag["entry"].'">
@@ -738,20 +747,23 @@ function edit_user()
                 </tr>';
     }
 
+    $output .= $output_temp;
+
     $output .= '
               </table>
             </div>
             <br />
-            <div id="edit_theme_fieldset" class="fieldset_border">
+            <div id="edit_theme_fieldset" class="fieldset_border center">
               <span class="legend">'.lang("edit", "theme_options").'</span>
               <table class="hidden" id="edit_theme_table">
                 <tr>
                   <td align="left">'.lang("edit", "select_layout_lang").': </td>
                   <td align="right">
-                    <form action="edit.php" method="get" name="form1">
-                      <input type="hidden" name="action" value="lang_set" />
-                      <select name="lang">
-                        <optgroup label="'.lang("edit", "language").'">';
+                    <form action="edit.php" method="get" id="form1">
+                      <div>
+                        <input type="hidden" name="action" value="lang_set" />
+                        <select name="lang">
+                          <optgroup label="'.lang("edit", "language").'">';
     if ( is_dir('./lang') )
     {
       if ( $dh = opendir('./lang') )
@@ -769,8 +781,9 @@ function edit_user()
       }
     }
     $output .= '
-                        </optgroup>
-                      </select>
+                          </optgroup>
+                        </select>
+                      </div>
                     </form>
                   </td>
                   <td>';
@@ -781,10 +794,11 @@ function edit_user()
                 <tr>
                   <td align="left">'.lang("edit", "select_theme").': </td>
                   <td align="right">
-                    <form action="edit.php" method="get" name="form2">
-                      <input type="hidden" name="action" value="theme_set" />
-                      <select name="theme">
-                        <optgroup label="'.lang("edit", "theme").'">';
+                    <form action="edit.php" method="get" id="form2">
+                      <div>
+                        <input type="hidden" name="action" value="theme_set" />
+                        <select name="theme">
+                          <optgroup label="'.lang("edit", "theme").'">';
     if ( is_dir('./themes') )
     {
       if ( $dh = opendir('./themes') )
@@ -803,8 +817,9 @@ function edit_user()
       }
     }
     $output .= '
-                        </optgroup>
-                      </select>
+                          </optgroup>
+                        </select>
+                      </div>
                     </form>
                   </td>
                   <td>';
@@ -814,8 +829,7 @@ function edit_user()
                 </tr>
               </table>
             </div>
-            <br />
-          </center>';
+            <br />';
   }
   else
     error(lang("global", "err_no_records_found"));

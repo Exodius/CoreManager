@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,10 +19,11 @@
 */
 
 
-require_once("header.php");
-require_once("configs/forum.conf.php");
-require_once("libs/forum_lib.php");
-require_once("libs/bb2html_lib.php");
+require_once "header.php";
+require_once "configs/forum.conf.php";
+require_once "libs/forum_lib.php";
+require_once "libs/bb2html_lib.php";
+
 valid_login($action_permission["view"]);
 
 if ( isset($_COOKIE["corem_lang"]) )
@@ -86,8 +87,7 @@ function forum_index()
           <div class="top">
             <h1>'.lang("forum", "forums").'</h1>'.lang("forum", "you_are_here").': <a href="forum.php">'.lang("forum", "forum_index").'</a>
           </div>
-          <center>
-            <table class="lined">';
+          <table class="lined">';
   foreach ( $forum_skeleton as $category )
   {
     if ( ( $category["level_read"] > $user_lvl ) )
@@ -104,12 +104,12 @@ function forum_index()
       }
     }
     $output .= '
-              <tr>
-                <td class="head" align="left">'.$category["name"].'</td>
-                <td class="head">'.lang("forum", "topics").'</td>
-                <td class="head">'.lang("forum", "replies").'</td>
-                <td class="head" align="right">'.lang("forum", "last_post").'</td>
-              </tr>';
+            <tr>
+              <td class="head" align="left">'.$category["name"].'</td>
+              <td class="head">'.lang("forum", "topics").'</td>
+              <td class="head">'.lang("forum", "replies").'</td>
+              <td class="head" align="right">'.lang("forum", "last_post").'</td>
+            </tr>';
     foreach ( $category["forums"] as $id => $forum )
     {
       if ( $forum["level_read"] > $user_lvl )
@@ -130,13 +130,13 @@ function forum_index()
       $totalreplies = $sql["mgr"]->query("SELECT id FROM forum_posts WHERE forum='".$id."';");
       $numreplies = $sql["mgr"]->num_rows($totalreplies);
       $output .= '
-              <tr>
-                <td align="left">
-                  <a href="forum.php?action=view_forum&amp;id='.$id.'">'.$forum["name"].'</a>
-                  <br />'.$forum["desc"].'
-                </td>
-                <td>'.$numtopics.'</td>
-                <td>'.$numreplies.'</td>';
+            <tr>
+              <td align="left">
+                <a href="forum.php?action=view_forum&amp;id='.$id.'">'.$forum["name"].'</a>
+                <br />'.$forum["desc"].'
+              </td>
+              <td>'.$numtopics.'</td>
+              <td>'.$numreplies.'</td>';
       if ( isset($lasts[$id]) )
       {
         // Use screen name if available
@@ -149,29 +149,28 @@ function forum_index()
         }
         $lasts[$id][2] = htmlspecialchars($lasts[$id][2]);
         $output .= '
-                <td align="right">
-                  <a href="forum.php?action=view_topic&amp;postid='.$lasts[$id][1].'">'.$lasts[$id][2].'</a>
-                  <br />'
-                  .lang("forum", "by").': '.$lasts[$id][0].'
-                  <br />'
-                  .$lasts[$id][3].'
-                </td>
-              </tr>';
+              <td align="right">
+                <a href="forum.php?action=view_topic&amp;postid='.$lasts[$id][1].'">'.$lasts[$id][2].'</a>
+                <br />'
+                .lang("forum", "by").': '.$lasts[$id][0].'
+                <br />'
+                .$lasts[$id][3].'
+              </td>
+            </tr>';
       }
       else
       {
         $output .= '
-                <td align="right">'.lang("forum", "no_topics").'</td>
-              </tr>';
+              <td align="right">'.lang("forum", "no_topics").'</td>
+            </tr>';
       }
     }
   }
   $output .= '
-              <tr>
-                <td align="right" class="hidden"></td>
-              </tr>
-            </table>
-          </center>
+            <tr>
+              <td align="right" class="hidden"></td>
+            </tr>
+          </table>
           <br/>';
 }
 
@@ -232,8 +231,7 @@ function forum_view_forum()
           <div class="top">
             <h1>'.lang("forum", "forums").'</h1>'.lang("forum", "you_are_here").': <a href="forum.php">'.lang("forum", "forum_index").'</a> -> <a href="forum.php?action=view_forum&amp;id='.$id.'">'.$forum["name"].'</a>
           </div>
-          <center>
-            <table class="lined">';
+          <table class="lined">';
   $topics = $sql["mgr"]->query("SELECT id, authorid, authorname, name, announced, sticked, closed FROM forum_posts WHERE (forum='".$id."' AND id=`topic`) OR announced = 1 AND id=`topic` ORDER BY announced DESC, sticked DESC, lastpost DESC LIMIT ".$start.", ".$maxqueries.";");
   $result = $sql["mgr"]->query("SELECT `topic` AS curtopic, (SELECT COUNT(`id`)-1 FROM forum_posts WHERE `topic`=`curtopic`) AS replies, lastpost AS curlastpost, (SELECT authorname FROM forum_posts WHERE id=curlastpost) AS authorname, (SELECT time FROM forum_posts WHERE id=curlastpost) AS time FROM `forum_posts` WHERE (`forum`=".$id." AND `topic`=`id` ) OR announced=1;");
   $lasts = array();
@@ -244,25 +242,25 @@ function forum_view_forum()
   }
   if ( $forum_skeleton[$cat]["level_post_topic"] <= $user_lvl && $forum["level_post_topic"] <= $user_lvl )
     $output .= '
-              <tr>
-                <td colspan="4" id="forum_topic_list_header">
-                  <a href="forum.php?action=add_topic&amp;id='.$id.'">'.lang("forum", "new_topic").'</a>
-                </td>
-              </tr>';
+            <tr>
+              <td colspan="4" id="forum_topic_list_header">
+                <a href="forum.php?action=add_topic&amp;id='.$id.'">'.lang("forum", "new_topic").'</a>
+              </td>
+            </tr>';
   if ( $sql["mgr"]->num_rows($topics) != 0 )
   {
     $output .= '
-              <tr>
-                <td id="forum_topic_list_header_title">'.lang("forum", "title").'</td>
-                <td id="forum_topic_list_header_author">'.lang("forum", "author").'</td>
-                <td>'.lang("forum", "replies").'</td>
-                <td>'.lang("forum", "last_post").'</td>
-              </tr>';
+            <tr>
+              <td id="forum_topic_list_header_title">'.lang("forum", "title").'</td>
+              <td id="forum_topic_list_header_author">'.lang("forum", "author").'</td>
+              <td>'.lang("forum", "replies").'</td>
+              <td>'.lang("forum", "last_post").'</td>
+            </tr>';
     while ( $topic = $sql["mgr"]->fetch_row($topics) )
     {
       $output .= '
-            <tr>
-              <td id="forum_topic_list_title">';
+          <tr>
+            <td id="forum_topic_list_title">';
       if ( $topic[4] == "1" )
         $output .= lang("forum", "announcement").": ";
       else
@@ -285,40 +283,39 @@ function forum_view_forum()
         $topic[2] = $sn["ScreenName"];
       }
       $output .= '
-                  <a href="forum.php?action=view_topic&amp;id='.$topic[0].'">'.$topic[3].'</a>
-                </td>
-                <td>'.$topic[2].'</td>
-                <td>'.$lasts[$topic[0]][1].'</td>
-                <td>'.lang("forum", "last_post_by").' '.$lasts[$topic[0]][3].', '.$lasts[$topic[0]][4].'</td>
-              </tr>';
+                <a href="forum.php?action=view_topic&amp;id='.$topic[0].'">'.$topic[3].'</a>
+              </td>
+              <td>'.$topic[2].'</td>
+              <td>'.$lasts[$topic[0]][1].'</td>
+              <td>'.lang("forum", "last_post_by").' '.$lasts[$topic[0]][3].', '.$lasts[$topic[0]][4].'</td>
+            </tr>';
     }
     $totaltopics = $sql["mgr"]->query("SELECT id FROM forum_posts WHERE forum='".$id."' AND id=`topic`;"); //My page system is so roxing, i can' t break this query xD
     $pages = ceil($sql["mgr"]->num_rows($totaltopics)/$maxqueries);
     $output .= '
-              <tr>
-                <td align="right" colspan="4">'.lang("forum", "pages").': ';
+            <tr>
+              <td align="right" colspan="4">'.lang("forum", "pages").': ';
     for ( $x = 1; $x <= $pages; $x++ )
     {
       $y = $x-1;
       $output .= '
-                  <a href="forum.php?action=view_forum&amp;id='.$id.'&amp;page='.$y.'">'.$x.'</a> ';
+                <a href="forum.php?action=view_forum&amp;id='.$id.'&amp;page='.$y.'">'.$x.'</a> ';
     }
     $output .= '
-                </td>
-              </tr>';
+              </td>
+            </tr>';
   }
   else
     $output .= '
-              <tr>
-                <td>'.lang("forum", "no_topics").'</td>
-              </tr>';
+            <tr>
+              <td>'.lang("forum", "no_topics").'</td>
+            </tr>';
 
   $output .= '
-              <tr>
-                <td align="right" class="hidden"></td>
-              </tr>
-            </table>
-          </center>
+            <tr>
+              <td align="right" class="hidden"></td>
+            </tr>
+          </table>
           <br/>';
   // Queries: 3
 }
@@ -383,9 +380,7 @@ function forum_view_topic()
         WHERE level IN (SELECT MAX(level) FROM `".$characters_db[$realm_id]['name']."`.characters WHERE account IN (";
 
     while ( $post = $sql["mgr"]->fetch_row($posts) )
-    {
       $query .= $post[1].",";
-    }
 
     mysql_data_seek($posts, 0);
 
@@ -491,12 +486,11 @@ function forum_view_topic()
         <div class="top">
           <h1>'.lang("forum", "forums").'</h1>'.lang("forum", "you_are_here").': <a href="forum.php">'.lang("forum", "forum_index").'</a> -> <a href="forum.php?action=view_forum&amp;id='.$fid.'">'.$forum["name"].'</a> -> <a href="forum.php?action=view_topic&amp;id='.$id.'">'.$post[4].'</a>
         </div>
-        <center>
-          <table class="lined">
-            <tr>
-              <td id="forum_topic_header_info">'.lang("forum", "info").'</td>
-              <td id="forum_topic_header_text">'.lang("forum", "text").'</td>
-              <td id="forum_topic_header_misc">';
+        <table class="lined">
+          <tr>
+            <td id="forum_topic_header_info">'.lang("forum", "info").'</td>
+            <td id="forum_topic_header_text">'.lang("forum", "text").'</td>
+            <td id="forum_topic_header_misc">';
     if ( $user_lvl > 0 )
     {
       if ( $post[8] == "1" )
@@ -506,21 +500,21 @@ function forum_view_topic()
           // Announcement
           $output .= 
                 lang("forum", "announcement").'
-                <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=0">
-                  <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
-                </a>';
+              <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=0">
+                <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
+              </a>';
         }
         else
         {
           // Sticky
           $output .= 
-                lang("forum", "sticky").'
-                <a href="forum.php?action=edit_stick&amp;id='.$post[0].'&amp;state=0">
-                  <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
-                </a>
-                <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=1">
-                  <img src="img/forums/up.gif" border="0" alt="'.lang("forum", "up").'" />
-                </a>';
+              lang("forum", "sticky").'
+              <a href="forum.php?action=edit_stick&amp;id='.$post[0].'&amp;state=0">
+                <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
+              </a>
+              <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=1">
+                <img src="img/forums/up.gif" border="0" alt="'.lang("forum", "up").'" />
+              </a>';
         }
       }
       else
@@ -529,37 +523,37 @@ function forum_view_topic()
         {
           // Announcement
           $output .= 
-                lang("forum", "announcement").'
-                <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=0">
-                  <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
-                </a>';
+              lang("forum", "announcement").'
+              <a href="forum.php?action=edit_announce&amp;id='.$post[0].'&amp;state=0">
+                <img src="img/forums/down.gif" border="0" alt="'.lang("forum", "down").'" />
+              </a>';
         }
         else
         {
           // Normal Topic
           $output .= 
-                lang("forum", "normal").'
-                <a href="forum.php?action=edit_stick&amp;id='.$post[0].'&amp;state=1">
-                  <img src="img/forums/up.gif" border="0" alt="'.lang("forum", "up").'" />
-                </a>';
+              lang("forum", "normal").'
+              <a href="forum.php?action=edit_stick&amp;id='.$post[0].'&amp;state=1">
+                <img src="img/forums/up.gif" border="0" alt="'.lang("forum", "up").'" />
+              </a>';
         }
       }
 
       if ( $post[9] == "1" )
         $output .= '
-                <a href="forum.php?action=edit_close&amp;id='.$post[0].'&amp;state=0">
-                  <img src="img/forums/lock.gif" border="0" alt="'.lang("forum", "open").'" />
-                </a>';
+              <a href="forum.php?action=edit_close&amp;id='.$post[0].'&amp;state=0">
+                <img src="img/forums/lock.gif" border="0" alt="'.lang("forum", "open").'" />
+              </a>';
       else
         $output .= '
-                <a href="forum.php?action=edit_close&amp;id='.$post[0].'&amp;state=1">
-                  <img src="img/forums/unlock.gif" border="0" alt="'.lang("forum", "close").'" />
-                </a>';
+              <a href="forum.php?action=edit_close&amp;id='.$post[0].'&amp;state=1">
+                <img src="img/forums/unlock.gif" border="0" alt="'.lang("forum", "close").'" />
+              </a>';
 
       $output .= '
-                <a href="forum.php?action=move_topic&amp;id='.$post[0].'">
-                  <img src="img/forums/move.gif" border="0" alt="'.lang("forum", "move").'" />
-                </a>';
+              <a href="forum.php?action=move_topic&amp;id='.$post[0].'">
+                <img src="img/forums/move.gif" border="0" alt="'.lang("forum", "move").'" />
+              </a>';
     }
     if ( isset($avatars[$post[1]]) )
       $avatar = gen_avatar_panel($avatars[$post[1]]["level"], $avatars[$post[1]]["sex"], $avatars[$post[1]]["race"], $avatars[$post[1]]["class"], ( ( $avatars[$post[1]]["gm"] ) ? 0 : 1 ), $avatars[$post[1]]["gm"]);
@@ -567,14 +561,14 @@ function forum_view_topic()
       $avatar = "";
 
     $output .= '
-              </td>
-            </tr>
-            <tr>
-              <td id="forum_topic_avatar">
-                <center>'.$avatar.'</center>'.lang("forum", "author").': ';
+            </td>
+          </tr>
+          <tr>
+            <td id="forum_topic_avatar">
+              <div>'.$avatar.'</div>'.lang("forum", "author").': ';
     if ( $user_lvl > 0 )
       $output .= '
-                <a href="user.php?action=edit_user&error=11&acct='.$post[1].'">';
+              <a href="user.php?action=edit_user&error=11&acct='.$post[1].'">';
     // Use screen name if available
     // we have to get the actual login name first here
     if ( $core == 1 )
@@ -597,29 +591,29 @@ function forum_view_topic()
       $output .= $post[2];
     if ( $user_lvl > 0 )
       $output .= '
+              </a>';
+
+    $output .= '
+              <br /> '
+              .lang("forum", "at").': '.$post[6].'
+            </td>
+            <td colspan="2" id="forum_topic_text">'
+              .$post[5].'
+              <br />
+              <div id="forum_topic_controls">';
+    if ( ( $user_lvl > 0 ) || ( $user_id == $post[1] ) )
+      $output .= '
+                <a href="forum.php?action=edit_post&amp;id='.$post[0].'">
+                  <img src="img/forums/edit.gif" border="0" alt="'.lang("forum", "edit").'" />
+                </a>
+                <a href="forum.php?action=delete_post&amp;id='.$post[0].'">
+                  <img src="img/forums/delete.gif" border="0" alt="'.lang("forum", "delete").'" />
                 </a>';
 
     $output .= '
-                <br /> '
-                .lang("forum", "at").': '.$post[6].'
-              </td>
-              <td colspan="2" id="forum_topic_text">'
-                .$post[5].'
-                <br />
-                <div id="forum_topic_controls">';
-    if ( ( $user_lvl > 0 ) || ( $user_id == $post[1] ) )
-      $output .= '
-                  <a href="forum.php?action=edit_post&amp;id='.$post[0].'">
-                    <img src="img/forums/edit.gif" border="0" alt="'.lang("forum", "edit").'" />
-                  </a>
-                  <a href="forum.php?action=delete_post&amp;id='.$post[0].'">
-                    <img src="img/forums/delete.gif" border="0" alt="'.lang("forum", "delete").'" />
-                  </a>';
-
-    $output .= '
-                </div>
-              </td>
-            </tr>';
+              </div>
+            </td>
+          </tr>';
     $closed = $post[9];
 
     while ( $post = $sql["mgr"]->fetch_row($posts) )
@@ -646,12 +640,12 @@ function forum_view_topic()
         $avatar = "";
 
       $output .= '
-            <tr>
-              <td id="forum_topic_reply_avatar">
-                <center>'.$avatar.'</center>'.lang("forum", "author").': ';
+          <tr>
+            <td id="forum_topic_reply_avatar">
+              <div class="center">'.$avatar.'</div>'.lang("forum", "author").': ';
       if ( $user_lvl > 0 )
         $output .= '
-                <a href="user.php?action=edit_user&error=11&acct='.$post[1].'">';
+              <a href="user.php?action=edit_user&error=11&acct='.$post[1].'">';
       // Use screen name if available
       // we have to get the actual login name first here
       if ( $core == 1 )
@@ -674,29 +668,29 @@ function forum_view_topic()
         $output .= $post[2];
       if ( $user_lvl > 0 )
         $output .= '
-                </a>';
+              </a>';
 
       $output .= '
-                <br /> '
-                .lang("forum", "at").': '.$post[6].'
-              </td>
-              <td colspan="2" id="forum_topic_reply_text">'
-                .$post[5].'
-                <br />';
+              <br /> '
+              .lang("forum", "at").': '.$post[6].'
+            </td>
+            <td colspan="2" id="forum_topic_reply_text">'
+              .$post[5].'
+              <br />';
       if ( ( $user_lvl > 0 ) || ( $user_id == $post[1] ) )
         $output .= '
-                <div id="forum_topic_reply_controls">
-                  <a href="forum.php?action=edit_post&amp;id='.$post[0].'">
-                    <img src="img/forums/edit.gif" border="0" alt="'.lang("forum", "edit").'" />
-                  </a>
-                  <a href="forum.php?action=delete_post&amp;id='.$post[0].'">
-                    <img src="img/forums/delete.gif" border="0" alt="'.lang("forum", "delete").'" />
-                  </a>
-                </div>';
+              <div id="forum_topic_reply_controls">
+                <a href="forum.php?action=edit_post&amp;id='.$post[0].'">
+                  <img src="img/forums/edit.gif" border="0" alt="'.lang("forum", "edit").'" />
+                </a>
+                <a href="forum.php?action=delete_post&amp;id='.$post[0].'">
+                  <img src="img/forums/delete.gif" border="0" alt="'.lang("forum", "delete").'" />
+                </a>
+              </div>';
 
       $output .= '
-              </td>
-            </tr>';
+            </td>
+          </tr>';
     }
 
 
@@ -705,62 +699,59 @@ function forum_view_topic()
 
     $pages = ceil($totalposts/$maxqueries);
     $output .= '
-            <tr>
-              <td align="right" colspan="3">'.lang("forum", "pages").': ';
+          <tr>
+            <td align="right" colspan="3">'.lang("forum", "pages").': ';
     for ( $x = 1; $x <= $pages; $x++ )
     {
       $y = $x-1;
       $output .= '
-                <a href="forum.php?action=view_topic&amp;id='.$id.'&amp;page='.$y.'">'.$x.'</a> ';
+              <a href="forum.php?action=view_topic&amp;id='.$id.'&amp;page='.$y.'">'.$x.'</a> ';
     }
     $output .= '
-              </td>
-            </tr>
-            <tr>
-              <td align="right" class="hidden"></td>
-            </tr>
-          </table>';
+            </td>
+          </tr>
+          <tr>
+            <td align="right" class="hidden"></td>
+          </tr>
+        </table>';
 
     // Quick reply form
     if ( ( ( $user_lvl > 0 ) || !$closed ) && ( $forum_skeleton[$cat]["level_post"] <= $user_lvl && $forum["level_post"] <= $user_lvl ) )
     {
       $output .= '
-          <form action="forum.php?action=do_add_post" method="POST" name="form">
-            <table class="top_hidden">
-              <tr>
-                <td>
-                  <center>'.lang("forum", "quick_reply").'</center>
-                </td>
-              </tr>
-              <tr>
-                <td colspan="2">';
+        <form action="forum.php?action=do_add_post" method="POST" id="form">
+          <table class="top_hidden">
+            <tr>
+              <td>
+                <center>'.lang("forum", "quick_reply").'</center>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">';
       bbcode_add_editor();
       $output .= '
-                  <textarea id="msg" name="msg" rows=8 cols=93></textarea>
-                </td>
-              </tr>
-              <tr>
-                <td align="left">';
+                <textarea id="msg" name="msg" rows=8 cols=93></textarea>
+              </td>
+            </tr>
+            <tr>
+              <td align="left">';
       makebutton(lang("forum", "post"), "javascript:do_submit()", 100);
       $output .= '
-                </td>
-              </tr>
-            </table>
-            <br/>
-            <input type="hidden" name="forum" value="'.$fid.'" />
-            <input type="hidden" name="topic" value="'.$id.'" />
-          </form>';
+              </td>
+            </tr>
+          </table>
+          <br/>
+          <input type="hidden" name="forum" value="'.$fid.'" />
+          <input type="hidden" name="topic" value="'.$id.'" />
+        </form>';
     }
-
-    $output .= '
-        </center>';
   }
   else
   {
     $output .= '
-      <div class="top">
-        <h1>Stand by...</h1>
-      </div>';
+        <div class="top">
+          <h1>Stand by...</h1>
+        </div>';
 
     $post = $sql["mgr"]->query("SELECT topic, id FROM forum_posts WHERE id='".$id."'"); // Get our post id
     if ( $sql["mgr"]->num_rows($post) == 0 )
@@ -1029,7 +1020,7 @@ function forum_add_topic()
             <h1>'.lang("forum", "forums").'</h1>'.lang("forum", "you_are_here").': <a href="forum.php">'.lang("forum", "forum_index").'</a> -> <a href="forum.php?action=view_forum&amp;id='.$id.'">'.$forum["name"].'</a> -> '.lang("forum", "new_topic").'
           </div>
           <center>
-            <form action="forum.php?action=do_add_topic" method="post" name="form">
+            <form action="forum.php?action=do_add_topic" method="post" id="form">
               <table class="top_hidden">
                 <tr>
                   <td>'.lang("forum", "topic_name").': <input name="name" size="40"></td>
@@ -1073,7 +1064,7 @@ function forum_do_add_topic()
     $mintimeb4post = time() - strtotime($mintimeb4post[0]);
 
     if ( $mintimeb4post < $minfloodtime )
-      error(lang("forum", "please_wait"));
+      error(lang("forum", "please_wait1")." ".$minfloodtime." ".lang("forum", "please_wait2"));
   }
 
   if ( !isset($_POST["forum"]) )
@@ -1155,7 +1146,7 @@ function forum_do_add_post()
       $mintimeb4post = time() - strtotime($mintimeb4post[0]);
 
       if ( $mintimeb4post < $minfloodtime )
-        error(lang("forum", "please_wait"));
+        error(lang("forum", "please_wait1")." ".$minfloodtime." ".lang("forum", "please_wait2"));
     }
   }
 
@@ -1262,7 +1253,7 @@ function forum_edit_post()
           <div class="top">
             <h1>'.lang("forum", "forums").'</h1>'.lang("forum", "you_are_here").': <a href="forum.php">'.lang("forum", "forum_index").'</a> -> <a href="forum.php?action=view_forum&amp;id='.$post[3].'">'.$forum["name"].'</a> -> <a href="forum.php?action=view_topic&amp;id='.$post[1].'">'.$post[4].'</a> -> '.lang("forum", "edit").'
           </div>
-          <form action="forum.php?action=do_edit_post" method="post" name="form">
+          <form action="forum.php?action=do_edit_post" method="post" id="form">
             <input type="hidden" name="forum" value="'.$post[3].'" />
             <input type="hidden" name="post" value="'.$post[0].'" />
             <center>
@@ -1400,7 +1391,7 @@ function forum_move_topic()
             <table class="lined">
               <tr>
                 <td>'.lang("forum", "where").': 
-                  <form action="forum.php?action=do_move_topic" method="post" name="form">
+                  <form action="forum.php?action=do_move_topic" method="post" id="form">
                     <select name="forum">';
 
   foreach ( $forum_skeleton as $category )
@@ -1521,6 +1512,6 @@ switch ( $action )
 
 unset($action);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

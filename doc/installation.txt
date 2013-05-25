@@ -11,6 +11,8 @@ REQUIREMENTS:
     If you are not using Apache2,
       We recommend PHP VC9 NTS.
 
+  For best functionality we recommend Apache 2.4.
+
 
 NOTICE:
 

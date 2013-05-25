@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 require_once "header.php";
 require_once "libs/char_lib.php";
 require_once "libs/spell_lib.php";
+
 // minimum permission to view page
 valid_login($action_permission["view"]);
 
@@ -271,7 +272,6 @@ function char_talent()
       }
       
       $output .= '
-          <center>
               <div class="tab">
               <ul>
                 <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -302,18 +302,19 @@ function char_talent()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
+            <div class="tab_content center center_text">
+              <span class="bold">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' - </span>
               <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-              <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'</font>
+              <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+              <span class="bold"> - '.lang("char", "level_short").char_get_level_color($char["level"]).'</span>
               <br />
               <br />';
       if ( $cur_spec == 1 )
         $output .= '
-              <font class="bold">'.lang("char", "talentspec").': '.$cur_spec.'&nbsp;<a href="char_talent.php?id='.$id.'&amp;realm='.$realm_id.'&amp;curspec='.$opp_spec.'">'.$opp_spec.'</a></font><br />';
+              <span class="bold">'.lang("char", "talentspec").': '.$cur_spec.'&nbsp;<a href="char_talent.php?id='.$id.'&amp;realm='.$realm_id.'&amp;curspec='.$opp_spec.'">'.$opp_spec.'</a></span><br />';
       else
         $output .= '
-              <font class="bold">'.lang("char", "talentspec").': <a href="char_talent.php?id='.$id.'&amp;realm='.$realm_id.'&amp;curspec='.$opp_spec.'">'.$opp_spec.'</a>&nbsp;'.$cur_spec.'</font><br />';
+              <span class="bold">'.lang("char", "talentspec").': <a href="char_talent.php?id='.$id.'&amp;realm='.$realm_id.'&amp;curspec='.$opp_spec.'">'.$opp_spec.'</a>&nbsp;'.$cur_spec.'</span><br />';
 
       if ( count($talents) > 1 )
       {
@@ -418,7 +419,7 @@ function char_talent()
                 // this_is_junk: style left hardcoded because it's calculated.
                 $output .= '
                         <td valign="bottom" align="center" style="border-top-width: 0px;border-bottom-width: 0px;background-attachment:fixed;background:url(./img/TALENTFRAME/'.$class_name.$talent_name.'.png) '.($j*(-50)).'px '.($i*(-50)).'px">
-                          <a href="'.$base_datasite.$spell_datasite.$data[$i][$j][0].'" target="_blank">
+                          <a href="'.$base_datasite.$spell_datasite.$data[$i][$j][0].'" rel="external">
                             <img src="'.spell_get_icon($data[$i][$j][0]).'" width="36" height="36" class="icon_border_'.$data[$i][$j][2].'" alt="" />
                           </a>
                           <div class="ch_tal_level_shadow">'.$data[$i][$j][1].'</div>
@@ -455,7 +456,7 @@ function char_talent()
                 </tr>
               </table>
               <br />
-              <table>
+              <table class="center">
                 <tr>
                   <td align="left">
                     '.lang("char", "talent_rate").': <br />
@@ -471,7 +472,7 @@ function char_talent()
                     '.$l.'<br />
                     '.$talent_points_left.'
                   </td>
-                  <td width="64">
+                  <td style="width: 64px">
                   </td>
                   <td align="right">';
         unset($l);
@@ -507,14 +508,14 @@ function char_talent()
           if ( isset($glyph_field["glyph6"]) )
             array_push($glyphs, $glyph_field["glyph6"]);
         }
-        for ( $i=0; $i<6; ++$i )
+        for ( $i = 0; $i < 6; ++$i )
         {
           if ( $glyphs[$i] )
           {
             $glyph = $sql["dbc"]->result($sql["dbc"]->query("SELECT spellid FROM glyphproperties WHERE id='".$glyphs[$i]."'"), 0);
 
             $output .='
-                    <a href="'.$base_datasite.$spell_datasite.$glyph.'" target="_blank">
+                    <a href="'.$base_datasite.$spell_datasite.$glyph.'" rel="external">
                       <img src="'.spell_get_icon($glyph).'" width="36" height="36" class="icon_border_0" alt="" />
                     </a>';
           }
@@ -570,7 +571,6 @@ function char_talent()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_talent.php -->';
     }
     else

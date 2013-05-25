@@ -1,6 +1,6 @@
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -56,6 +56,8 @@ a:hover, a:focus
   position: relative;
   width: 838px;
   height: 120px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .table_top_left
 {
@@ -382,6 +384,8 @@ table.top_hidden
   border-spacing: 0px;
   border-collapse: collapse;
   text-align: left;
+  margin-left: auto;
+  margin-right: auto;
 }
 table.top_hidden td, table.hidden td
 {
@@ -392,6 +396,8 @@ table.lined
   width: 770px;
   border-collapse: collapse;
   text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 table.lined, table.lined td, table.lined td.hidden
@@ -511,10 +517,12 @@ tr th a.DESC
 
 #body_main
  {
-  position: absolute;
-  left: 50%;
+  position: relative;
+  /*left: 50%;*/
   width: 800px;
-  margin-left: -400px; /* half of the width */
+  margin-left: auto;
+  margin-right: auto;
+  /*margin-left: -400px;*/ /* half of the width */
   line-height: 120%;
   text-align: center;
   font-size: /font_size_2/;
@@ -523,11 +531,13 @@ tr th a.DESC
 
 .body_main_deep
 {
-  top: 150px;
+  /*top: 150px;*/
+  margin-top: 3px;
 }
 .body_main_shallow
 {
-  top: 135px;
+  /*top: 135px;*/
+  margin-top: 10px;
 }
 
 .error
@@ -1120,6 +1130,20 @@ tr td.rep0
   display: block;
 }
 
+.no_display
+{
+  display: none;
+}
+.center_text
+{
+  text-align: center;
+}
+.center
+{
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* PAGE SPECIFIC STYLES */
 
 /* CHANGE_CHAR_NAME.PHP */
@@ -1128,6 +1152,7 @@ tr td.rep0
 #xname_fieldset
 {
   width: 310px;
+  margin-bottom: 10px;
 }
 #xname_choose
 {
@@ -1136,6 +1161,7 @@ tr td.rep0
 #xname_char_table
 {
   width: 300px;
+  margin-bottom: 10px;
 }
 .xname_radio
 {
@@ -1144,6 +1170,11 @@ tr td.rep0
 .xname_name
 {
   width: 100px;
+}
+.xname_info
+{
+  position: relative;
+  right: -2px;
 }
 .xname_LRC
 {
@@ -1159,6 +1190,8 @@ tr td.rep0
 #login_table
 {
   width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #login_realm
@@ -1182,6 +1215,24 @@ tr td.rep0
 #qiv_approve_quantity
 {
   color: YellowGreen;
+}
+#qiv_quest_select
+{
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+#qiv_item_select
+{
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
+}
+#qiv_item_quantity
+{
+  width: 300px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* REGISTER.PHP */
@@ -1296,7 +1347,7 @@ tr td.rep0
 /* USER.PHP */
 #user_new_account
 {
-  width: 550px;
+  width: 360px;
 }
 .user_edit_account
 {
@@ -1379,11 +1430,19 @@ tr td.rep0
   left: 22px;
   z-index: 99;
 }
+.color_white
+{
+  color: white;
+}
 
 /* BANNED.PHP */
 #banned_delete_cursor
 {
   cursor: pointer;
+}
+#new_banned
+{
+  width: 410px;
 }
 
 /* CHAR.PHP */
@@ -1435,6 +1494,14 @@ tr td.rep0
   top: -20px;
   left: 32px;
 }
+#ch_item_delete_wrap
+{
+  width: 300px;
+}
+#ch_item_delete_table
+{
+  width: 300px;
+}
 
 /* CHAR_ACHIEVE.PHP */
 #ch_ach_info
@@ -1475,7 +1542,13 @@ tr td.rep0
 /* CHAR_INV.PHP */
 #ch_inv_bags
 {
+  position: relative;
   width: 700px;
+}
+#ch_inv_bags_wrap
+{
+  width: 760px;
+  text-align: center;
 }
 .ch_inv_padding
 {
@@ -1518,6 +1591,11 @@ tr td.rep0
 {
   margin-left: 30px;
 }
+#ch_backpack
+{
+  margin-left: auto;
+  margin-right: auto;
+}
 #ch_money
 {
   text-align: right;
@@ -1525,6 +1603,9 @@ tr td.rep0
   background-image: none;
   background-color: #393936;
   padding: 2px;
+  padding-bottom: 7px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* CHAR_PETS.PHP */
@@ -1538,7 +1619,15 @@ tr td.rep0
 }
 
 /* CHAR_QUEST.PHP */
-#ch_que_quests
+#ch_que_questsA
+{
+  width: 550px;
+}
+#ch_que_questsB
+{
+  width: 550px;
+}
+#ch_que_questsC
 {
   width: 550px;
 }
@@ -1604,6 +1693,19 @@ tr td.rep0
   width: 400px;
 }
 
+/* CHAR_EDIT.PHP */
+#button_margins
+{
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+/* CHAR_VIEW.PHP */
+#model_view
+{
+  width: 400px;
+}
+
 /* CREATURE.PHP */
 #ch_cre_proto
 {
@@ -1615,22 +1717,58 @@ tr td.rep0
 {
   width: 550px;
 }
+#edit_fieldset_table
+{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#edit_profile_fieldset
+{
+  width: 550px;
+}
+#edit_profile_table
+{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: left;
+}
+#edit_invites_fieldset
+{
+  width: 550px;
+}
+#edit_invites_table
+{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#active_invites_table
+{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
+#edit_prizebags_fieldset
+{
+  width: 550px;
+}
+#edit_prizebags_table
+{
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+}
 #edit_theme_fieldset
 {
   width: 550px;
 }
 #edit_theme_table
 {
-  width: 510px;
-}
-#edit_profile_table
-{
-  width: 540px;
-  text-align: left;
-}
-#active_invites_table
-{
-  width: 100%;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* FOOTER.PHP */
@@ -1757,11 +1895,17 @@ tr td.rep0
   top: -20px;
   z-index: 99;
 }
+#guild_pages_background
+{
+  background-color: #383838;
+}
 
 /* GUILDBANK.PHP */
 #guildbank_tabs
 {
   width: 510px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #guildbank_padding
 {
@@ -1794,6 +1938,8 @@ tr td.rep0
 .honor_faction
 {
   width: 776px;
+  margin-left: auto;
+  margin-right: auto;
 }
 #honor_alliance_ranks
 {
@@ -1822,6 +1968,8 @@ tr td.rep0
 {
   font-size: /font_size_10/;
   color: orange;
+  text-align: center;
+  width: 100%;
 }
 #index_realm_info
 {
@@ -1907,7 +2055,7 @@ tr td.rep0
 }
 .map_image
 {
-  z-index: -1;
+  position: relative;
 }
 .dis_button
 {
@@ -1929,8 +2077,12 @@ tr td.rep0
 /* CHAR_LIST.PHP */
 #char_list_bubble
 {
-  width: 813px;
-  left: -7px;
+  width: 835px;
+  left: -17px;
+}
+#char_list_delete_wrap
+{
+  width: 300px;
 }
 
 /* CHAR_PVP.PHP */
@@ -1963,6 +2115,16 @@ tr td.rep0
 .char_tools_avatar
 {
   width: 150px;
+}
+
+/* ERROR.PHP */
+#error_message_table
+{
+  width: 400px;
+}
+#error_buttons
+{
+  width: 300px;
 }
 
 /* OBJECT.PHP */

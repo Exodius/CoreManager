@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -117,26 +117,32 @@ function accounts()
   if ( !$accounts_action )
   {
     $output .= '
-        <center>
-          <table class="hidden">
-            <tr>
-              <td>
-                <form action="admin.php" method="get" name="form">
-                  <input type="hidden" name="section" value="accounts" />
+        <div class="center" id="admin_accounts_search">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="accounts" />
+            </div>
+            <table class="hidden" id="admin_accounts_search_table">
+              <tr>
+                <td>
                   <input type="text" size="24" maxlength="50" name="search_value" value="'.$search_value.'" />
+                </td>
+                <td>
                   <select name="search_by">';
   foreach ( $search_menu as $row )
   {
     $output .= '
-                            <option value="'.$row[0].'"'.( ( $search_by === $row[0] ) ? ' selected="selected"' : '' ).'>'.lang("admin", $row[1]).'</option>';
+                    <option value="'.$row[0].'"'.( ( $search_by === $row[0] ) ? ' selected="selected"' : '' ).'>'.lang("admin", $row[1]).'</option>';
   }
   $output .= '
                   </select>
+                </td>
+                <td>
                   <input type="submit" name="search" value="'.lang("global", "search").'" />
-                </form>
-              </td>
-            </tr>
-          </table>';
+                </td>
+              </tr>
+            </table>
+          </form>';
 
     $output .= '
           <a href="admin.php?section=accounts&amp;order_by='.$order_by.'&amp;start='.$start.'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;perpage='.$accts_per_page.'">'.lang("admin", "clearsearch").'</a>
@@ -176,30 +182,28 @@ function accounts()
               </td>
             </tr>
           </table>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="accounts" />
-            <table class="simple admin_accounts">
-              <tr>
-                <th width="10%">'.lang("admin", "edit").'</th>
-                <th>
-                  <a href="admin.php?section=accounts&amp;order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'acct' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "acct").'</a>
-                </th>
-                <th>
-                  <a href="admin.php?section=accounts&amp;order_by=login&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'login' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "login").'</a>
-                </th>
-                <th>
-                  <a href="admin.php?section=accounts&amp;order_by=ScreenName&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'ScreenName' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "screenname").'</a>
-                </th>
-                <th width="20%">
-                  <a href="admin.php?section=accounts&amp;order_by=SecurityLevel&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'SecurityLevel' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "seclvl").'</a>
-                </th>
-                <th width="15%">
-                  <a href="admin.php?section=accounts&amp;order_by=WebAdmin&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'WebAdmin' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "acpaccess").'</a>
-                </th>
-                <th width="15%">
-                  <a href="admin.php?section=accounts&amp;order_by=TempPassword&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'TempPassword' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "confirm_account").'</a>
-                </th>
-              </tr>';
+          <table class="simple admin_accounts">
+            <tr>
+              <th style="width: 10%;">'.lang("admin", "edit").'</th>
+              <th>
+                <a href="admin.php?section=accounts&amp;order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'acct' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "acct").'</a>
+              </th>
+              <th>
+                <a href="admin.php?section=accounts&amp;order_by=login&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'login' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "login").'</a>
+              </th>
+              <th>
+                <a href="admin.php?section=accounts&amp;order_by=ScreenName&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'ScreenName' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "screenname").'</a>
+              </th>
+              <th style="width: 20%;">
+                <a href="admin.php?section=accounts&amp;order_by=SecurityLevel&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'SecurityLevel' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "seclvl").'</a>
+              </th>
+              <th style="width: 15%;">
+                <a href="admin.php?section=accounts&amp;order_by=WebAdmin&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'WebAdmin' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "acpaccess").'</a>
+              </th>
+              <th style="width: 15%;">
+                <a href="admin.php?section=accounts&amp;order_by=TempPassword&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'&amp;perpage='.$accts_per_page.'"'.( ( $order_by == 'TempPassword' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("admin", "confirm_account").'</a>
+              </th>
+            </tr>';
     $color = "#EEEEEE";
     while ( $acct = $sqll->fetch_assoc($result) )
     {
@@ -215,54 +219,52 @@ function accounts()
       $sl = $sqlm->fetch_assoc($sl_result);
 
       $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=accounts&amp;acct='.$acct["login"].'&amp;editacct=editaccount">
-                      <img src="img/edit.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$acct["acct"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.ucfirst(strtolower($acct["login"])).'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$acct["ScreenName"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$sl["Full_Name"].' ('.$acct["SecurityLevel"].')</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <img src="img/'.( ( $acct["WebAdmin"] ) ? 'up' : 'down' ).'.gif" alt="" />
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=accounts&amp;acct='.$acct["login"].'&amp;editacct=editaccount">
+                    <img src="img/edit.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$acct["acct"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.strtolower($acct["login"]).'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$acct["ScreenName"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$sl["Full_Name"].' ('.$acct["SecurityLevel"].')</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <img src="img/'.( ( $acct["WebAdmin"] ) ? 'up' : 'down' ).'.gif" alt="" />
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">';
 
       if ( $acct["TempPassword"] != "" )
         $output .= '
-                  <center>
-                    <a href="register.php?action=do_activate&amp;key='.$acct["TempPassword"].'&amp;redirect=1" onmouseover="oldtoolTip(\''.lang("admin", "confirm_account_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                      <img src="img/aff_tick.png" alt="" />
-                    </a>
-                  </center>';
+                <center>
+                  <aspanhref="register.php?action=do_activate&amp;key='.$acct["TempPassword"].'&amp;redirect=1" onmouseover="oldtoolTip(\''.lang("admin", "confirm_account_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                    <img src="img/aff_tick.png" alt="" />
+                  </a>
+                </span>';
       else
         $output .= '
-                  &nbsp;';
+                &nbsp;';
 
       $output .= '
-                </td>
-              </tr>';
+              </td>
+            </tr>';
       $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
     }
     $output .= '
-            </table>
-            <!-- input type="submit" name="editacct" value="'.lang("admin", "editacct").'" -->
-          </form>
-        </center>';
+          </table>
+        </div>';
   }
   else
   {
@@ -288,14 +290,16 @@ function accounts()
     $web_admin_only = ($sn_acct["SecurityLevel"] & 1073741824);
 
     $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="accounts" />
-            <input type="hidden" name="action" value="saveacct" />
-            <fieldset id="admin_edit_account">
+        <div id="admin_edit_account">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="accounts" />
+              <input type="hidden" name="action" value="saveacct" />
+            </div>
+            <fieldset>
               <table>
                 <tr>
-                  <td width="50%">'.lang("admin", "login").': </td>
+                  <td style="width: 50%;">'.lang("admin", "login").': </td>
                   <td>
                     <input type="text" readonly="readonly" name="login" value="'.$logon_acct["login"].'" />
                   </td>
@@ -324,14 +328,16 @@ function accounts()
                     <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "acpaccess_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "acpaccess").'</a>:
                   </td>
                   <td>
-                    <input type="checkbox" name="acp" '.($web_admin_only ? 'checked' : '').' />
+                    <input type="checkbox" name="acp" '.($web_admin_only ? 'checked="checked"' : '').' />
                   </td>
                 </tr>
               </table>
             </fieldset>
-            <input type="submit" name="saveacct" value="'.lang("admin", "save").'" />
+            <div>
+              <input type="submit" name="saveacct" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
   }
 }
 

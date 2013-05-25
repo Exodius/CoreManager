@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,22 +18,23 @@
 */
 
 
-require_once("header.php");
-require_once 'libs/char_lib.php';
+require_once "header.php" ;
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 $go_types = array
 (
-  0 => array(0, lang("game_object", "DOOR")),
-  1 => array(1, lang("game_object", "BUTTON")),
-  2 => array(2, lang("game_object", "QUESTGIVER")),
-  3 => array(3, lang("game_object", "CHEST")),
-  4 => array(4, lang("game_object", "BINDER")),
-  5 => array(5, lang("game_object", "GENERIC")),
-  6 => array(6, lang("game_object", "TRAP")),
-  7 => array(7, lang("game_object", "CHAIR")),
-  8 => array(8, lang("game_object", "SPELL_FOCUS")),
-  9 => array(9, lang("game_object", "TEXT")),
+   0 => array( 0, lang("game_object", "DOOR")),
+   1 => array( 1, lang("game_object", "BUTTON")),
+   2 => array( 2, lang("game_object", "QUESTGIVER")),
+   3 => array( 3, lang("game_object", "CHEST")),
+   4 => array( 4, lang("game_object", "BINDER")),
+   5 => array( 5, lang("game_object", "GENERIC")),
+   6 => array( 6, lang("game_object", "TRAP")),
+   7 => array( 7, lang("game_object", "CHAIR")),
+   8 => array( 8, lang("game_object", "SPELL_FOCUS")),
+   9 => array( 9, lang("game_object", "TEXT")),
   10 => array(10, lang("game_object", "GOOBER")),
   11 => array(11, lang("game_object", "TRANSPORT")),
   12 => array(12, lang("game_object", "AREADAMAGE")),
@@ -151,71 +152,72 @@ function search()
     $type = -1;
 
   $output .= '
-        <center>
-          <div class="fieldset_border">
-            <span class="legend">'.lang("game_object", "search_template").'</span>
-            <br />
-            <form action="object.php" method="get" name="form">
+        <div class="fieldset_border">
+          <span class="legend">'.lang("game_object", "search_template").'</span>
+          <br />
+          <form action="object.php" method="get" id="form">
+            <div>
               <!-- input type="hidden" name="action" value="do_search" / -->
               <input type="hidden" name="error" value="2" />
-              <table class="hidden">
-                <tr>
-                  <td>'.lang("game_object", "entry").':</td>
-                  <td>
-                    <input type="text" size="14" maxlength="11" name="entry" value="'.$entry.'" />
-                  </td>
-                  <td>'.lang("game_object", "name").':</td>
-                  <td colspan="3">
-                    <input type="text" size="45" maxlength="100" name="name" value="'.$name.'" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
-                  <td>'.lang("game_object", "type").':</td>
-                  <td colspan="3" align="left">
-                    <select name="type">
-                      <option value="-1"'.( ( $type == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("game_object", "select").'</option>';
+            </div>
+            <table class="hidden center">
+              <tr>
+                <td>'.lang("game_object", "entry").':</td>
+                <td>
+                  <input type="text" size="14" maxlength="11" name="entry" value="'.$entry.'" />
+                </td>
+                <td>'.lang("game_object", "name").':</td>
+                <td colspan="3">
+                  <input type="text" size="45" maxlength="100" name="name" value="'.$name.'" />
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>'.lang("game_object", "type").':</td>
+                <td colspan="3" align="left">
+                  <select name="type">
+                    <option value="-1"'.( ( $type == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("game_object", "select").'</option>';
   foreach ( $go_types as $row )
     $output .= '
-                      <option value="'.$row[0].'"'.( ( $type == $row[0] ) ? ' selected="selected" ' : '' ).'>'.$row[0].' '.$row[1].'</option>';
+                    <option value="'.$row[0].'"'.( ( $type == $row[0] ) ? ' selected="selected" ' : '' ).'>'.$row[0].' '.$row[1].'</option>';
   $output .= '
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("game_object", "displayId").':</td>
-                  <td>
-                    <input type="text" size="14" maxlength="11" name="displayid" value="'.$displayid.'" />
-                  </td>';
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("game_object", "displayId").':</td>
+                <td>
+                  <input type="text" size="14" maxlength="11" name="displayid" value="'.$displayid.'" />
+                </td>';
     $output .= '
-                  <td>'.lang("game_object", "flags").':</td>
-                  <td align="left">
-                    <input type="text" size="15" maxlength="11" name="flags" value="'.$flags.'" />
-                  </td>';
+                <td>'.lang("game_object", "flags").':</td>
+                <td align="left">
+                  <input type="text" size="15" maxlength="11" name="flags" value="'.$flags.'" />
+                </td>';
   if ( $core != 1 )
     $output .= '
-                  <td>'.lang("game_object", "faction").':</td>
-                  <td align="left">
-                    <input type="text" size="14" maxlength="11" name="faction" value="'.$faction.'" />
-                  </td>';
+                <td>'.lang("game_object", "faction").':</td>
+                <td align="left">
+                  <input type="text" size="14" maxlength="11" name="faction" value="'.$faction.'" />
+                </td>';
   else
     $output .= '
-                  <td colspan="2">&nbsp;</td>';
+                <td colspan="2">&nbsp;</td>';
   $output .= '
-                </tr>
-                <tr>
-                  <td colspan="3">';
+              </tr>
+              <tr>
+                <td colspan="3">';
   makebutton(lang("game_object", "search"), "javascript:do_submit()", 150);
   $output .= '
-                  </td>
-                  <td colspan="3">'.lang("game_object", "tot_go_templ").': '.$tot_go.'</td>
-                </tr>
-              </table>
-            </form>
-          </div>
-          <br />
-          <br />';
+                </td>
+                <td colspan="3">'.lang("game_object", "tot_go_templ").': '.$tot_go.'</td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <br />
+        <br />';
 
   // now we only want $type if it has REAL content
   if ( $type == -1 )
@@ -279,34 +281,34 @@ function search()
   $total_found = $total_result["COUNT(*)"];
 
   $output .= '
-          <table class="top_hidden">
-            <tr>
-              <td>';
+        <table class="top_hidden">
+          <tr>
+            <td>';
   makebutton(lang("game_object", "new_search"), "object.php", 160);
   $output .= '
-              </td>
-              <td align="right">'.lang("game_object", "tot_found").' : '.$total_found.'</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td align="right">';
+            </td>
+            <td align="right">'.lang("game_object", "tot_found").' : '.$total_found.'</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td align="right">';
   $output .= generate_pagination('object.php?order_by='.$order_by.'&amp;dir='.( ($dir) ? 0 : 1 ).( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ), $total_found, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>
-          <table class="lined">
-            <tr>
-              <th width="10%">'.lang("game_object", "entry").'</th>
-              <th width="40%">'.lang("game_object", "name").'</th>
-              <th width="20%">'.lang("game_object", "type").'</th>
-              <th width="15%">'.lang("game_object", "displayId").'</th>';
+            </td>
+          </tr>
+        </table>
+        <table class="lined">
+          <tr>
+            <th style="width: 10%;">'.lang("game_object", "entry").'</th>
+            <th style="width: 40%;">'.lang("game_object", "name").'</th>
+            <th style="width: 20%;">'.lang("game_object", "type").'</th>
+            <th style="width: 15%;">'.lang("game_object", "displayId").'</th>';
   if ( $core != 1 )
     $output .= '
-              <th width="15%">'.lang("game_object", "faction").'</th>';
+            <th style="width: 15%;">'.lang("game_object", "faction").'</th>';
   $output .= '
-              <th>'.lang("game_object", "spawncount").'</th>
-            </tr>';
+            <th>'.lang("game_object", "spawncount").'</th>
+          </tr>';
 
   for ( $i = 1; $i <= $page_total; $i++ )
   {
@@ -329,33 +331,32 @@ function search()
     $spawn_count = $count_result["COUNT(*)"];
 
     $output .= '
-            <tr>
-              <td>
-                <a href="object.php?action=view&amp;entry='.$go["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.$go["entry"].'</a>
-              </td>
-              <td>
-                <a href="object.php?action=view&amp;entry='.$go["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.htmlspecialchars($go["name"], ENT_COMPAT, $site_encoding).'</a>
-              </td>
-              <td>'.get_go_type($go["type"]).'</td>
-              <td>'.$go["displayId"].'</td>';
+          <tr>
+            <td>
+              <a href="object.php?action=view&amp;entry='.$go["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.$go["entry"].'</a>
+            </td>
+            <td>
+              <a href="object.php?action=view&amp;entry='.$go["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.htmlspecialchars($go["name"], ENT_COMPAT, $site_encoding).'</a>
+            </td>
+            <td>'.get_go_type($go["type"]).'</td>
+            <td>'.$go["displayId"].'</td>';
     if ( $core != 1 )
       $output .= '
-              <td>'.$go["faction"].'</td>';
+            <td>'.$go["faction"].'</td>';
     $output .= '
-              <td>'.$spawn_count.'</td>
-            </tr>';
+            <td>'.$spawn_count.'</td>
+          </tr>';
   }
   $output .= '
-          </table>
-          <table class="top_hidden">
-            <tr>
-              <td align="right">';
+        </table>
+        <table class="top_hidden">
+          <tr>
+            <td align="right">';
   $output .= generate_pagination('object.php?order_by='.$order_by.'&amp;dir='.( ($dir) ? 0 : 1 ).( ( $name ) ? '&amp;name='.$name : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $faction ) ? '&amp;faction='.$faction : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ), $total_found, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>
-        </center>
+            </td>
+          </tr>
+        </table>
         <br />';
 }
 
@@ -390,14 +391,14 @@ function view_go()
   if ( $show == 4395 )
   {
     if ( $floor == 505 )
-      $display_floor = ' AND worldmaparea_fine.ID=505';
+      $display_floor = " AND worldmaparea_fine.ID=505";
     else
       // we default to Dalaran
-      $display_floor = ' AND worldmaparea_fine.ID=504';
+      $display_floor = " AND worldmaparea_fine.ID=504";
   }
   else
     // we aren't showing Dalaran or The Underbelly
-    $display_floor = '';
+    $display_floor = "";
 
   // object info
   if ( $core == 1 )
@@ -446,13 +447,12 @@ function view_go()
   $result = $sql["world"]->query($query_areas);
 
   $output .= '
-        <div class="gob_header">
+        <div class="gob_header center">
           <span class="gob_name">'.$go_info["name"].'</span>
           <hr />
         </div>
-        <center>
-          <div>
-            <span>'.lang("game_object", "foundin").'</span>';
+        <div class="center_text">
+          <span>'.lang("game_object", "foundin").'</span>';
 
   while ( $row = $sql["world"]->fetch_assoc($result) )
   {
@@ -488,14 +488,14 @@ function view_go()
     // show zones with spawns and counts
     if ( $row["AreaTable"] != $show )
       $output .= '
-            <a href="object.php?action=view&amp;entry='.$entry.'&amp;show='.$row["AreaTable"].( ( $row["AreaTable"] == 4395 ) ? '&amp;floor='.$row["ID"] : '' ).'&amp;error=3">'.$row["Name"]. "</a>&nbsp;(".$total_by_area.') ';
+          <a href="object.php?action=view&amp;entry='.$entry.'&amp;show='.$row["AreaTable"].( ( $row["AreaTable"] == 4395 ) ? '&amp;floor='.$row["ID"] : '' ).'&amp;error=3">'.$row["Name"]. "</a>&nbsp;(".$total_by_area.') ';
     else
       $output .= '
-            <span class="zone_active">'.$row["Name"]. "</span>&nbsp;(".$total_by_area.') ';
+          <span class="zone_active">'.$row["Name"]. "</span>&nbsp;(".$total_by_area.') ';
   }
 
   $output .= '
-          </div>';
+        </div>';
 
   if ( $core == 1 )
     $query = "SELECT gameobject_spawns.id AS guid, Yw, Xw, position_y, position_x, position_z, worldmaparea.X1 AS XBase, worldmaparea.Y1 AS YBase, Z1, Z2 FROM gameobject_spawns
@@ -521,7 +521,6 @@ function view_go()
 
   // show selected map
   $output .= '
-        </center>
         <div class="mini_map">
           <img src="img/map/area_small/'.$show_map["RefCon"].'.png" alt="'.$show_map["Name"].'" />';
 
@@ -661,19 +660,19 @@ switch ( $err )
   case 1:
     $output .= '
           <h1>
-            <font class="error">'.lang("global", "empty_fields").'</font>
+            <span class="error">'.lang("global", "empty_fields").'</span>
           </h1>';
     break;
   case 2:
     $output .= '
           <h1>
-            <font class="error">'.lang("game_object", "search_results").'</font>
+            <span class="error">'.lang("game_object", "search_results").'</span>
           </h1>';
     break;
   case 3:
     $output .= '
           <h1>
-            <font class="error">'.lang("game_object", "view_go").'</font>
+            <span class="error">'.lang("game_object", "view_go").'</span>
           </h1>';
     break;
   default: //no error
@@ -698,5 +697,5 @@ switch ( $action )
     search();
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

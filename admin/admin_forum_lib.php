@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,9 +46,11 @@ function forum()
     {
       $cats = $sqlm->query("SELECT * FROM config_forum_categories");
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="forum" />
+        <div class="center" id="admin_forum_categories">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="forum" />
+            </div>
             <table class="simple admin_top_menus">
               <tr>
                 <th colspan="2">'.lang("admin", "cats").'</th>
@@ -56,8 +58,8 @@ function forum()
             </table>
             <table class="simple admin_top_menus">
               <tr>
-                <th width="15%">'.lang("admin", "edit").'</th>
-                <th width="5%">'.lang("admin", "remove").'</th>
+                <th style="width: 15%;">'.lang("admin", "edit").'</th>
+                <th style="width: 5%;">'.lang("admin", "remove").'</th>
                 <th>'.lang("admin", "name").'</th>
               </tr>';
       $color = "#EEEEEE";
@@ -65,45 +67,42 @@ function forum()
       {
         $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;category='.$cat["Index"].'&amp;editforum=editforum">
                       <img src="img/edit.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;category='.$cat["Index"].'&amp;delforum=delforum">
                       <img src="img/aff_cross.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$cat["Name"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$cat["Name"].'</span>
                 </td>
               </tr>';
         $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
       }
       $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;addforum=addforum">
                       <img src="img/add.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
                 <td style="background-color:'.$color.'" colspan="2">
                   <a href="admin.php?section=forum&amp;addforum=addforum">'.lang("admin", "addforum").'</a>
                 </td>
               </tr>
             </table>
-            <!-- input type="submit" name="editforum" value="'.lang("admin", "editforum").'">
-            <input type="submit" name="addforum" value="'.lang("admin", "addforum").'">
-            <input type="submit" name="delforum" value="'.lang("admin", "delforum").'" -->
           </form>
-        </center>';
+        </div>';
       break;
     }
     case "edit":
@@ -112,10 +111,12 @@ function forum()
       $cat = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_forum_categories WHERE `Index`='".$cat_id."'"));
       $sec_levels = sec_level_list();
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="forum" />
-            <input type="hidden" name="category" value="'.$cat_id.'" />
+        <div class="center" id="admin_edit_forum_wrap">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="forum" />
+              <input type="hidden" name="category" value="'.$cat_id.'" />
+            </div>
             <table class="simple" id="admin_edit_top_menu_nameaction">
               <tr>
                 <th colspan="2">'.lang("admin", "cat").'</th>
@@ -131,8 +132,8 @@ function forum()
               <tr>
                 <th>'.lang("admin", "edit").'</th>
                 <th>'.lang("admin", "remove").'</th>
-                <th>'.lang("admin", "name").'</th>
-                <th>'.lang("admin", "desc").'</th>
+                <th style="width: 25%;">'.lang("admin", "name").'</th>
+                <th style="width: 25%;">'.lang("admin", "desc").'</th>
                 <th>'.lang("admin", "sideaccess").'</th>
                 <th>'.lang("admin", "secread").'</th>
                 <th>'.lang("admin", "secpost").'</th>
@@ -144,61 +145,60 @@ function forum()
       {
         $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;category='.$cat_id.'&amp;forum_item='.$forum["Index"].'&amp;editforum_item=editforumsection">
                       <img src="img/edit.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;category='.$cat_id.'&amp;forum_item='.$forum["Index"].'&amp;delforum_item=delforumsection">
                       <img src="img/aff_cross.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td width="25%" style="background-color:'.$color.'">
-                <center>'.$forum["Name"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$forum["Name"].'</span>
                 </td>
-                <td width="25%" style="background-color:'.$color.'">
-                  <center>'.$forum["Desc"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$forum["Desc"].'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$forum["Side_Access"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$forum["Side_Access"].'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($forum["Min_Security_Level_Read"]).'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($forum["Min_Security_Level_Read"]).'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($forum["Min_Security_Level_Post"]).'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($forum["Min_Security_Level_Post"]).'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($forum["Min_Security_Level_Create_Topic"]).'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($forum["Min_Security_Level_Create_Topic"]).'</span>
                 </td>
               </tr>';
         $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
       }
       $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=forum&amp;category='.$cat_id.'&amp;addforum_item=addforumsection">
                       <img src="img/add.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
                 <td style="background-color:'.$color.'" colspan="7">
                   <a href="admin.php?section=forum&amp;category='.$cat_id.'&amp;addforum_item=addforumsection">'.lang("admin", "addforum_item").'</a>
                 </td>
               </tr>
             </table>
-            <!-- input type="submit" name="editforum_item" value="'.lang("admin", "editforum_item").'">
-            <input type="submit" name="addforum_item" value="'.lang("admin", "addforum_item").'" -->
-            <input type="submit" name="saveforum" value="'.lang("admin", "save").'" />
-            <!-- input type="submit" name="delforum_item" value="'.lang("admin", "delforum_item").'" -->
+            <div>
+              <input type="submit" name="saveforum" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
       break;
     }
     case "edititem":
@@ -210,12 +210,14 @@ function forum()
       $cat_list_result = $sqlm->query($cat_list_query);
 
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="forum" />
-            <input type="hidden" name="action" value="saveforum" />
-            <input type="hidden" name="forum_item" value="'.$forum_item.'" />
-            <fieldset id="admin_edit_forum_field">
+        <div id="admin_edit_forum_field">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="forum" />
+              <input type="hidden" name="action" value="saveforum" />
+              <input type="hidden" name="forum_item" value="'.$forum_item.'" />
+            </div>
+            <fieldset>
               <table class="help" id="admin_edit_forum_item">
                 <tr>
                   <td>
@@ -304,9 +306,11 @@ function forum()
                 </tr>
               </table>
             </fieldset>
-            <input type="submit" name="save_forum_item" value="'.lang("admin", "save").'" />
+            <div>
+              <input type="submit" name="save_forum_item" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
       break;
     }
     case "addforum":

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 require_once "header.php";
 require_once "libs/char_lib.php";
 require_once "libs/forum_lib.php";
+
 // minimum permission to view page
 valid_login($action_permission["view"]);
 
@@ -340,10 +341,9 @@ function browse_users()
   $output .= '
           <!-- start of user.php -->
           <script type="text/javascript" src="libs/js/check.js"></script>
-          <center>
-            <table class="top_hidden">
-              <tr>
-                <td>';
+          <table class="top_hidden">
+            <tr>
+              <td>';
   if ( $user_lvl >= $action_permission["insert"] )
   {
     makebutton(lang("user", "add_acc"), 'user.php?action=add_new', 130);
@@ -360,8 +360,8 @@ function browse_users()
     makebutton(lang("user", "user_list"), 'user.php', 130);
 
   $output .= '
-                </td>
-                <td align="right" width="25%" rowspan="2">';
+              </td>
+              <td align="right" style="width: 25%;" rowspan="2">';
 
   // multi page links
   $output .=
@@ -369,14 +369,15 @@ function browse_users()
   generate_pagination('user.php?order_by='.$order_by.'&amp;dir='.( ($dir) ? 0 : 1 ).( $search_value && $search_by ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'', $all_record, $itemperpage, $start);
   // this part for search
   $output .= '
-                </td>
-              </tr>
-              <tr align="left">
-                <td>
-                  <table class="hidden">
-                    <tr>
-                      <td>
-                        <form action="user.php" method="get" name="form">
+              </td>
+            </tr>
+            <tr align="left">
+              <td>
+                <table class="hidden">
+                  <tr>
+                    <td>
+                      <form action="user.php" method="get" id="form">
+                        <div>
                           <input type="hidden" name="error" value="3" />
                           <input type="text" size="24" maxlength="50" name="search_value" value="'.$search_value.'" />
                           <select name="search_by">';
@@ -387,77 +388,80 @@ function browse_users()
   }
   $output .= '
                           </select>
-                        </form>
-                      </td>
-                      <td>';
+                        </div>
+                      </form>
+                    </td>
+                    <td>';
   makebutton(lang("global", "search"), 'javascript:do_submit()',80);
   $output .= '
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>';
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>';
   //==========================top tage navigaion ENDS here ========================
   $output .= '
-            <form method="get" action="user.php" name="form1">
+          <form method="get" action="user.php" id="form1">
+            <div>
               <input type="hidden" name="action" value="del_user" />
               <input type="hidden" name="start" value="'.$start.'" />
               <input type="hidden" name="backup_op" value="0"/>
-              <table class="lined">
-                <tr>
-                  <td colspan="8" align="left" class="hidden">';
+            </div>
+            <table class="lined">
+              <tr>
+                <td colspan="8" align="left" class="hidden">';
   if ( $user_lvl >= $action_permission["delete"] )
     makebutton(lang("user", "del_selected_users"), 'javascript:do_submit(\'form1\',0)" type="wrn',230);
   $output .= '
-                  </td>
-                </tr>
-                <tr>';
+                </td>
+              </tr>
+              <tr>';
   // column headers, with links for sorting
   // first column is the  selection check box
   if ( $user_lvl >= $action_permission["insert"] )
     $output.= '
-                  <th width="1%">
-                    <input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.form1);" />
-                  </th>';
+                <th style="width: 1%;">
+                  <input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.getElementById(\'form1\'));" />
+                </th>';
   else
     $output .= '
-                  <th width="1%"></th>';
+                <th style="width: 1%;"></th>';
   //expander symbol
   $output .= '
-                  <th width="1%"></th>';
+                <th style="width: 1%;"></th>';
   $output .='
-                  <th width="1%"><a href="user.php?order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='acct' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "acct").'</a></th>
-                  <th width="1%"><a href="user.php?order_by=login&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='login' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "login").'</a></th>
-                  <th width="1%">'.lang("user", "screenname").'</th>
-                  <th width="1%"><a href="user.php?order_by=gm&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='gm' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "gm_level").'</a></th>
-                  <th width="1%">'.lang("user", "sec_level").'</th>';
+                <th style="width: 1%;"><a href="user.php?order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='acct' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "acct").'</a></th>
+                <th style="width: 1%;"><a href="user.php?order_by=login&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='login' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "login").'</a></th>
+                <th style="width: 1%;">'.lang("user", "screenname").'</th>
+                <th style="width: 1%;"><a href="user.php?order_by=gm&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='gm' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "gm_level").'</a></th>
+                <th style="width: 1%;">'.lang("user", "sec_level").'</th>';
   if ( $expansion_select )
     $output .='
-                  <th width="1%"><a href="user.php?order_by=flags&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='flags' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "expansion_short").'</a></th>';
+                <th style="width: 1%;"><a href="user.php?order_by=flags&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='flags' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "expansion_short").'</a></th>';
   $output .='
-                  <th width="1%"><a href="user.php?order_by=email&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='email' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "email").'</a></th>
-                  <!-- <th width="1%"><a href="user.php?order_by=joindate&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='joindate' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "join_date").'</a></th> -->
-                  <th width="1%"><a href="user.php?order_by=lastip&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='lastip' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "ip").'</a></th>
-                  <th width="1%">'.lang("user", "char_count").'</th>';
+                <th style="width: 1%;"><a href="user.php?order_by=email&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='email' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "email").'</a></th>
+                <!-- <th style="width: 1%;"><a href="user.php?order_by=joindate&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='joindate' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "join_date").'</a></th> -->
+                <th style="width: 1%;"><a href="user.php?order_by=lastip&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='lastip' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "ip").'</a></th>
+                <th style="width: 1%;">'.lang("user", "char_count").'</th>';
     if ( $core == 1 )
       $output .= '
-                  <th width="1%"><a href="user.php?order_by=muted&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='muted' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "muted").'</a></th>';
+                <th style="width: 1%;"><a href="user.php?order_by=muted&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='muted' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "muted").'</a></th>';
     else
       $output .= '
-                  <th width="1%"><a href="user.php?order_by=muted&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='muted' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "locked").'</a></th>';
+                <th style="width: 1%;"><a href="user.php?order_by=muted&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='muted' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "locked").'</a></th>';
     $output .= '
-                  <th width="1%"><a href="user.php?order_by=lastlogin&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='lastlogin' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "last_login").'</a></th>
-                  <th width="1%">'.lang("user", "online").'</th>';
+                <th style="width: 1%;"><a href="user.php?order_by=lastlogin&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.( ( $order_by=='lastlogin' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("user", "last_login").'</a></th>
+                <th style="width: 1%;">'.lang("user", "online").'</th>';
   if ( $showcountryflag )
   {
     require_once "libs/misc_lib.php";
     $output .= '
-                  <th width="1%">'.lang("global", "country").'</th>';
+                <th style="width: 1%;">'.lang("global", "country").'</th>';
   }
   $output .= '
-                  <th width="1%">'.lang("user", "banned").'</th>
-                </tr>';
+                <th style="width: 1%;">'.lang("user", "banned").'</th>
+              </tr>';
 
   //---------------Page Specific Data Starts Here--------------------------
   while ( $data = $sql["logon"]->fetch_assoc($query) )
@@ -520,72 +524,72 @@ function browse_users()
     //if ( ( $user_lvl >= gmlevel($screenname["sec_lvl"]) ) || ( $user_name == $data["login"] ) )
     {
       $output .= '
-                <tr>';
+              <tr>';
       if ( $user_lvl >= $action_permission["insert"] )
         $output .= '
-                  <td><input type="checkbox" name="check[]" value="'.$data["acct"].'" onclick="CheckCheckAll(document.form1);" /></td>';
+                <td><input type="checkbox" name="check[]" value="'.$data["acct"].'" onclick="CheckCheckAll(document.getElementById(\'form1\'));" /></td>';
       else
         $output .= '
-                  <td>*</td>';
+                <td>*</td>';
       // show character expander symbol
       if ( ( $show_chars == 0 ) || ( $show_chars != $data["acct"] ) )
         $output .= '
-                  <td>
-                    <a href="user.php?order_by='.$order_by.'&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;show_chars='.$data["acct"].'">+</a>
-                  </td>';
+                <td>
+                  <a href="user.php?order_by='.$order_by.'&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;show_chars='.$data["acct"].'">+</a>
+                </td>';
       else
         $output .= '
-                  <td>
-                    <a href="user.php?order_by='.$order_by.'&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;show_chars=0">&#8211;</a>
-                  </td>';
+                <td>
+                  <a href="user.php?order_by='.$order_by.'&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.( ( $dir ) ? 0 : 1 ).'&amp;show_chars=0">&#8211;</a>
+                </td>';
 
       if ( ( $user_lvl >= $action_permission["insert"] ) || ( $user_name == $data["login"] ) )
         $output .= '
-                  <td>'.$data["acct"].'</td>
-                  <td>
-                    <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$data["acct"].'">'.$data["login"].'</a>
-                  </td>';
+                <td>'.$data["acct"].'</td>
+                <td>
+                  <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$data["acct"].'">'.$data["login"].'</a>
+                </td>';
       else
         $output .= '
-                  <td>***</td>
-                  <td>*****</td>';
+                <td>***</td>
+                <td>*****</td>';
       $temp_screenname = $screenname["ScreenName"];
       if ( ( $temp_screenname == '' ) || ( $temp_screenname == NULL ) )
         $temp_screenname = "-";
 
       if ( ( $user_lvl >= $action_permission["view"] ) || ( $user_name == $data["login"] ) )
         $output .= '
-                  <td>
-                    <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$data["acct"].'">'.$temp_screenname.'</a>
-                  </td>';
+                <td>
+                  <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$data["acct"].'">'.$temp_screenname.'</a>
+                </td>';
       else
         $output .= '
-                  <td>*****</td>';
+                <td>*****</td>';
       $output .= '
-                  <td>'.$data["gm"].'</td>';
+                <td>'.$data["gm"].'</td>';
       $output .= '
-                  <td>'.gmlevel_short($screenname["sec_lvl"]).'</td>';
+                <td>'.gmlevel_short($screenname["sec_lvl"]).'</td>';
       if ( $expansion_select )
       {
         $exp_lvl_arr = id_get_exp_lvl();
         $output .= '
-                  <td>'.$exp_lvl_arr[$data["flags"]][2].'</td>';
+                <td>'.$exp_lvl_arr[$data["flags"]][2].'</td>';
         unset($exp_lvl_arr);
       }
       if ( ( $user_lvl >= $action_permission["update"] ) || ( $user_name === $data["login"] ) )
         $output .= '
-                  <td>'.( ( $data["email"] ) ? '<a href="mailto:'.$data["email"].'">'.substr($data["email"],0,15).'</a>' : '-' ).'</td>';
+                <td>'.( ( $data["email"] ) ? '<a href="mailto:'.$data["email"].'">'.substr($data["email"],0,15).'</a>' : '-' ).'</td>';
       else
         $output .= '
-                  <td>***@***.***</td>';
+                <td>***@***.***</td>';
       if ( ( $user_lvl >= $action_permission["update"] ) || ( $user_name === $data["login"] ) )
         $output .= '
-                  <td>'.$data["lastip"].'</td>';
+                <td>'.$data["lastip"].'</td>';
       else
         $output .= '
-                  <td>*******</td>';
+                <td>*******</td>';
       $output .= '
-                  <td>'.$char_count.'</td>';
+                <td>'.$char_count.'</td>';
 
       $o_temp = 0;
       foreach ( $characters_db as $db )
@@ -610,54 +614,54 @@ function browse_users()
         $lastlog = '-';
 
       $output .= '
-                  <td>'.( ( $data["muted"] ) ? '<img src="img/lock.png" />' : '-' ).'</td>
-                  <td class="small">'.$lastlog.'</td>
-                  <td>'.( ( $o_temp <> 0 ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>';
+                <td>'.( ( $data["muted"] ) ? '<img src="img/lock.png" />' : '-' ).'</td>
+                <td class="small">'.$lastlog.'</td>
+                <td>'.( ( $o_temp <> 0 ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>';
       if ( $showcountryflag )
       {
         $country = misc_get_country_by_ip($data["lastip"]);
         $output .= '
-                  <td>'.( ( $country["code"] ) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-' ).'</td>';
+                <td>'.( ( $country["code"] ) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-' ).'</td>';
       }
       if ( $core == 1 )
       {
         if ( time() < $data["banned"] )
           $output .= '
-                  <td><img src="img/flag_red.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
+                <td><img src="img/flag_red.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
         elseif ( ( time() > $data["banned"] ) && ( $data["banned"] != 0 ) )
           $output .= '
-                  <td><img src="img/flag_green.png" onmousemove="oldtoolTip(\''.lang("user", "ban_expired").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
+                <td><img src="img/flag_green.png" onmousemove="oldtoolTip(\''.lang("user", "ban_expired").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
         else
           $output .= '
-                  <td>-</td>';
+                <td>-</td>';
       }
       else
       {
         if ( $data["active"] )
           if ( time() < $data["banned"] )
             $output .= '
-                  <td><img src="img/flag_red.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
+                <td><img src="img/flag_red.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
           else
             $output .= '
-                  <td><img src="img/flag_blue.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active_expired").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
+                <td><img src="img/flag_blue.png" onmousemove="oldtoolTip(\''.lang("user", "ban_active_expired").'\',  \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
         else
           if ( time() < $data["banned"] )
             $output .= '
-                  <td><img src="img/flag_green.png" onmousemove="oldtoolTip(\''.lang("user", "ban_inactive").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
+                <td><img src="img/flag_green.png" onmousemove="oldtoolTip(\''.lang("user", "ban_inactive").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" /></td>';
           else
             $output .= '
-                  <td>-</td>';
+                <td>-</td>';
       }
       $output .= '
-                </tr>';
+              </tr>';
 
       // if we're going to, show characters owned by this account (all realms)
       if ( $data["acct"] == $show_chars )
       {
         $output .= '
-                <tr>
-                  <td colspan="3">&nbsp;</td>
-                  <td colspan="';
+              <tr>
+                <td colspan="3">&nbsp;</td>
+                <td colspan="';
         if ( $expansion_select || $showcountryflag )
         {
           if ( $expansion_select && $showcountryflag )
@@ -668,7 +672,7 @@ function browse_users()
         else
           $output .= '11';
         $output .= '">
-                    <table class="hidden">';
+                  <table class="hidden">';
 
         for ( $i = 0; $i < count($char_list); $i++ )
         {
@@ -684,9 +688,9 @@ function browse_users()
           $sqlt->connect($characters_db[$cur_realm]["addr"], $characters_db[$cur_realm]["user"], $characters_db[$cur_realm]["pass"], $characters_db[$cur_realm]["name"], $characters_db[$cur_realm]["encoding"]);
 
           $output .= '
-                      <tr>
-                        <td align="left">'.$cur_realm_name.'</td>
-                      </tr>';
+                    <tr>
+                      <td align="left">'.$cur_realm_name.'</td>
+                    </tr>';
           foreach ( $realm_chars as $row)
           {
             $row_name_query = "SELECT * FROM characters WHERE guid='".$row."'";
@@ -694,18 +698,18 @@ function browse_users()
             $row_name_result = $sqlt->fetch_assoc($row_name_result);
 
             $output .= '
-                      <tr>
-                        <td align="left">
-                          <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                          <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
-                        </td>
-                      </tr>';
+                    <tr>
+                      <td align="left">
+                        <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                        <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
+                      </td>
+                    </tr>';
           }
         }
         $output .= '
-                    </table>
-                  </td>
-                </tr>';
+                  </table>
+                </td>
+              </tr>';
       }
     }
     /*else
@@ -725,8 +729,8 @@ function browse_users()
     }*/
   }
   $output .= '
-                <tr>
-                  <td  colspan="';
+              <tr>
+                <td  colspan="';
   if ( $expansion_select || $showcountryflag )
   {
     if ( $expansion_select && $showcountryflag )
@@ -736,21 +740,21 @@ function browse_users()
   }
   else
     $output .= '14';
-  $output .= '" class="hidden" align="right" width="25%">';
+  $output .= '" class="hidden" align="right" style="width: 25%;">';
   $output .= generate_pagination('user.php?order_by='.$order_by.'&amp;dir='.( ( $dir ) ? 0 : 1 ).( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'', $all_record, $itemperpage, $start);
   $output .= '
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="8" align="left" class="hidden">';
+                </td>
+              </tr>
+              <tr>
+                <td colspan="8" align="left" class="hidden">';
   if ( $user_lvl >= $action_permission["delete"] )
     makebutton(lang("user", "del_selected_users"), 'javascript:do_submit(\'form1\',0)" type="wrn',230);
 // backup is broken
 //if($user_lvl >= $action_permission["insert"])
 //                  makebutton($lang_user["backup_selected_users"], 'javascript:do_submit(\'form1\',1)',230);
   $output .= '
-                  </td>
-                  <td colspan="';
+                </td>
+                <td colspan="';
   if ( $expansion_select || $showcountryflag )
   {
     if ( $expansion_select && $showcountryflag )
@@ -761,11 +765,10 @@ function browse_users()
   else
     $output .= '3';
   $output .= '" align="right" class="hidden">'.lang("user", "tot_acc").' : '.$all_record.'</td>
-                </tr>
-              </table>
-            </form>
-            <br />
-          </center>
+              </tr>
+            </table>
+          </form>
+          <br />
           <!-- end of user.php -->';
 
 }
@@ -866,7 +869,7 @@ function dodel_user()
     }
   }
   $output .= '
-        <center>';
+        <div class="center">';
   if ( $deleted_acc == 0 )
     $output .= '
           <h1><font class="error">'.lang("user", "no_acc_deleted").'</font></h1>';
@@ -889,7 +892,7 @@ function dodel_user()
             </tr>
           </table>
           <br />
-        </center>';
+        </div>';
 
 }
 
@@ -1051,117 +1054,119 @@ function add_new()
   valid_login($action_permission["insert"]);
 
   $output .= '
-    <center>
-      <script type="text/javascript" src="libs/js/sha1.js">
-      </script>
-      <script type="text/javascript">
-        // <![CDATA[
-        function do_submit_data ()
+    <script type="text/javascript" src="libs/js/sha1.js">
+    </script>
+    <script type="text/javascript">
+      // <![CDATA[
+      function do_submit_data ()
+      {
+        var myForm = document.getElementById("form");
+
+        if ( myForm.new_pass1.value != myForm.new_pass2.value)
         {
-          if (document.form.new_pass1.value != document.form.new_pass2.value)
-          {
-            alert("'.lang("user", "nonidentical_passes").'");
-            return;
-          }
-          else
-          {';
+          alert("'.lang("user", "nonidentical_passes").'");
+          return;
+        }
+        else
+        {';
   if ( $core == 1 )
     $output .= '
-            document.form.pass.value = document.form.new_pass1.value;';
+          myForm.pass.value = myForm.new_pass1.value;';
   else
     $output .= '
-            document.form.pass.value = hex_sha1(document.form.new_user.value.toUpperCase()+":"+document.form.new_pass1.value.toUpperCase());';
+          myForm.pass.value = hex_sha1(myForm.new_user.value.toUpperCase() + ":" + myForm.new_pass1.value.toUpperCase());';
   $output .= '
-            do_submit();
-          }
+          do_submit();
         }
-        // ]]>
-      </script>
-      <div id="user_new_account" class="fieldset_border">
-        <span class="legend">'.lang("user", "create_new_acc").'</span>
-        <form method="get" action="user.php" name="form">
+      }
+      // ]]>
+    </script>
+    <div id="user_new_account" class="fieldset_border center">
+      <span class="legend">'.lang("user", "create_new_acc").'</span>
+      <form method="get" action="user.php" id="form">
+        <div>
           <input type="hidden" name="pass" value="" maxlength="256" />
           <input type="hidden" name="action" value="doadd_new" />
-          <table class="flat">
-            <tr>
-              <td>'.lang("user", "login").':</td>
-              <td>
-                <input type="text" name="new_user" size="24" maxlength="15" value="New_Account" />
-              </td>
-            </tr>
-            <tr>
-              <td>'.lang("user", "screenname").':</td>
-              <td>
-                <input type="text" name="new_screenname" size="24" maxlength="15" value="New_Account" />
-              </td>
-            </tr>
-            <tr>
-              <td>'.lang("user", "password").':</td>
-              <td>
-                <input type="text" name="new_pass1" size="24" maxlength="25" value="123456" />
-              </td>
-            </tr>
-            <tr>
-              <td>'.lang("user", "confirm").':</td>
-              <td>
-                <input type="text" name="new_pass2" size="24" maxlength="25" value="123456" />
-              </td>
-            </tr>
-            <tr>
-              <td>'.lang("user", "email").':</td>
-              <td>
-                <input type="text" name="new_mail" size="24" maxlength="225" value="none@mail.com" />
-              </td>
-            </tr>
-            <tr>
-              <td>'.lang("user", ( ( $core == 1 ) ? "muted" : "locked" ) ).':</td>
-              <td>
-                <input type="checkbox" name="new_locked" value="1" />
-              </td>
-            </tr>';
+        </div>
+        <table class="flat">
+          <tr>
+            <td>'.lang("user", "login").':</td>
+            <td>
+              <input type="text" name="new_user" size="24" maxlength="15" value="New_Account" />
+            </td>
+          </tr>
+          <tr>
+            <td>'.lang("user", "screenname").':</td>
+            <td>
+              <input type="text" name="new_screenname" size="24" maxlength="15" value="New_Account" />
+            </td>
+          </tr>
+          <tr>
+            <td>'.lang("user", "password").':</td>
+            <td>
+              <input type="text" name="new_pass1" size="24" maxlength="25" value="123456" />
+            </td>
+          </tr>
+          <tr>
+            <td>'.lang("user", "confirm").':</td>
+            <td>
+              <input type="text" name="new_pass2" size="24" maxlength="25" value="123456" />
+            </td>
+          </tr>
+          <tr>
+            <td>'.lang("user", "email").':</td>
+            <td>
+              <input type="text" name="new_mail" size="24" maxlength="225" value="none@mail.com" />
+            </td>
+          </tr>
+          <tr>
+            <td>'.lang("user", ( ( $core == 1 ) ? "muted" : "locked" ) ).':</td>
+            <td>
+              <input type="checkbox" name="new_locked" value="1" />
+            </td>
+          </tr>';
   if ( $expansion_select )
   {
     $output .= '
-            <tr>
-              <td>'.lang("user", "expansion_account").':</td>
-              <td>
-                <select name="new_expansion">';
+          <tr>
+            <td>'.lang("user", "expansion_account").':</td>
+            <td>
+              <select name="new_expansion">';
     if ( $core == 1 )
       $output .= '
-                  <option value="24">'.lang("user", "wotlktbc").'</option>
-                  <option value="16">'.lang("user", "wotlk").'</option>
-                  <option value="8">'.lang("user", "tbc").'</option>
-                  <option value="0">'.lang("user", "classic").'</option>';
+                <option value="24">'.lang("user", "wotlktbc").'</option>
+                <option value="16">'.lang("user", "wotlk").'</option>
+                <option value="8">'.lang("user", "tbc").'</option>
+                <option value="0">'.lang("user", "classic").'</option>';
     else
       $output .= '
-                  <option value="2">'.lang("user", "wotlktbc").'</option>
-                  <option value="1">'.lang("user", "tbc").'</option>
-                  <option value="0">'.lang("user", "classic").'</option>';
+                <option value="2">'.lang("user", "wotlktbc").'</option>
+                <option value="1">'.lang("user", "tbc").'</option>
+                <option value="0">'.lang("user", "classic").'</option>';
     $output .= '
-                </select>
-              </td>
-            </tr>';
+              </select>
+            </td>
+          </tr>';
   }
   $output .= '
-            <tr>
-              <td></td>
-            </tr>
-            <tr>
-              <td>';
+          <tr>
+            <td></td>
+          </tr>
+          <tr>
+            <td>';
   makebutton(lang("user", "create_acc"), "javascript:do_submit_data()\" type=\"wrn",130);
   $output .= '
-              </td>
-              <td>';
+            </td>
+            <td>';
   makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def",130);
   $output .= '
-              </td>
-            </tr>
-          </table>
-        </form>
-      </div>
-      <br />
-      <br />
-    </center>';
+            </td>
+          </tr>
+        </table>
+      </form>
+    </div>
+    <br />
+    <br />';
 }
 
 
@@ -1333,27 +1338,28 @@ function edit_user()
           <script type="text/javascript">
             // <![CDATA[
               function do_submit_data ()
-              {';
+              {
+                var myForm = document.getElementById("form");';
     if ( $core == 1 )
     {
       if ( $arc_encrypted )
         $output .= '
-                if ( document.form.new_pass.value != "******" )
-                  document.form.pass.value = hex_sha1(document.form.login.value.toUpperCase()+":"+document.form.new_pass.value.toUpperCase());
+                if ( myForm.new_pass.value != "******" )
+                  myForm.pass.value = hex_sha1(myForm.login.value.toUpperCase() + ":" + myFormnew_pass.value.toUpperCase());
                 else
-                  document.form.pass.value = "******";';
+                  myForm.pass.value = "******";';
       else
         $output .= '
-                document.form.pass.value = document.form.new_pass.value;';
+                myForm.pass.value = myForm.new_pass.value;';
     }
     else
       $output .= '
-                if ( document.form.new_pass.value != "******" )
-                  document.form.pass.value = hex_sha1(document.form.login.value.toUpperCase()+":"+document.form.new_pass.value.toUpperCase());
+                if ( myForm.new_pass.value != "******" )
+                  myForm.pass.value = hex_sha1(myForm.login.value.toUpperCase() + ":" + myForm.new_pass.value.toUpperCase());
                 else
-                  document.form.pass.value = "******";';
+                  myForm.pass.value = "******";';
     $output .= '
-                document.form.new_pass.value = "******";
+                myForm.new_pass.value = "******";
                 do_submit();
               }
             // ]]>
@@ -1385,7 +1391,7 @@ function edit_user()
           <br />
           <div class="user_edit_account fieldset_border">
             <span class="legend">'.lang("user", "edit_acc").'</span>
-            <form method="post" action="user.php?action=doedit_user" name="form">
+            <form method="post" action="user.php?action=doedit_user" id="form">
             <input type="hidden" name="pass" value="" maxlength="256" />
             <input type="hidden" name="acct" value="'.$acct.'" />
             <input type="hidden" name="oldscreenname" value="'.$screenname["ScreenName"].'" />
@@ -2343,6 +2349,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

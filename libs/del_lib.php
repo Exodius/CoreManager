@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@ function del_char($guid, $realm)
 
   if ( ( $user_lvl >= gmlevel($owner_gmlvl) ) || ( $owner_acc_id == $user_id ) )
   {
-    if ( $sql["char"]->result($query, 0, 'online') )
+    if ( $sql["char"]->result($query, 0, "online") )
       ;
     else
     {
@@ -91,7 +91,7 @@ function del_char($guid, $realm)
         //$sql["char"]->query("DELETE FROM account_data WHERE acct='".$owner_acc_id."'");
 
       // finally, delete the character
-      $sql["char"]->query("DELETE FROM characters WHERE guid = '".$guid."'");
+      $sql["char"]->query("DELETE FROM characters WHERE guid='".$guid."'");
       return true;
     }
   }
@@ -128,8 +128,7 @@ function del_acc($acc_id)
       $char_count_query = "SELECT COUNT(*) FROM characters WHERE account='".$acct_id."'";
 
     $online = $sql["char"]->result($sql["char"]->query($char_count_query), 0);
-    if ( $online > 0 );
-    else
+    if ( !$online > 0 )
     {
       foreach ( $characters_db as $db )
       {

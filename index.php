@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -27,6 +27,7 @@ require_once "libs/get_uptime_lib.php";
 require_once "libs/forum_lib.php";
 require_once "libs/data_lib.php";
 require_once "libs/item_lib.php";
+
 valid_login($action_permission["view"]);
 
 //#############################################################################
@@ -50,9 +51,7 @@ function main()
   if ( preg_match("/MSIE/", $_SERVER["HTTP_USER_AGENT"]) )
     $msie = '
             <br />
-            <center>
               <span id="index_explorer_warning">'.lang("index", "explorer_warn").'</span>
-            </center>
             <br />';
   else
     $msie = '';
@@ -72,43 +71,41 @@ function main()
       $output .= '
             <div id="uptime">'.$msie.'
               <h1>
-                <font id="index_realm_info">'
-                  .$staticUptime;
+                <span id="index_realm_info">
+                  <span>'.$staticUptime.'</span>';
 
       if ( !$hide_max_players )
         $output .= '
-                  <br />'
-                  .lang("index", "maxplayers").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["peak"].'</font>';
+                  <br />
+                  <span>'.lang("index", "maxplayers").': </span>
+                  <span class="index_realm_info_value">'.$stats["peak"].'</span>';
+
       if ( !$hide_avg_latency )
         $output .= '
-                  <br />'
-                  .lang("index", "avglat").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["avglat"].'</font>';
+                  <br />
+                  <span>'.lang("index", "avglat").': </span>
+                  <span class="index_realm_info_value">'.$stats["avglat"].'</span>';
+
         $output .= '
                   <br />';
+
       if ( $hide_server_mem <> 0 )
       {
         if ( ( $hide_server_mem == 2 ) || ( $user_lvl == $action_permission["delete"] ) )
         {
-          $output .= 
-                  lang("index", "cpu").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["cpu"].'%</font>, ';
-          $output .= 
-                  lang("index", "ram").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["ram"].' MB</font>, ';
-          $output .= 
-                  lang("index", "threads").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["threads"].'</font>';
+          $output .= '
+                  <span>'.lang("index", "cpu").': </span>
+                  <span class="index_realm_info_value">'.$stats["cpu"].'%, </span>';
+          $output .= '
+                  <span>'.lang("index", "ram").': </span>
+                  <span class="index_realm_info_value">'.$stats["ram"].' MB, </span>';
+          $output .= '
+                  <span>'.lang("index", "threads").': </span>
+                  <span class="index_realm_info_value">'.$stats["threads"].'</span>';
         }
       }
       $output .= '
-               </font>
+               </span>
               </h1>
             </div>';
     }
@@ -181,7 +178,7 @@ function main()
       if ( !$hide_uptime )
       {
         if ( $stats["starttime"] <> 0 )
-          $staticUptime .= '<br />'.lang("index", "online").format_uptime($uptimetime);
+          $staticUptime .= '<br /><span>'.lang("index", "online").format_uptime($uptimetime).'</span>';
         else
           $staticUptime .= '<br /><span style="color:orange">'.lang("index", "time_error1").': <br>'.format_uptime($uptimetime).'</span><br><span style="color:red">'.lang("index", "time_error2").'</span>';
       }
@@ -190,16 +187,15 @@ function main()
       $output .= '
             <div id="uptime">'.$msie.'
               <h1>
-                <font id="index_realm_info">'
+                <span id="index_realm_info">'
                   .$staticUptime;
 
       if ( !$hide_max_players )
       {
         $output .= '
-                  <br />'
-                  .lang("index", "maxplayers").
-                  ': <font class="index_realm_info_value">'
-                  .$stats["maxplayers"].'</font>';
+                  <br />
+                  <span>'.lang("index", "maxplayers").': </span>
+                  <span class="index_realm_info_value">'.$stats["maxplayers"].'</span>';
       }
       // this_is_junk: MaNGOS doesn't store player latency. :/
       if ( $core == 3 )
@@ -212,14 +208,13 @@ function main()
           $avglat = sprintf("%.3f", $lat_fields["SUM(latency)"] / $lat_fields["COUNT(*)"]);
           
           $output .= '
-                    <br />'
-                    .lang("index", "avglat").
-                    ': <font class="index_realm_info_value">'
-                    .$avglat.'</font>';
+                    <br />
+                    <span>'.lang("index", "avglat").': </span>
+                    <span class="index_realm_info_value">'.$avglat.'</span>';
         }
       }
       $output .= '
-                </font>
+                </span>
               </h1>
             </div>';
       unset($stats);
@@ -232,7 +227,7 @@ function main()
   }
   else
   {
-    $output .= $msie.'<h1><font class="error">'.lang("index", "realm").' <em>'.htmlentities(get_realm_name($realm_id), ENT_COMPAT, $site_encoding).'</em> '.lang("index", "offline_or_let_high").'</font></h1>';
+    $output .= $msie.'<h1><span class="error">'.lang("index", "realm").' <em>'.htmlentities(get_realm_name($realm_id), ENT_COMPAT, $site_encoding).'</em> '.lang("index", "offline_or_let_high").'</span></h1>';
     $online = false;
   }
 
@@ -250,21 +245,19 @@ function main()
     $output .= '
           <script type="text/javascript">
             // <![CDATA[
-              answerbox.btn_ok="'.lang("global", "yes_low").'";
-              answerbox.btn_cancel="'.lang("global", "no").'";
+              answerbox.btn_ok = "'.lang("global", "yes_low").'";
+              answerbox.btn_cancel = "'.lang("global", "no").'";
               var del_motd = "motd.php?action=delete_motd&amp;id=";
             // ]]>
           </script>';
 
-  $output .= '
-          <center>';
+  /*$output .= '
+          <center>';*/
 
   if ( $sql["mgr"]->num_rows($motd_result) > 0 )
   {
     $output .= '
-            <table class="lined">';
-
-    $output .= '
+            <table class="lined">
               <tr><th>'.lang("index", "motd").'</th></tr>';
   }
 
@@ -329,8 +322,8 @@ function main()
         if ( $temp["Last_Edited_By"] != 0 )
         {
           $output .= '
-                    <br />';
-          $output .= lang("motd", "edited_by").': '.( ( $user_lvl > -1 ) ? '<a href="user.php?action=edit_user&amp;error=11&amp;acct='.$temp["Last_Edited_By"].'">' : '' ).$edited_name.( ( $user_lvl > -1 ) ? '</a>' : '' ).' ('.date('m/d/Y H:i:s', $temp["Last_Edited"]).')';
+                    <br />
+                    <span>'.lang("motd", "edited_by").': '.( ( $user_lvl > -1 ) ? '<a href="user.php?action=edit_user&amp;error=11&amp;acct='.$temp["Last_Edited_By"].'">' : '' ).$edited_name.( ( $user_lvl > -1 ) ? '</a>' : '' ).' ('.date('m/d/Y H:i:s', $temp["Last_Edited"]).')</span>';
         }
 
         $output .= '
@@ -368,13 +361,13 @@ function main()
   if ( $user_lvl >= $action_permission["insert"] )
   {
     $output .= '
-                <table class="lined">
-                  <tr>
-                    <td align="right">
-                      <a href="motd.php?action=add_motd&amp;error=4">'.lang("index", "add_motd").'</a>
-                    </td>
-                  </tr>
-                </table>';
+            <table class="lined">
+              <tr>
+                <td align="right">
+                  <a href="motd.php?action=add_motd&amp;error=4">'.lang("index", "add_motd").'</a>
+                </td>
+              </tr>
+            </table>';
   }
   /*else
     $output .= '
@@ -441,13 +434,13 @@ function main()
               // extract gold/silver/copper from single gold number
               $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
               $coupon_g = substr($coupon["money"],  0, -4);
-              if ( $coupon_g == '' )
+              if ( $coupon_g == "" )
                 $coupon_g = 0;
               $coupon_s = substr($coupon["money"], -4,  2);
-              if ( ( $coupon_s == '' ) || ( $coupon_s == '00' ) )
+              if ( ( $coupon_s == "" ) || ( $coupon_s == "00" ) )
                 $coupon_s = 0;
               $coupon_c = substr($coupon["money"], -2);
-              if ( ( $coupon_c == '' ) || ( $coupon_c == '00' ) )
+              if ( ( $coupon_c == "" ) || ( $coupon_c == "00" ) )
                 $coupon_c = 0;
 
               $output .= '
@@ -492,7 +485,7 @@ function main()
                     <br />
                     <div class="coupon_item">
                       <div>
-                        <a href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.$coupon["entry"].'\');" onmouseout="HideTooltip(\'_b'.$coupon["entry"].'\');">
+                        <a href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_b'.$coupon["entry"].'\');" onmouseout="HideTooltip(\'_b'.$coupon["entry"].'\');">
                           <img src="'.get_item_icon($coupon["item_id"]).'" alt="" />
                         </a>';
 
@@ -967,7 +960,7 @@ function main()
     $output = str_replace('%%REPLACE_TAG%%', $replace, $output);
     unset($replace);
     $output .= '
-            <font class="bold">'.lang("index", "tot_users_online").': '.$total_online.'</font>';
+            <span class="bold">'.lang("index", "tot_users_online").': '.$total_online.'</span>';
 
     if ( $total_online )
     {
@@ -1139,8 +1132,7 @@ function main()
             </table>';
     }
     $output .= '
-            <br />
-          </center>';
+            <br />';
 
     unset($total_online);
   }

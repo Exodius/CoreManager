@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -46,28 +47,22 @@ function char_quest()
   }
 
   $id = $sql["char"]->quote_smart($_GET["id"]);
-  if ( is_numeric($id) )
-    ;
-  else
+  if ( !is_numeric($id) )
     $id = 0;
 
   //==========================$_GET and SECURE=================================
   $start = ( ( isset($_GET["start"]) ) ? $sql["char"]->quote_smart($_GET["start"]) : 0 );
-  if ( is_numeric($start) )
-    ;
-  else
+  if ( !is_numeric($start) )
     $start = 0;
 
   $order_by = ( ( isset($_GET["order_by"]) ) ? $sql["char"]->quote_smart($_GET["order_by"]) : 1 );
-  if ( is_numeric($order_by) )
+  if ( !is_numeric($order_by) )
     ;
   else
     $order_by = 1;
 
   $dir = ( ( isset($_GET["dir"]) ) ? $sql["char"]->quote_smart($_GET["dir"]) : 0 );
-  if ( preg_match('/^[01]{1}$/', $dir) )
-    ;
-  else
+  if ( !preg_match('/^[01]{1}$/', $dir) )
     $dir = 0;
 
   $order_dir = ( ( $dir ) ? 'ASC' : 'DESC' );
@@ -212,7 +207,6 @@ function char_quest()
     if ( ( $view_override ) || ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
     {
       $output .= '
-          <center>
             <div class="tab">
               <ul>
                 <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -243,19 +237,20 @@ function char_quest()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">
+            <div class="tab_content center center_text">
+              <span class="bold">
                 '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                 <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-              </font>
-              <br /><br />
-              <table class="lined" id="ch_que_quests">
+              </span>
+              <br />
+              <br />
+              <table class="lined" id="ch_que_questsA">
                 <tr>
-                  <th width="10%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=0&amp;dir='.$dir.'"'.( ( $order_by == 0 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_id").'</a></th>
-                  <th width="7%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=1&amp;dir='.$dir.'"'.( ( $order_by == 1 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_level").'</a></th>
-                  <th width="78%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=2&amp;dir='.$dir.'"'.( ( $order_by == 2 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_title").'</a></th>
-                  <th width="5%"><img src="img/aff_qst.png" width="14" height="14" border="0" alt="" /></th>
+                  <th style="width: 10%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=0&amp;dir='.$dir.'"'.( ( $order_by == 0 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_id").'</a></th>
+                  <th style="width: 7%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=1&amp;dir='.$dir.'"'.( ( $order_by == 1 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_level").'</a></th>
+                  <th style="width: 78%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=2&amp;dir='.$dir.'"'.( ( $order_by == 2 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_title").'</a></th>
+                  <th style="width: 5%;"><img src="img/aff_qst.png" width="14" height="14" alt="" /></th>
                 </tr>';
 
       if ( $core == 1 )
@@ -326,7 +321,7 @@ function char_quest()
                 <tr>
                   <td>'.$data[0].'</td>
                   <td>('.$data[1].')</td>
-                  <td align="left"><a href="'.$base_datasite.$quest_datasite.$data[0].'" target="_blank">'.htmlentities($data[2], ENT_COMPAT, $site_encoding).'</a></td>
+                  <td align="left"><a href="'.$base_datasite.$quest_datasite.$data[0].'" rel="external">'.htmlentities($data[2], ENT_COMPAT, $site_encoding).'</a></td>
                   <td><img src="img/aff_qst.png" width="14" height="14" alt="" /></td>
                 </tr>';
         }
@@ -335,7 +330,7 @@ function char_quest()
         {
           $output .= '
               </table>
-              <table class="hidden" id="ch_que_quests">
+              <table class="hidden" id="ch_que_questsB">
                 <tr align="right">
                   <td>';
           $output .= generate_pagination('char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by='.$order_by.'&amp;dir='.( ( $dir ) ? 0 : 1 ), $all_record, $itemperpage, $start);
@@ -343,13 +338,13 @@ function char_quest()
                   </td>
                 </tr>
               </table>
-              <table class="lined" id="ch_que_quests">
+              <table class="lined" id="ch_que_questsC">
                 <tr>
-                  <th width="10%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=0&amp;dir='.$dir.'"'.( ( $order_by == 0 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_id").'</a></th>
-                  <th width="7%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=1&amp;dir='.$dir.'"'.( ( $order_by == 1 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_level").'</a></th>
-                  <th width="68%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=2&amp;dir='.$dir.'"'.( ( $order_by == 2 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_title").'</a></th>
-                  <th width="10%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=3&amp;dir='.$dir.'"'.( ( $order_by == 3 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "rewarded").'</a></th>
-                  <th width="5%"><img src="img/aff_tick.png" width="14" height="14" border="0" alt="" /></th>
+                  <th style="width: 10%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=0&amp;dir='.$dir.'"'.( ( $order_by == 0 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_id").'</a></th>
+                  <th style="width: 7%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=1&amp;dir='.$dir.'"'.( ( $order_by == 1 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_level").'</a></th>
+                  <th style="width: 68%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=2&amp;dir='.$dir.'"'.( ( $order_by == 2 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "quest_title").'</a></th>
+                  <th style="width: 10%;"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=3&amp;dir='.$dir.'"'.( ( $order_by == 3 ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "rewarded").'</a></th>
+                  <th style="width: 5%;"><img src="img/aff_tick.png" width="14" height="14" alt="" /></th>
                 </tr>';
           $i = 0;
           foreach ( $quests_1 as $data )
@@ -360,7 +355,7 @@ function char_quest()
                 <tr>
                   <td>'.$data[0].'</td>
                   <td>('.$data[1].')</td>
-                  <td align="left"><a href="'.$base_datasite.$quest_datasite.$data[0].'" target="_blank">'.htmlentities($data[2], ENT_COMPAT, $site_encoding).'</a></td>
+                  <td align="left"><a href="'.$base_datasite.$quest_datasite.$data[0].'" rel="external">'.htmlentities($data[2], ENT_COMPAT, $site_encoding).'</a></td>
                   <td><img src="img/aff_'.( ( $data[3] ) ? 'tick' : 'qst' ).'.png" width="14" height="14" alt="" /></td>
                   <td><img src="img/aff_tick.png" width="14" height="14" alt="" /></td>
                 </tr>';
@@ -389,7 +384,7 @@ function char_quest()
               </table>
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -429,7 +424,6 @@ function char_quest()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_quest.php -->';
     }
     else
@@ -454,7 +448,7 @@ char_quest();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

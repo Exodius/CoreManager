@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -61,10 +61,10 @@ else
 $cur_filename = "error.php";
 
 //---------------------Loading Libraries---------------------------------------
-require_once("libs/config_lib.php");
-require_once("libs/global_lib.php");
-require_once("lang/".$lang.".php");
-require_once("libs/lang_lib.php");
+require_once "libs/config_lib.php";
+require_once "libs/global_lib.php";
+require_once "lang/".$lang.".php";
+require_once "libs/lang_lib.php";
 
 // generate minimum info to prevent php errors
 if ( $allow_anony && empty($_SESSION["logged_in"]) )
@@ -79,7 +79,7 @@ header("Content-Type: text/html; charset=".$site_encoding);
 // the webserver should be adding this directive, but just in case...
 header("Cache-Control: private, must-revalidate, post-check=0, pre-check=0");
 $output .= '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>'.$title.'</title>
@@ -95,16 +95,9 @@ $output .= '
 
 $output .= '
   <body onload="dynamicLayout();">
-    <center>
-      <!-- table class="table_top">
-        <tr>
-          <td class="table_top_left" valign="top">
-          </td>
-          <td class="table_top_middle"></td>
-          <td class="table_top_right"></td>
-        </tr>
-      </table -->
-      <br />
+      <div>
+        <br />
+      </div>
       <div id="body_main">';
 // end of header
 
@@ -117,23 +110,23 @@ $err = ( ( isset($_SESSION["pass_error"]) ) ? $_SESSION["pass_error"] : lang("er
 $output .= '
         <div class="bubble">
           <!-- start of error.php -->
-          <center>
+          <div class="center_text">
             <br />
-            <table width="400" class="flat">
+            <table id="error_message_table" class="flat center">
               <tr>
                 <td align="center">
                   <h1>
-                    <font class="error">
+                    <span class="error">
                       <img src="img/warn_red.gif" width="48" height="48" alt="error" />
                       <br />'.lang("error", "error").'!
-                    </font>
+                    </span>
                   </h1>
                   <br />'.htmlspecialchars($err).'<br />
                 </td>
               </tr>
             </table>
             <br />
-            <table width="300" class="hidden">
+            <table id="error_buttons" class="hidden center">
               <tr>
                 <td align="center">';
 makebutton(lang("global", "home"), 'index.php', 130);
@@ -144,7 +137,7 @@ $output .= '
               </tr>
             </table>
             <br />
-          </center>
+          </div>
           <!-- end of error.php -->';
 
 require_once "footer.php";

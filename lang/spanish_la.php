@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
 
     This program is free software: you can redistribute it and/or modify
@@ -538,6 +538,7 @@ $GLOBALS['lang_char'] = array
   'games' => 'Juegos',
   'winloss' => 'Ganados - Perdidos',
   'played' => 'Jugados',
+  'ratio' => 'Ratio',
   'thisweek' => 'Esta Semana',
   'thisseason' => 'Esta Temporada',
   // ---- char_tools.php ----
@@ -1649,6 +1650,7 @@ $GLOBALS['lang_xrace'] = array
   'chooserace' => 'Select New Character Race',
   'enterrace' => 'Select your desired race below',
   'newrace' => 'New Character Race',
+  'no_races' => 'There are no other races available to this character',
   'confirmname' => 'Confirm New Name',
   'save' => 'Save Changes',
   // The following is the message that asks GMs permission to change the character's race

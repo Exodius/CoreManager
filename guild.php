@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -21,6 +21,7 @@
 
 require_once "header.php";
 require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //#############################################################################
@@ -75,20 +76,19 @@ function browse_guilds()
   if ( $query_myGuild )
   {
     $output .= '
-        <center>
-          <div class="guild_fieldset fieldset_border">
-            <span class="legend">'.lang("guild", "my_guilds").'</span>
-            <table class="lined" align="center">
-              <tr>
-                <th width="1%">'.lang("guild", "id").'</th>
-                <th width="20%">'.lang("guild", "guild_name").'</th>
-                <th width="10%">'.lang("guild", "guild_leader").'</th>
-                <th width="1%">'.lang("guild", "guild_faction").'</th>
-                <th width="10%">'.lang("guild", "tot_m_online").'</th>
-                <th width="20%">'.lang("guild", "info").'</th>
-                <th width="20%">'.lang("guild", "guild_motd").'</th>
-                <th width="20%">'.lang("guild", "create_date").'</th>
-              </tr>';
+        <div class="guild_fieldset fieldset_border">
+          <span class="legend">'.lang("guild", "my_guilds").'</span>
+          <table class="lined">
+            <tr>
+              <th style="width: 1%;">'.lang("guild", "id").'</th>
+              <th style="width: 20%;">'.lang("guild", "guild_name").'</th>
+              <th style="width: 10%;">'.lang("guild", "guild_leader").'</th>
+              <th style="width: 1%;">'.lang("guild", "guild_faction").'</th>
+              <th style="width: 10%;">'.lang("guild", "tot_m_online").'</th>
+              <th style="width: 20%;">'.lang("guild", "info").'</th>
+              <th style="width: 20%;">'.lang("guild", "guild_motd").'</th>
+              <th style="width: 20%;">'.lang("guild", "create_date").'</th>
+            </tr>';
     while ( $data = $sql["char"]->fetch_assoc($query_myGuild) )
     {
       if ( $core == 1 )
@@ -108,25 +108,24 @@ function browse_guilds()
         $owner_gmlvl -= 1073741824;
 
       $output .= '
-              <tr>
-                <td>'.$data["gid"].'</td>
-                <td><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$data["gid"].'">'.$data["gname"].'</a></td>';
+            <tr>
+              <td>'.$data["gid"].'</td>
+              <td><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$data["gid"].'">'.$data["gname"].'</a></td>';
       $output .= ( ( $user_lvl >= $owner_gmlvl ) ? '<td><a href="char.php?id='.$data["lguid"].'" onmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td><spanonmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding) );
       $output .= '
-                <td><img src="img/'.( ( $data["faction"]==0 ) ? "alliance" : "horde" ).'_small.gif" alt="" /></td>
-                <td>'.$data["gonline"].'/'.$data["mcount"].'</td>
-                <td>'.htmlentities($data["info"], ENT_COMPAT, $site_encoding).'</td>
-                <td>'.htmlentities($data["motd"], ENT_COMPAT, $site_encoding).'</td>
-                <td class="small">'.date('o-m-d', $data["createdate"]).'</td>
-              </tr>';
+              <td><img src="img/'.( ( $data["faction"]==0 ) ? "alliance" : "horde" ).'_small.gif" alt="" /></td>
+              <td>'.$data["gonline"].'/'.$data["mcount"].'</td>
+              <td>'.htmlentities($data["info"], ENT_COMPAT, $site_encoding).'</td>
+              <td>'.htmlentities($data["motd"], ENT_COMPAT, $site_encoding).'</td>
+              <td class="small">'.date('o-m-d', $data["createdate"]).'</td>
+            </tr>';
     }
     unset($data);
     unset($result);
     $output .= '
-            </table>
-          </div>
-          <br />
-        </center>';
+          </table>
+        </div>
+        <br />';
   }
   //==========================MyGuild end======================================
   //==========================Browse/Search Guilds CHECK=======================
@@ -272,15 +271,15 @@ function browse_guilds()
   $search_by = htmlspecialchars($search_by);
   $search_value = htmlspecialchars($search_value);
 
-  $output .= '
-        <center>
-          <table class="top_hidden">
-            <tr align="left">
-              <td>
-                <table class="hidden">
-                  <tr>
-                    <td>
-                      <form action="guild.php" method="get" name="form">
+$output .= '
+        <table class="top_hidden">
+          <tr align="left">
+            <td>
+              <table class="hidden">
+                <tr>
+                  <td>
+                    <form action="guild.php" method="get" id="form">
+                      <div>
                         <input type="hidden" name="error" value="4" />
                         <input type="text" size="24" name="search_value" value="'.$search_value.'" />
                         <select name="search_by">
@@ -288,40 +287,39 @@ function browse_guilds()
                           <option value="leadername" '.( ( $search_by == "leadername" ) ? ' selected="selected"' : '' ).'>'.lang("guild", "by_guild_leader").'</option>
                           <option value="guildid" '.( ( $search_by == "guildid" ) ? ' selected="selected"' : '' ).'>'.lang("guild", "by_id").'</option>
                         </select>
-                      </form>
-                    </td>
-                    <td width="300">';
-  makebutton(lang("global", "search"), "javascript:do_submit()",80);
+                      </div>
+                    </form>
+                  </td>
+                  <td>';
+  makebutton(lang("global", "search"), "javascript:do_submit()", 80);
   ( ( $search_by &&  $search_value ) ? makebutton(lang("guild", "show_guilds"), "guild.php\" type=\"def", 130) : $output .= "" );
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </center>';
-  //==========================top tage navigaion ENDS here ====================
-  $output .= '
-        <center>
-          <div class="guild_fieldset fieldset_border">
-            <span class="legend">'.lang("guild", "browse_guilds").'</span>
-              <table class="lined" align="center">
-                <tr class="hidden">
-                  <td colspan="6" class="hidden" align="right" width="25%">';
-      $output .= generate_pagination("guild.php?action=brows_guilds&amp;order_by=".$order_by."&amp;".( ( $search_value && $search_by ) ? "search_by=".$search_by."&amp;search_value=".$search_value."&amp" : "")."dir=".( ( $dir ) ? 0 : 1 )."", $all_record, $itemperpage, $start);
-      $output .= '
                   </td>
                 </tr>
-                <tr>
-                  <th width="5%"><a href="guild.php?order_by=gid&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "gid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "id").'</a></th>
-                  <th width="30%"><a href="guild.php?order_by=guildname&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "guildname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_name").'</a></th>
-                  <th width="20%"><a href="guild.php?order_by=lname&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "lname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_leader").'</a></th>
-                  <th width="10%"><a href="guild.php?order_by=lfaction&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "lfaction" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_faction").'</a></th>
-                  <th width="15%"><a href="guild.php?order_by=tot_chars&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "tot_chars" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "tot_members").'</a></th>
-                  <th width="20%">'.lang("guild", "info").'</th>
-                  <th width="20%"><a href="guild.php?order_by=createdate&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "createdate" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "create_date").'</a></th>
-                </tr>';
+              </table>
+            </td>
+          </tr>
+        </table>';
+  //==========================top tage navigaion ENDS here ====================
+$output .= '
+        <div class="guild_fieldset fieldset_border">
+          <span class="legend">'.lang("guild", "browse_guilds").'</span>
+            <table class="lined">
+              <tr class="hidden">
+                <td colspan="6" class="hidden" align="right" style="width: 25%;">';
+      $output .= generate_pagination("guild.php?action=brows_guilds&amp;order_by=".$order_by."&amp;".( ( $search_value && $search_by ) ? "search_by=".$search_by."&amp;search_value=".$search_value."&amp" : "")."dir=".( ( $dir ) ? 0 : 1 )."", $all_record, $itemperpage, $start);
+      $output .= '
+                </td>
+              </tr>
+              <tr>
+                <th style="width: 5%;"><a href="guild.php?order_by=gid&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "gid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "id").'</a></th>
+                <th style="width: 30%;"><a href="guild.php?order_by=guildname&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "guildname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_name").'</a></th>
+                <th style="width: 20%;"><a href="guild.php?order_by=lname&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "lname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_leader").'</a></th>
+                <th style="width: 10%;"><a href="guild.php?order_by=lfaction&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "lfaction" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "guild_faction").'</a></th>
+                <th style="width: 15%;"><a href="guild.php?order_by=tot_chars&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "tot_chars" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "tot_members").'</a></th>
+                <th style="width: 20%;">'.lang("guild", "info").'</th>
+                <th style="width: 20%;"><a href="guild.php?order_by=createdate&amp;start='.$start.'&amp;dir='.$dir.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : "" ).'">'.( ( $order_by == "createdate" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : "" ).lang("guild", "create_date").'</a></th>
+              </tr>';
   while ( $data = $sql["char"]->fetch_assoc($query) )
   {
     if ( $core == 1 )
@@ -336,28 +334,27 @@ function browse_guilds()
     $result = $sql["mgr"]->query("SELECT SecurityLevel AS gm FROM config_accounts WHERE Login='".$user."'");
     $owner_gmlvl = $sql["logon"]->result($result, 0, 'gm');
     $output .= '
-                <tr>
-                  <td>'.$data["gid"].'</td>';
+              <tr>
+                <td>'.$data["gid"].'</td>';
     $output .= ( ( $user_lvl >= $action_permission["update"] ) ? '<td><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$data["gid"].'">'.htmlentities($data["guildname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td>'.htmlentities($data["guildname"], ENT_COMPAT, $site_encoding).'</td>' );
     $output .= ( ( $user_lvl >= $owner_gmlvl ) ? '<td><a href="char.php?id='.$data["lguid"].'" onmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td><span onmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</span></td>' );
     $output .= '
-                  <td><img src="img/'.( ( $data["lfaction"] == 0 ) ? "alliance" : "horde" ).'_small.gif" alt="" /></td>
-                  <td>'.$data["tot_chars"].'</td>
-                  <td>'.$data["info"].'</td>
-                  <td class="small">'.date("o-m-d", $data["createdate"]).'</td>
-                </tr>';
+                <td><img src="img/'.( ( $data["lfaction"] == 0 ) ? "alliance" : "horde" ).'_small.gif" alt="" /></td>
+                <td>'.$data["tot_chars"].'</td>
+                <td>'.$data["info"].'</td>
+                <td class="small">'.date("o-m-d", $data["createdate"]).'</td>
+              </tr>';
   }
   $output .= '
-                <tr>
-                  <td colspan="6" class="hidden" align="right" width="25%">'.generate_pagination("guild.php?action=brows_guilds&amp;order_by=".$order_by."&amp;".( ( $search_value && $search_by ) ? "search_by=".$search_by."&amp;search_value=".$search_value."&amp" : "" )."dir=".( ( $dir ) ? 0 : 1 )."", $all_record, $itemperpage, $start).'</td>
-                </tr>
-                <tr>
-                  <td colspan="6" class="hidden" align="right">'.lang("guild", "tot_guilds").' : '.$all_record.'</td>
-                </tr>
-              </table>
-            </div>
-            <br />
-          </center>';
+              <tr>
+                <td colspan="6" class="hidden" align="right" style="width: 25%;">'.generate_pagination("guild.php?action=brows_guilds&amp;order_by=".$order_by."&amp;".( ( $search_value && $search_by ) ? "search_by=".$search_by."&amp;search_value=".$search_value."&amp" : "" )."dir=".( ( $dir ) ? 0 : 1 )."", $all_record, $itemperpage, $start).'</td>
+              </tr>
+              <tr>
+                <td colspan="6" class="hidden" align="right">'.lang("guild", "tot_guilds").' : '.$all_record.'</td>
+              </tr>
+            </table>
+          </div>
+          <br />';
 
 }
   //==========================Browse/Search Guilds end=========================
@@ -455,56 +452,55 @@ function view_guild()
           answerbox.btn_ok="'.lang("global", "yes").'";
           answerbox.btn_cancel="'.lang("global", "no").'";
         </script>
-        <center>
-          <div class="guild_fieldset fieldset_border">
-            <span class="legend">'.lang("guild", "guild").'</span>
-            <table class="lined">
-              <tr>
-                <td width="25%" class="hidden"><b>'.lang("guild", "create_date").':</b><br />'.date('o-m-d', $guild_data["createdate"]).'</td>
-                <td width="50%" class="bold hidden" colspan="2">'.$guild_data["name"].'</td>
-                <td width="25%" class="hidden"><b>'.lang("guild", "tot_m_online").':</b><br />'.$guild_data["monline"].' / '.$guild_data["mtotal"].'</td>
-              </tr>
-              <tr>
-                <td colspan="2" class="hidden"><b>'.lang("guild", "info").':</b><br />'.$guild_data["info"].'</td>
-                <td colspan="2" class="hidden"><b>'.lang("guild", "motd").':</b><br />'.$guild_data["MOTD"].'</td>
-              </tr>';
+        <div class="guild_fieldset fieldset_border">
+          <span class="legend">'.lang("guild", "guild").'</span>
+          <table class="lined">
+            <tr>
+              <td style="width: 25%;" class="hidden"><b>'.lang("guild", "create_date").':</b><br />'.date('o-m-d', $guild_data["createdate"]).'</td>
+              <td style="width: 50%;" class="bold hidden" colspan="2">'.$guild_data["name"].'</td>
+              <td style="width: 25%;" class="hidden"><b>'.lang("guild", "tot_m_online").':</b><br />'.$guild_data["monline"].' / '.$guild_data["mtotal"].'</td>
+            </tr>
+            <tr>
+              <td colspan="2" class="hidden"><b>'.lang("guild", "info").':</b><br />'.$guild_data["info"].'</td>
+              <td colspan="2" class="hidden"><b>'.lang("guild", "motd").':</b><br />'.$guild_data["MOTD"].'</td>
+            </tr>';
   if ( $show_guild_emblem )
     $output .= '
-              <tr>
-                <td colspan="4" class="hidden">
-                  <div id="guild_emblem">
-                    <center>
-                      <img id="guild_view_background" src="img/emblems/Background_'.doubledigit($guild_data["BackgroundColor"]).'.png" alt="" />
-                      <img id="guild_view_emblem" src="img/emblems/Emblem_'.doubledigit($guild_data["EmblemStyle"]).'_'.doubledigit($guild_data["EmblemColor"]).'.png" alt="" />
-                      <img id="guild_view_border" src="img/emblems/Border_'.doubledigit($guild_data["BorderStyle"]).'_'.doubledigit($guild_data["BorderColor"]).'.png" alt="" />
-                      <img id="guild_emblem_border" src="img/EmblemBorder.png" alt="" />
-                    </center>
+            <tr>
+              <td colspan="4" class="hidden">
+                <div id="guild_emblem">
+                  <div>
+                    <img id="guild_view_background" src="img/emblems/Background_'.doubledigit($guild_data["BackgroundColor"]).'.png" alt="" />
+                    <img id="guild_view_emblem" src="img/emblems/Emblem_'.doubledigit($guild_data["EmblemStyle"]).'_'.doubledigit($guild_data["EmblemColor"]).'.png" alt="" />
+                    <img id="guild_view_border" src="img/emblems/Border_'.doubledigit($guild_data["BorderStyle"]).'_'.doubledigit($guild_data["BorderColor"]).'.png" alt="" />
+                    <img id="guild_emblem_border" src="img/EmblemBorder.png" alt="" />
                   </div>
-                </td>
-              </tr>
-              <tr>
-                <td align="right">'.generate_pagination("guild.php?action=view_guild&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".( ( $dir ) ? 0 : 1 )."", $guildmemberCount, $itemperpage, $start).'</td>
-              </tr>
-            </table>
-            <table class="lined">
-              <tr>
-                <th width="1%">'.lang("guild", "remove").'</th>
-                <th width="15%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=cname&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'cname' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "name").'</a></th>
-                <th width="1%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=crace&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'crace' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif\" alt="" /> ' : '' ).lang("guild", "race").'</a></th>
-                <th width="1%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=class&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'cclass' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "class").'</a></th>
-                <th width="1%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clevel&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'clevel' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "level").'</a></th>
-                <th width="15%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=mrank&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'mrank' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "rank").'</a></th>
-                <th width="15%">'.lang("guild", "pnote").'</th>
-                <th width="15%">'.lang("guild", "offnote").'</th>
-                <th width="15%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clogout&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'clogout' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "llogin").'</a></th>
-                <th width="1%"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=conline&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'conline' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "online").'</a></th>';
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td id="guild_pages_background" style="text-align: right;" colspan="4">'.generate_pagination("guild.php?action=view_guild&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".( ( $dir ) ? 0 : 1 )."", $guildmemberCount, $itemperpage, $start).'</td>
+            </tr>
+          </table>
+          <table class="lined">
+            <tr>
+              <th style="width: 1%;">'.lang("guild", "remove").'</th>
+              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=cname&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'cname' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "name").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=crace&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'crace' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif\" alt="" /> ' : '' ).lang("guild", "race").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=class&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'cclass' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "class").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clevel&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'clevel' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "level").'</a></th>
+              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=mrank&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'mrank' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "rank").'</a></th>
+              <th style="width: 15%;">'.lang("guild", "pnote").'</th>
+              <th style="width: 15%;">'.lang("guild", "offnote").'</th>
+              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clogout&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'clogout' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "llogin").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=conline&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'conline' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "online").'</a></th>';
 
   if ($showcountryflag)
   {
     require_once 'libs/misc_lib.php';
 
     $output .= '
-                <th width="1%">'.lang("global", "country").'</th>';
+              <th style="width: 1%;">'.lang("global", "country").'</th>';
   }
 
   $output .= '
@@ -551,19 +547,19 @@ function view_guild()
       $owner_gmlvl -= 1073741824;
 
     $output .= '
-              <tr>';
+            <tr>';
     // gm, guildleader or own account! are allowed to remove from guild
     $output .= ( ( $user_lvl >= $action_permission["delete"] || $amIguildleader || $member["acct"] == $user_id ) ? '<td><img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").': &lt;font color=white&gt;'.$member["cname"].'&lt;/font&gt;&lt;br /&gt;'.lang("global", "are_you_sure").'\', \'guild.php?action=rem_char_from_guild&amp;realm='.$realmid.'&amp;id='.$member["cguid"].'&amp;guld_id='.$guild_id.'\');" class="guild_edit_delete_cursor" /></td>' : '<td></td>' );
     $output .= ( ( $user_lvl >= $owner_gmlvl ) ? '<td><a href="char.php?id='.$member["cguid"].'">'.htmlentities($member["cname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td>'.htmlentities($member["cname"], ENT_COMPAT, $site_encoding).'</td>' );
     $output .= '
-                <td><img src="img/c_icons/'.$member["crace"].'-'.$member["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member["crace"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                <td><img src="img/c_icons/'.$member["cclass"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member["cclass"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                <td>'.char_get_level_color($member["clevel"]).'</td>
-                <td>'.htmlentities($member["rname"], ENT_COMPAT, $site_encoding).' ('.$member["mrank"].')</td>
-                <td>'.htmlentities($member["pnote"], ENT_COMPAT, $site_encoding).'</td>
-                <td>'.htmlentities($member["offnote"], ENT_COMPAT, $site_encoding).'</td>
-                <td>'.get_days_with_color($member["clogout"]).'</td>
-                <td>'.( ( $member["conline"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />').'</td>';
+              <td><img src="img/c_icons/'.$member["crace"].'-'.$member["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member["crace"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+              <td><img src="img/c_icons/'.$member["cclass"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member["cclass"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+              <td>'.char_get_level_color($member["clevel"]).'</td>
+              <td>'.htmlentities($member["rname"], ENT_COMPAT, $site_encoding).' ('.$member["mrank"].')</td>
+              <td>'.htmlentities($member["pnote"], ENT_COMPAT, $site_encoding).'</td>
+              <td>'.htmlentities($member["offnote"], ENT_COMPAT, $site_encoding).'</td>
+              <td>'.get_days_with_color($member["clogout"]).'</td>
+              <td>'.( ( $member["conline"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />').'</td>';
 
     if ( $showcountryflag )
     {
@@ -576,46 +572,45 @@ function view_guild()
           $country = 0;
 
         $output .= '
-                <td>'.( ($country["code"] ) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.$country["country"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-' ).'</td>';
+              <td>'.( ($country["code"] ) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.$country["country"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-' ).'</td>';
     }
 
               $output .= '
-              </tr>';
+            </tr>';
   }
   unset($member);
 
   $output .= '
-              <tr>
-                <td align="right" class="hidden">'.generate_pagination("guild.php?action=view_guild&amp;error=3&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".!$dir, $guildmemberCount, $itemperpage, $start).'</td>
-              </tr>
-            </table>
-            <br />';
+            <tr>
+              <td align="right" class="hidden">'.generate_pagination("guild.php?action=view_guild&amp;error=3&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".!$dir, $guildmemberCount, $itemperpage, $start).'</td>
+            </tr>
+          </table>
+          <br />';
 
   $output .= '
-            <table class="hidden">
-              <tr>
-                <td>';
+          <table class="hidden center">
+            <tr>
+              <td>';
 
   if ( $user_lvl >= $action_permission["delete"] || $amIguildleader )
   {
     makebutton(lang("guild", "del_guild"), "guild.php?action=del_guild&amp;realm=".$realm_id."&amp;id=".$guild_id."&amp;name=".$guild_data["name"]."\" type=\"wrn", 130);
     $output .= '
-                </td>
-                <td>';
+              </td>
+              <td>';
   }
 
   makebutton(lang("guild", "guildbank"), "guildbank.php?id=".$guild_id, 130);
   $output .= '
-                </td>
-                <td>';
+              </td>
+              <td>';
 
   makebutton(lang("guild", "show_guilds"), "guild.php\" type=\"def", 130);
   $output .= '
-                </td>
-              </tr>
-            </table>
-          </div>
-        </center>';
+              </td>
+            </tr>
+          </table>
+        </div>';
 }
 
 
@@ -650,15 +645,17 @@ function show_del_guild()
     redirect("guild.php?error=6");
 
   $output .= '
-        <center>
-          <h1><font class="error">'.lang("global", "are_you_sure").'</font></h1>
+        <div class="center_text">
+          <h1><span class="error">'.lang("global", "are_you_sure").'</span></h1>
           <br />
-          <font class="bold">'.lang("guild", "guild_id").': '.$id.' "'.$_GET["name"].'"<br />'.lang("global", "will_be_erased").'</font>
+          <span class="bold">'.lang("guild", "guild_id").': '.$id.' "'.$_GET["name"].'"<br />'.lang("global", "will_be_erased").'</span>
           <br />
           <br />
-          <form action="guild.php?action=do_del_guild" method="post" name="form">
-            <input type="hidden" name="check" value="'.(-$id).'" />
-            <table class="hidden">
+          <form action="guild.php?action=do_del_guild" method="post" id="form">
+            <div class="no_display">
+              <input type="hidden" name="check" value="'.(-$id).'" />
+            </div>
+            <table class="hidden center">
               <tr>
                 <td>';
 
@@ -673,7 +670,7 @@ function show_del_guild()
               </tr>
             </table>
           </form>
-        </center>';
+        </div>';
 }
 
 
@@ -790,17 +787,17 @@ $err = ( ( isset($_GET["error"]) ) ? $_GET["error"] : NULL );
 
 $output .= '
       <div class="bubble">
-          <div class="top">';
+        <div class="top">';
 
 switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "err_empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_no_search_passed").'</font></h1>';
+          <h1><span class="error">'.lang("global", "err_no_search_passed").'</span></h1>';
     break;
   case 3:
     $output .= '
@@ -808,15 +805,15 @@ switch ( $err )
     break;
   case 4:
     $output .= '
-          <h1><font class="error">'.lang("guild", "guild_search_result").':</font></h1>';
+          <h1><span class="error">'.lang("guild", "guild_search_result").':</span></h1>';
     break;
   case 5:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_invalid_input").':</h1>';
+          <h1><span class="error">'.lang("global", "err_invalid_input").':</span></h1>';
     break;
   case 6:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_no_permission").':</font></h1>';
+          <h1><span class="error">'.lang("global", "err_no_permission").':</span></h1>';
     break;
   default: //no error
     $output .= '
@@ -826,7 +823,7 @@ switch ( $err )
 unset($err);
 
 $output .= '
-          </div>';
+        </div>';
 
 $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
 

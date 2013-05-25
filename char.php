@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -18,11 +18,12 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/item_lib.php';
-require_once 'libs/spell_lib.php';
-require_once 'libs/map_zone_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/item_lib.php";
+require_once "libs/spell_lib.php";
+require_once "libs/map_zone_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -257,9 +258,9 @@ function char_main()
         $guild_name = '<a href="guild.php?action=view_guild&amp;realm='.$realmid.'&amp;error=3&amp;id='.$guild_id.'" >'.$guild_name.'</a>';
         $mrank = $guild_rank;
         if ( $core == 1 )
-          $guild_rank = $sql["char"]->result($sql["char"]->query('SELECT rankname FROM guild_ranks WHERE guildid='.$guild_id.' AND rankId='.$mrank.''), 0, 'rankname');
+          $guild_rank = $sql["char"]->result($sql["char"]->query("SELECT rankname FROM guild_ranks WHERE guildid='".$guild_id."' AND rankId='".$mrank."'"), 0, "rankname");
         else
-          $guild_rank = $sql["char"]->result($sql["char"]->query('SELECT rname AS rankname FROM guild_rank WHERE guildid='.$guild_id.' AND rid='.$mrank.''), 0, 'rankname');
+          $guild_rank = $sql["char"]->result($sql["char"]->query("SELECT rname AS rankname FROM guild_rank WHERE guildid='".$guild_id."' AND rid='".$mrank."'"), 0, "rankname");
       }
       else
       {
@@ -746,79 +747,78 @@ function char_main()
 
       $output .= '
           <!-- start of char.php -->
-          <center>
-            <div class="tab">
-              <ul>
-                <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
+          <div class="tab">
+            <ul>
+              <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
 
       if ( $view_inv_override )
         $output .= '
-                <li><a href="char_inv.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "inventory").'</a></li>';
+              <li><a href="char_inv.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "inventory").'</a></li>';
 
       if ( $view_talent_override )
         $output .= '
-                '.( ( $char["level"] < 10 ) ? '' : '<li><a href="char_talent.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "talents").'</a></li>' ).'';
+              '.( ( $char["level"] < 10 ) ? '' : '<li><a href="char_talent.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "talents").'</a></li>' ).'';
 
       if ( $view_achieve_override )
         $output .= '
-                <li><a href="char_achieve.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "achievements").'</a></li>';
+              <li><a href="char_achieve.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "achievements").'</a></li>';
 
       if ( $view_quest_override )
         $output .= '
-                <li><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "quests").'</a></li>';
+              <li><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "quests").'</a></li>';
 
       if ( $view_friends_override )
         $output .= '
-                <li><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "friends").'</a></li>';
+              <li><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "friends").'</a></li>';
 
       if ( $view_view_override )
         $output .= '
-                <li><a href="char_view.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "view").'</a></li>';
+              <li><a href="char_view.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "view").'</a></li>';
 
       $output .= '
-              </ul>
-            </div>';
+            </ul>
+          </div>';
 
       if ( ( $view_override ) || ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
       {
         $output .= '
-            <div class="tab_content">
-              <div class="tab">
-                <ul>
-                  <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
+          <div class="tab_content center">
+            <div class="tab">
+              <ul>
+                <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
 
         if ( ( char_get_class_name($char["class"]) === "Hunter" ) && ( $view_pets_override ) )
           $output .= '
-                  <li><a href="char_pets.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "pets").'</a></li>';
+                <li><a href="char_pets.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "pets").'</a></li>';
 
         if ( $view_rep_override )
           $output .= '
-                  <li><a href="char_rep.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "reputation").'</a></li>';
+                <li><a href="char_rep.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "reputation").'</a></li>';
 
         if ( $view_skill_override )
           $output .= '
-                  <li><a href="char_skill.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "skills").'</a></li>';
+                <li><a href="char_skill.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "skills").'</a></li>';
 
         if ( $view_pvp_override )
           $output .= '
-                  <li><a href="char_pvp.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "pvp").'</a></li>';
+                <li><a href="char_pvp.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "pvp").'</a></li>';
 
         if ( ( $owner_name == $user_name ) || ( $user_lvl >= get_page_permission("insert", "char_mail.php") ) )
           $output .= '
-                  <li><a href="char_mail.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "mail").'</a></li>';
+                <li><a href="char_mail.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "mail").'</a></li>';
 
         $output .= '
-                </ul>
-              </div>';
+              </ul>
+            </div>';
       }
       else
         $output .= '
-            <div class="tab_content">
+            <div class="tab_content center">
               <div class="tab">
               </div>';
 
       $output .= '
-              <div class="tab_content2">
+              <div class="tab_content2 center">
                 <table class="lined" id="char_character_sheet">
                   <tr>
                     <td colspan="2">
@@ -838,7 +838,7 @@ function char_main()
         while ( $aura = $sql["char"]->fetch_assoc($a_results) )
         {
                  $output .= '
-                        <a class="char_icon_padding" href="'.$base_datasite.$spell_datasite.$aura["spell"].'" target="_blank">
+                        <a class="char_icon_padding" href="'.$base_datasite.$spell_datasite.$aura["spell"].'" rel="external">
                           <img src="'.spell_get_icon($aura["spell"]).'" alt="'.$aura["spell"].'" width="24" height="24" />
                         </a>';
         }
@@ -847,12 +847,12 @@ function char_main()
                       </div>
                     </td>
                     <td colspan="4">
-                      <font class="bold">
+                      <span class="bold">
                         '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                         <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                         <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                        - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-                      </font>
+                      </span>
                       <br />'.lang("char", "location").': '.get_map_name($char["mapid"]).' - '.get_zone_name($char["zoneid"]).'
                       <br />'.lang("char", "honor_points").': '.$char_data[PLAYER_FIELD_HONOR_CURRENCY].' | '.lang("char", "arena_points").': '.$char_data[PLAYER_FIELD_ARENA_CURRENCY].' | '.lang("char", "honor_kills").': '.$char_data[PLAYER_FIELD_LIFETIME_HONORBALE_KILLS].'
                       <br />'.lang("char", "guild").': '.$guild_name.' | '.lang("char", "rank").': '.htmlentities($guild_rank, ENT_COMPAT, $site_encoding).'
@@ -868,11 +868,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="6%">';
+                    <td style="width: 6%;">';
       if ( $equiped_items[1][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_HEAD.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'HEAD'.'\');" onmouseout="HideTooltip(\'_b'.'HEAD'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_HEAD.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'HEAD'.'\');" onmouseout="HideTooltip(\'_b'.'HEAD'.'\');">
                         <img src="'.$equiped_items[1][1].'" class="'.$equiped_items[1][2].'" alt="Head" />
                       </a>';
 
@@ -903,7 +903,7 @@ function char_main()
                       <img src="img/INV/INV_empty_head.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td class="half_line" colspan="2" align="center" width="50%">
+                    <td class="half_line" colspan="2" align="center" style="width: 50%;">
                       <div class="gradient_p" id="char_hp_name">'.lang("item", "health").':</div>
                       <div class="gradient_pp" id="char_hp_value">'.$char_data[UNIT_FIELD_HEALTH].'/'.$char_data[UNIT_FIELD_MAXHEALTH].'</div>';
       if ( $char["class"] == 11 ) //druid
@@ -913,7 +913,7 @@ function char_main()
                       <div class="gradient_pp" id="char_energy_value">'.$char_data[UNIT_FIELD_POWER1].'/'.$char_data[UNIT_FIELD_MAXPOWER1].'</div>';
       $output .= '
                     </td>
-                    <td class="half_line" colspan="2" align="center" width="50%">';
+                    <td class="half_line" colspan="2" align="center" style="width: 50%;">';
       if ( $char["class"] == 1 ) // warrior
       {
         $output .= '
@@ -954,11 +954,11 @@ function char_main()
       }
       $output .= '
                     </td>
-                    <td width="6%">';
+                    <td style="width: 6%;">';
       if ( $equiped_items[10][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_GLOVES.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'GLOVES'.'\');" onmouseout="HideTooltip(\'_b'.'GLOVES'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_GLOVES.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'GLOVES'.'\');" onmouseout="HideTooltip(\'_b'.'GLOVES'.'\');">
                         <img src="'.$equiped_items[10][1].'" class="'.$equiped_items[10][2].'" alt="Gloves" />
                       </a>';
 
@@ -991,11 +991,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[2][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_NECK.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'NECK'.'\');" onmouseout="HideTooltip(\'_b'.'NECK'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_NECK.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'NECK'.'\');" onmouseout="HideTooltip(\'_b'.'NECK'.'\');">
                         <img src="'.$equiped_items[2][1].'" class="'.$equiped_items[2][2].'" alt="Neck" />
                       </a>';
 
@@ -1026,7 +1026,7 @@ function char_main()
                       <img src="img/INV/INV_empty_neck.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td class="half_line" colspan="2" rowspan="3" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="3" align="center" style="width: 50%;">
                       <div class="gradient_p">
                         '.lang("item", "strength").':<br />
                         '.lang("item", "agility").':<br />
@@ -1044,7 +1044,7 @@ function char_main()
                         '.$char_data[UNIT_FIELD_RESISTANCES].'
                       </div>
                     </td>
-                    <td class="half_line" colspan="2" rowspan="3" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="3" align="center" style="width: 50%;">
                       <div class="gradient_p">
                         '.lang("item", "res_holy").':<br />
                         '.lang("item", "res_arcane").':<br />
@@ -1062,11 +1062,11 @@ function char_main()
                         '.$char_data[UNIT_FIELD_RESISTANCES + 6].'
                       </div>
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[6][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_BELT.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'BELT'.'\');" onmouseout="HideTooltip(\'_b'.'BELT'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_BELT.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'BELT'.'\');" onmouseout="HideTooltip(\'_b'.'BELT'.'\');">
                         <img src="'.$equiped_items[6][1].'" class="'.$equiped_items[6][2].'" alt="Belt" />
                       </a>';
 
@@ -1099,11 +1099,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[3][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_SHOULDER.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'SHOULDER'.'\');" onmouseout="HideTooltip(\'_b'.'SHOULDER'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_SHOULDER.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'SHOULDER'.'\');" onmouseout="HideTooltip(\'_b'.'SHOULDER'.'\');">
                         <img src="'.$equiped_items[3][1].'" class="'.$equiped_items[3][2].'" alt="Shoulder" />
                       </a>';
 
@@ -1134,11 +1134,11 @@ function char_main()
                       <img src="img/INV/INV_empty_shoulder.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[7][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_LEGS.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'LEGS'.'\');" onmouseout="HideTooltip(\'_b'.'LEGS'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_LEGS.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'LEGS'.'\');" onmouseout="HideTooltip(\'_b'.'LEGS'.'\');">
                         <img src="'.$equiped_items[7][1].'" class="'.$equiped_items[7][2].'" alt="Legs" />
                       </a>';
 
@@ -1171,11 +1171,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[15][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_BACK.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'BACK'.'\');" onmouseout="HideTooltip(\'_b'.'BACK'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_BACK.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'BACK'.'\');" onmouseout="HideTooltip(\'_b'.'BACK'.'\');">
                         <img src="'.$equiped_items[15][1].'" class="'.$equiped_items[15][2].'" alt="Back" />
                       </a>';
 
@@ -1206,11 +1206,11 @@ function char_main()
                       <img src="img/INV/INV_empty_chest_back.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[8][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FEET.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'FEET'.'\');" onmouseout="HideTooltip(\'_b'.'FEET'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FEET.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'FEET'.'\');" onmouseout="HideTooltip(\'_b'.'FEET'.'\');">
                         <img src="'.$equiped_items[8][1].'" class="'.$equiped_items[8][2].'" alt="Feet" />
                       </a>';
 
@@ -1243,11 +1243,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[5][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_CHEST.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'CHEST'.'\');" onmouseout="HideTooltip(\'_b'.'CHEST'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_CHEST.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'CHEST'.'\');" onmouseout="HideTooltip(\'_b'.'CHEST'.'\');">
                         <img src="'.$equiped_items[5][1].'" class="'.$equiped_items[5][2].'" alt="Chest" />
                       </a>';
 
@@ -1278,7 +1278,7 @@ function char_main()
                       <img src="img/INV/INV_empty_chest_back.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td class="half_line" colspan="2" rowspan="2" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="2" align="center" style="width: 50%;">
                       <div class="gradient_p" id="char_melee_name">
                         '.lang("char", "melee_d").':<br />
                         '.lang("char", "melee_ap").':<br />
@@ -1294,7 +1294,7 @@ function char_main()
                         '.$expertise.'<br />
                       </div>
                     </td>
-                    <td class="half_line" colspan="2" rowspan="2" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="2" align="center" style="width: 50%;">
                       <div class="gradient_p">
                         '.lang("char", "spell_d").':<br />
                         '.lang("char", "spell_heal").':<br />
@@ -1310,11 +1310,11 @@ function char_main()
                         '.$spell_haste.'
                       </div>
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[11][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FINGER1.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'FINGER1'.'\');" onmouseout="HideTooltip(\'_b'.'FINGER1'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FINGER1.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'FINGER1'.'\');" onmouseout="HideTooltip(\'_b'.'FINGER1'.'\');">
                         <img src="'.$equiped_items[11][1].'" class="'.$equiped_items[11][2].'" alt="Finger1" />
                       </a>';
 
@@ -1347,11 +1347,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[4][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_SHIRT.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'SHIRT'.'\');" onmouseout="HideTooltip(\'_b'.'SHIRT'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_SHIRT.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'SHIRT'.'\');" onmouseout="HideTooltip(\'_b'.'SHIRT'.'\');">
                         <img src="'.$equiped_items[4][1].'" class="'.$equiped_items[4][2].'" alt="Shirt" />
                       </a>';
 
@@ -1382,11 +1382,11 @@ function char_main()
                       <img src="img/INV/INV_empty_shirt.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[12][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FINGER2.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'FINGER2'.'\');" onmouseout="HideTooltip(\'_b'.'FINGER2'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_FINGER2.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'FINGER2'.'\');" onmouseout="HideTooltip(\'_b'.'FINGER2'.'\');">
                         <img src="'.$equiped_items[12][1].'" class="'.$equiped_items[12][2].'" alt="Finger2" />
                       </a>';
 
@@ -1418,11 +1418,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[19][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TABARD.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'TABARD'.'\');" onmouseout="HideTooltip(\'_b'.'TABARD'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TABARD.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'TABARD'.'\');" onmouseout="HideTooltip(\'_b'.'TABARD'.'\');">
                         <img src="'.$equiped_items[19][1].'" class="'.$equiped_items[19][2].'" alt="Tabard" />
                       </a>';
 
@@ -1452,7 +1452,7 @@ function char_main()
                       <img src="img/INV/INV_empty_tabard.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td class="half_line" colspan="2" rowspan="2" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="2" align="center" style="width: 50%;">
                       <div class="gradient_p">
                         '.lang("char", "dodge").':<br />
                         '.lang("char", "parry").':<br />
@@ -1464,7 +1464,7 @@ function char_main()
                         '.$block.'%
                       </div>
                     </td>
-                    <td class="half_line" colspan="2" rowspan="2" align="center" width="50%">
+                    <td class="half_line" colspan="2" rowspan="2" align="center" style="width: 50%;">
                       <div class="gradient_p" id="char_ranged_name">
                         '.lang("char", "ranged_d").':<br />
                         '.lang("char", "ranged_ap").':<br />
@@ -1478,11 +1478,11 @@ function char_main()
                         '.$ranged_crit.'%<br />
                       </div>
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[13][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TRINKET1.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'TRINKET1'.'\');" onmouseout="HideTooltip(\'_b'.'TRINKET1'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TRINKET1.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'TRINKET1'.'\');" onmouseout="HideTooltip(\'_b'.'TRINKET1'.'\');">
                         <img src="'.$equiped_items[13][1].'" class="'.$equiped_items[13][2].'" alt="Trinket1" />
                       </a>';
 
@@ -1515,11 +1515,11 @@ function char_main()
                     </td>
                   </tr>
                   <tr>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[9][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_WRIST.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'WRIST'.'\');" onmouseout="HideTooltip(\'_b'.'WRIST'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_WRIST.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'WRIST'.'\');" onmouseout="HideTooltip(\'_b'.'WRIST'.'\');">
                         <img src="'.$equiped_items[9][1].'" class="'.$equiped_items[9][2].'" alt="Wrist" />
                       </a>';
 
@@ -1550,11 +1550,11 @@ function char_main()
                       <img src="img/INV/INV_empty_wrist.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="1%">';
+                    <td style="width: 1%;">';
       if ( $equiped_items[14][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TRINKET2.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'TRINKET2'.'\');" onmouseout="HideTooltip(\'_b'.'TRINKET2'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_TRINKET2.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'TRINKET2'.'\');" onmouseout="HideTooltip(\'_b'.'TRINKET2'.'\');">
                         <img src="'.$equiped_items[14][1].'" class="'.$equiped_items[14][2].'" alt="Trinket2" />
                       </a>';
 
@@ -1588,11 +1588,11 @@ function char_main()
                   </tr>
                   <tr>
                     <td></td>
-                    <td width="15%">';
+                    <td style="width: 15%;">';
       if ( $equiped_items[16][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_MAIN_HAND.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'MAIN_HAND'.'\');" onmouseout="HideTooltip(\'_b'.'MAIN_HAND'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_MAIN_HAND.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'MAIN_HAND'.'\');" onmouseout="HideTooltip(\'_b'.'MAIN_HAND'.'\');">
                         <img src="'.$equiped_items[16][1].'" class="'.$equiped_items[16][2].'" alt="MainHand" />
                       </a>';
 
@@ -1623,11 +1623,11 @@ function char_main()
                       <img src="img/INV/INV_empty_main_hand.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="15%">';
+                    <td style="width: 15%;">';
       if ( $equiped_items[17][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_OFF_HAND.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'OFF_HAND'.'\');" onmouseout="HideTooltip(\'_b'.'OFF_HAND'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_OFF_HAND.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'OFF_HAND'.'\');" onmouseout="HideTooltip(\'_b'.'OFF_HAND'.'\');">
                         <img src="'.$equiped_items[17][1].'" class="'.$equiped_items[17][2].'" alt="OffHand" />
                       </a>';
 
@@ -1658,11 +1658,11 @@ function char_main()
                       <img src="img/INV/INV_empty_off_hand.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="15%">';
+                    <td style="width: 15%;">';
       if ( $equiped_items[18][1] )
       {
         $output .= '
-                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_RANGED.'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.'RANGED'.'\');" onmouseout="HideTooltip(\'_b'.'RANGED'.'\');">
+                      <a class="char_icon_padding" href="'.$base_datasite.$item_datasite.$EQU_RANGED.'" rel="external" onmouseover="ShowTooltip(this,\'_b'.'RANGED'.'\');" onmouseout="HideTooltip(\'_b'.'RANGED'.'\');">
                         <img src="'.$equiped_items[18][1].'" class="'.$equiped_items[18][2].'" alt="Ranged" />
                       </a>';
 
@@ -1693,7 +1693,7 @@ function char_main()
                       <img src="img/INV/INV_empty_ranged.png" class="icon_border_0" alt="empty" />';
       $output .= '
                     </td>
-                    <td width="15%"></td>
+                    <td style="width: 15%;"></td>
                     <td></td>
                   </tr>';
       if ( ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
@@ -1749,7 +1749,7 @@ function char_main()
               <br />
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -1805,7 +1805,6 @@ function char_main()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char.php -->';
     }
     else
@@ -1851,28 +1850,29 @@ function delete_item()
   valid_login($action_permission["delete"]);
 
   $output .= '
-          <center>
+          <div id="ch_item_delete_wrap" class="center center_text">
             <img src="img/warn_red.gif" width="48" height="48" alt="" />
-              <h1>
-                <font class="error">'.lang("global", "are_you_sure").'</font>
-              </h1>
-              <br />
-              <font class="bold">'.
-                lang("char", "thisitem").'
-                <br />'.
-                lang("global", "will_be_erased").'
-              </font>
-              <br /><br />
-              <table width="300" class="hidden">
-                <tr>
-                  <td>';
-  makebutton(lang("global", "yes"), 'char.php?action=dodelete_item&id='.$_GET["id"].'&bag='.$_GET["bag"].'&slot='.$_GET["slot"].'&item='.$_GET["item"].'&mode='.$_GET["mode"].'" type="wrn', 130);
-  makebutton(lang("global", "no"), 'char.php?id='.$_GET["id"].'&mode='.$_GET["mode"].'" type="def', 130);
+            <h1>
+              <span class="error">'.lang("global", "are_you_sure").'</span>
+            </h1>
+            <br />
+            <span class="bold">'.
+              lang("char", "thisitem").'
+              <br />'.
+              lang("global", "will_be_erased").'
+            </span>
+            <br />
+            <br />
+            <table id="ch_item_delete_table" class="hidden center">
+              <tr>
+                <td>';
+  makebutton(lang("global", "yes"), 'char.php?action=dodelete_item&amp;id='.$_GET["id"].'&amp;bag='.$_GET["bag"].'&amp;slot='.$_GET["slot"].'&amp;item='.$_GET["item"].'&amp;mode='.$_GET["mode"].'" type="wrn', 130);
+  makebutton(lang("global", "no"), 'char.php?id='.$_GET["id"].'&amp;mode='.$_GET["mode"].'" type="def', 130);
   $output .= '
-                  </td>
-                </tr>
-              </table>
-            </center>';
+                </td>
+              </tr>
+            </table>
+          </div>';
 }
 
 
@@ -1936,16 +1936,16 @@ $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
 $output .= '
       <div class="bubble">';
 
-if ( $action == 'delete_item' )
+if ( $action == "delete_item" )
   delete_item();
-elseif ( $action == 'dodelete_item' )
+elseif ( $action == "dodelete_item" )
   dodelete_item();
 else
   char_main();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

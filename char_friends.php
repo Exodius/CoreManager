@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,10 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/map_zone_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/map_zone_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -63,14 +64,14 @@ function char_friends()
   if ( !preg_match('/^[01]{1}$/', $dir) )
     $dir = 1;
 
-  $order_dir = ( ( $dir ) ? 'ASC' : 'DESC' );
+  $order_dir = ( ( $dir ) ? "ASC" : "DESC" );
   $dir = ( ( $dir ) ? 0 : 1 );
   //==========================$_GET and SECURE end========================
 
-  if ( $order_by === 'map' )
-    $order_by = 'map '.$order_dir.', zone';
-  elseif ( $order_by === 'zone' )
-    $order_by = 'zone '.$order_dir.', map';
+  if ( $order_by === "map" )
+    $order_by = "map ".$order_dir.", zone";
+  elseif ( $order_by === "zone" )
+    $order_by = "zone ".$order_dir.", map";
 
   // getting character data from database
   if ( $core == 1 )
@@ -85,7 +86,7 @@ function char_friends()
     $char = $sql["char"]->fetch_assoc($result);
 
     // we get user permissions first
-    $owner_acc_id = $sql["char"]->result($result, 0, 'acct');
+    $owner_acc_id = $sql["char"]->result($result, 0, "acct");
 
     if ( $core == 1 )
       $result = $sql["logon"]->query("SELECT login FROM accounts WHERE acct='".$char["acct"]."'");
@@ -215,7 +216,6 @@ function char_friends()
       //  because last line of header is an opening tag with 8 spaces
       //  keep html indent in sync, so debuging from browser source would be easy to read
       $output .= '
-          <center>
             <script type="text/javascript">
               // <![CDATA[
                 function wrap()
@@ -255,14 +255,14 @@ function char_friends()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">
+            <div class="tab_content center center_text">
+              <span class="bold">
                 '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                 <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-              </font>
+              </span>
               <br /><br />
-              <table class="hidden"  id="ch_fri_unk_1">
+              <table class="hidden" id="ch_fri_unk_1">
                 <tr valign="top">
                   <td>
                     <table class="lined" id="ch_fri_unk_2">';
@@ -275,20 +275,22 @@ function char_friends()
         $result = $sql["char"]->query("SELECT name, race, class, map AS mapid, zone AS zoneid, level, gender, online, account AS acct, guid
           FROM characters WHERE guid IN (SELECT friend FROM character_social WHERE guid='".$id."' AND flags=1) ORDER BY '".$order_by."' '".$order_dir."'");
 
+      $output_temp = '<tr><td style="display: none;"></td></tr>';
+
       if ( $sql["char"]->num_rows($result) )
       {
-        $output .= '
+        $output_temp .= '
                       <tr>
                         <th colspan="7" align="left">'.lang("char", "friends").'</th>
                       </tr>
                       <tr>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
                       </tr>';
         while ( $data = $sql["char"]->fetch_assoc($result) )
         {
@@ -299,15 +301,15 @@ function char_friends()
 
           $char_gm_level = $sql["mgr"]->result($sql["mgr"]->query("SELECT SecurityLevel AS gmlevel FROM config_accounts WHERE Login='".$char_owner."'"), 0, 'gmlevel');
 
-          $output .= '
+          $output_temp .= '
                       <tr>
                         <td>';
           if ( $user_lvl >= $char_gm_level )
-            $output .= '
+            $output_temp .= '
                           <a href="char.php?id='.$data["guid"].'">'.$data["name"].'</a>';
           else
-            $output .= $data["name"];
-          $output .= '
+            $output_temp .= $data["name"];
+          $output_temp .= '
                         </td>
                         <td><img src="img/c_icons/'.$data["race"].'-'.$data["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($data["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
                         <td><img src="img/c_icons/'.$data["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($data["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
@@ -329,18 +331,18 @@ function char_friends()
 
       if ( $sql["char"]->num_rows($result) )
       {
-        $output .= '
+        $output_temp .= '
                       <tr>
                         <th colspan="7" align="left">'.lang("char", "friendof").'</th>
                       </tr>
                       <tr>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
                       </tr>';
         while ( $data = $sql["char"]->fetch_assoc($result) )
         {
@@ -351,15 +353,15 @@ function char_friends()
 
           $char_gm_level = $sql["mgr"]->result($sql["mgr"]->query("SELECT SecurityLevel AS gmlevel FROM config_accounts WHERE Login='".$char_owner."'"), 0, 'gmlevel');
 
-          $output .= '
+          $output_temp .= '
                       <tr>
                         <td>';
           if ( $user_lvl >= $char_gm_level )
-            $output .= '
+            $output_temp .= '
                           <a href="char.php?id='.$data["guid"].'">'.$data["name"].'</a>';
           else
-            $output .= $data["name"];
-          $output .='
+            $output_temp .= $data["name"];
+          $output_temp .='
                         </td>
                         <td><img src="img/c_icons/'.$data["race"].'-'.$data["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($data["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
                         <td><img src="img/c_icons/'.$data["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($data["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
@@ -381,18 +383,18 @@ function char_friends()
 
       if ( $sql["char"]->num_rows($result) )
       {
-        $output .= '
+        $output_temp .= '
                       <tr>
                         <th colspan="7" align="left">'.lang("char", "ignored").'</th>
                       </tr>
                       <tr>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.($order_by==='name' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "name").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.($order_by==='race' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "race").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.($order_by==='class' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "class").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.($order_by==='level' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "level").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.($order_by==='mapid '.$order_dir.', zone' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "map").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.($order_by==='zoneid '.$order_dir.', map' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "zone").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.($order_by==='online' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "online").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.($order_by==='name' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "name").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.($order_by==='race' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "race").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.($order_by==='class' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "class").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.($order_by==='level' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "level").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.($order_by==='mapid '.$order_dir.', zone' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "map").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.($order_by==='zoneid '.$order_dir.', map' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "zone").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.($order_by==='online' ? ' class="'.$order_dir.'"' : '').'>'.lang("char", "online").'</a></th>
                       </tr>';
         while ( $data = $sql["char"]->fetch_assoc($result) )
         {
@@ -403,15 +405,15 @@ function char_friends()
 
           $char_gm_level = $sql["mgr"]->result($sql["mgr"]->query("SELECT SecurityLevel AS gmlevel FROM config_accounts WHERE Login='".$char_owner."'"), 0, 'gmlevel');
 
-          $output .= '
+          $output_temp .= '
                       <tr>
                         <td>';
           if ( $user_lvl >= $char_gm_level )
-            $output .= '
+            $output_temp .= '
                           <a href="char.php?id='.$data["guid"].'">'.$data["name"].'</a>';
           else
-            $output .= $data["name"];
-          $output .= '
+            $output_temp .= $data["name"];
+          $output_temp .= '
                         </td>
                         <td><img src="img/c_icons/'.$data["race"].'-'.$data["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($data["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
                         <td><img src="img/c_icons/'.$data["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($data["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
@@ -433,18 +435,18 @@ function char_friends()
 
       if ( $sql["char"]->num_rows($result) )
       {
-        $output .= '
+        $output_temp .= '
                       <tr>
                         <th colspan="7" align="left">'.lang("char", "ignoredby").'</th>
                       </tr>
                       <tr>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
-                        <th width="1%"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=name&amp;dir='.$dir.'"'.( ( $order_by === 'name' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "name").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=race&amp;dir='.$dir.'"'.( ( $order_by === 'race' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "race").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=class&amp;dir='.$dir.'"'.( ( $order_by === 'class' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "class").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=level&amp;dir='.$dir.'"'.( ( $order_by === 'level' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "level").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=mapid&amp;dir='.$dir.'"'.( ( $order_by === 'map '.$order_dir.', zone' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "map").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=zoneid&amp;dir='.$dir.'"'.( ( $order_by === 'zone '.$order_dir.', map' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "zone").'</a></th>
+                        <th style="width: 1%;"><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'&amp;order_by=online&amp;dir='.$dir.'"'.( ( $order_by === 'online' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("char", "online").'</a></th>
                       </tr>';
         while ( $data = $sql["char"]->fetch_assoc($result) )
         {
@@ -455,15 +457,15 @@ function char_friends()
 
           $char_gm_level = $sql["mgr"]->result($sql["mgr"]->query("SELECT SecurityLevel AS gmlevel FROM config_accounts WHERE Login='".$char_owner."'"), 0, 'gmlevel');
 
-          $output .= '
+          $output_temp .= '
                       <tr>
                         <td>';
           if ( $user_lvl >= $char_gm_level )
-            $output .= '
+            $output_temp .= '
                           <a href="char.php?id='.$data["guid"].'">'.$data["name"].'</a>';
           else
-            $output .= $data["name"];
-          $output .= '
+            $output_temp .= $data["name"];
+          $output_temp .= '
                         </td>
                         <td><img src="img/c_icons/'.$data["race"].'-'.$data["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($data["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
                         <td><img src="img/c_icons/'.$data["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($data["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
@@ -474,6 +476,9 @@ function char_friends()
                       </tr>';
         }
       }
+
+      $output .= $output_temp;
+
       $output .= '
                     </table>
                   </td>';
@@ -484,7 +489,7 @@ function char_friends()
               </table>
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -524,7 +529,6 @@ function char_friends()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_friends.php -->';
     }
     else
@@ -549,7 +553,7 @@ char_friends();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once("header.php");
-require_once("libs/char_lib.php");
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -43,9 +44,8 @@ function show_list()
         <table class="top_hidden">
           <tr>
             <td>
-              <center>
-                <div class="half_frame fieldset_border">
-                  <span class="legend">'.lang("ultra", "selectchar").'</span>';
+              <div class="half_frame fieldset_border center">
+                <span class="legend">'.lang("ultra", "selectchar").'</span>';
   if ( $num_rows == 0 )
   {
     // Localization
@@ -53,92 +53,93 @@ function show_list()
     $nochars = str_replace("%1", $_SESSION["login"], $nochars);
 
     $output .= '
-                  <table>
-                    <tr>
-                      <td>
-                        <b>'.$nochars.'</b>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>';
+                <table>
+                  <tr>
+                    <td>
+                      <b>'.$nochars.'</b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>';
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
     $output .= '
-                      </td>
-                    </tr>
-                  </table>';
+                    </td>
+                  </tr>
+                </table>';
   }
   else
   {
     $output .= '
-                  <form method="get" action="ultra_vendor.php" name="form">
+                <form method="get" action="ultra_vendor.php" id="form">
+                  <div>
                     <input type="hidden" name="action" value="selected_char" />
-                      <table class="lined" id="xname_char_table">
-                        <tr>
-                          <th class="xname_radio">&nbsp;</th>
-                          <th class="xname_name">'.lang("xname", "char").'</th>
-                          <th class="xname_LRC">'.lang("xname", "lvl").'</th>
-                          <th class="xname_LRC">'.lang("xname", "race").'</th>
-                          <th class="xname_LRC">'.lang("xname", "class").'</th>
-                        </tr>';
+                  </div>
+                  <table class="lined" id="xname_char_table">
+                    <tr>
+                      <th class="xname_radio">&nbsp;</th>
+                      <th class="xname_name">'.lang("xname", "char").'</th>
+                      <th class="xname_LRC">'.lang("xname", "lvl").'</th>
+                      <th class="xname_LRC">'.lang("xname", "race").'</th>
+                      <th class="xname_LRC">'.lang("xname", "class").'</th>
+                    </tr>';
     if ( $num_rows > 1 )
     {
       while ($field = $sql["char"]->fetch_assoc($result))
       {
         $output .= '
-                        <tr>
-                          <td>
-                            <input type="radio" name="charname" value="'.$field["name"].'" />
-                          </td>
-                          <td>'.$field["name"].'</td>
-                          <td>'.char_get_level_color($field["level"]).'</td>
-                          <td>
-                            <img src="img/c_icons/'.$field["race"].'-'.$field["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($field["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                          </td>
-                          <td>
-                            <img src="img/c_icons/'.$field["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($field["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                          </td>
-                        </tr>';
+                    <tr>
+                      <td>
+                        <input type="radio" name="charname" value="'.$field["name"].'" />
+                      </td>
+                      <td>'.$field["name"].'</td>
+                      <td>'.char_get_level_color($field["level"]).'</td>
+                      <td>
+                        <img src="img/c_icons/'.$field["race"].'-'.$field["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($field["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                      </td>
+                      <td>
+                        <img src="img/c_icons/'.$field["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($field["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                      </td>
+                    </tr>';
       }
     }
     else
     {
       $field = $sql["char"]->fetch_assoc($result);
       $output .= '
-                        <tr>
-                          <td>
-                            <input type="radio" name="charname" value="'.$field["name"].'" checked="true" />
-                          </td>
-                          <td>'.$field["name"].'</td>
-                          <td>'.char_get_level_color($field["level"]).'</td>
-                          <td>
-                            <img src="img/c_icons/'.$field["race"].'-'.$field["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($field["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                          </td>
-                          <td>
-                            <img src="img/c_icons/'.$field["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($field["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                          </td>
-                          </td>
-                        </tr>';
+                    <tr>
+                      <td>
+                        <input type="radio" name="charname" value="'.$field["name"].'" checked="true" />
+                      </td>
+                      <td>'.$field["name"].'</td>
+                      <td>'.char_get_level_color($field["level"]).'</td>
+                      <td>
+                        <img src="img/c_icons/'.$field["race"].'-'.$field["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($field["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                      </td>
+                      <td>
+                        <img src="img/c_icons/'.$field["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($field["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                      </td>
+                      </td>
+                    </tr>';
     }
     $output .= '
-                        <tr>
-                          <td class="hidden" colspan="3">';
+                    <tr>
+                      <td class="hidden" colspan="3">';
     makebutton(lang("ultra", "select"), "javascript:do_submit()\" type=\"def",180);
     $output .= '
-                          </td>
-                          <td class="hidden" colspan="2">';
+                      </td>
+                      <td class="hidden" colspan="2">';
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def",130);
     $output .= '
-                          </td>
-                        </tr>
-                      </table>
-                    </form>';
+                      </td>
+                    </tr>
+                  </table>
+                </form>';
   }
   $output .= '
-                  </div>
-                </center>
-              </td>
-            </tr>
-          </table>';
+              </div>
+            </td>
+          </tr>
+        </table>';
 
 }
 
@@ -160,13 +161,15 @@ function select_item()
           <table class="top_hidden">
             <tr>
               <td>
-                <center>
-                  <div class="half_frame fieldset_border">
-                    <span class="legend">'.lang("ultra", "selectitem").'</span>
-                    <form method="get" action="ultra_vendor.php" name="form">
+                <div class="half_frame fieldset_border center center_text">
+                  <span class="legend">'.lang("ultra", "selectitem").'</span>
+                  <form method="get" action="ultra_vendor.php" id="form">
+                    <div>
                       <input type="hidden" name="action" value="selected_item" />
-                      <input type="hidden" name="charname" value="'.$_GET["charname"].'" />'
-                      .lang("ultra", "itemline1").'.
+                      <input type="hidden" name="charname" value="'.$_GET["charname"].'" />
+                    </div>
+                    <div>
+                      <span>'.lang("ultra", "itemline1").'</span>.
                       <br />
                       <br />
                       <small>
@@ -179,21 +182,21 @@ function select_item()
                       <input name="myItem" type="text" />
                       <br />
                       <br />
-                      <table>
-                        <tr>
-                          <td>';
-  makebutton(lang("ultra", "select"), "javascript:do_submit()\" type=\"def", 180);
+                    </div>
+                    <table class="center">
+                      <tr>
+                        <td>';
+makebutton(lang("ultra", "select"), "javascript:do_submit()\" type=\"def", 180);
   $output .= '
-                          </td>
-                          <td>';
+                        </td>
+                        <td>';
   makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
   $output .= '
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
-                  </div>
-                </center>
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </div>
               </td>
             </tr>
           </table>';
@@ -273,13 +276,13 @@ function select_quantity()
     $chargold = $char["gold"];
     $chargold = str_pad($chargold, 4, "0", STR_PAD_LEFT);
     $pg = substr($chargold,  0, -4);
-    if ( $pg == '' )
+    if ( $pg == "" )
       $pg = 0;
     $ps = substr($chargold, -4,  2);
-    if ( ( $ps == '' ) || ( $ps == '00' ) )
+    if ( ( $ps == "" ) || ( $ps == "00" ) )
       $ps = 0;
     $pc = substr($chargold, -2);
-    if ( ( $pc == '' ) || ( $pc == '00' ) )
+    if ( ( $pc == "" ) || ( $pc == "00" ) )
       $pc = 0;
 
     $mul = $ultra_mult[$item["quality"]];
@@ -299,33 +302,32 @@ function select_quantity()
           <table class="top_hidden">
             <tr>
               <td>
-                <center>
-                  <div class="half_frame fieldset_border">
-                    <span class="legend">'.lang("ultra", "selectquantity").'</span>';
+                <div class="half_frame fieldset_border center center_text">
+                  <span class="legend">'.lang("ultra", "selectquantity").'</span>';
 
     $gold = $mul * $base_price;
     $gold = str_pad($gold, 4, "0", STR_PAD_LEFT);
     $cg = substr($gold,  0, -4);
-    if ( $cg == '' )
+    if ( $cg == "" )
       $cg = 0;
     $cs = substr($gold, -4,  2);
-    if ( ( $cs == '' ) || ( $cs == '00' ) )
+    if ( ( $cs == "" ) || ( $cs == "00" ) )
       $cs = 0;
     $cc = substr($gold, -2);
-    if ( ( $cc == '' ) || ( $cc == '00' ) )
+    if ( ( $cc == "" ) || ( $cc == "00" ) )
       $cc = 0;
     $gold = $mul * $base_price;
 
     $base_gold = $base_price;
     $base_gold = str_pad($base_gold, 4, "0", STR_PAD_LEFT);
     $bg = substr($base_gold,  0, -4);
-    if ( $bg == '' )
+    if ( $bg == "" )
       $bg = 0;
     $bs = substr($base_gold, -4,  2);
-    if ( ( $bs == '' ) || ( $bs == '00' ) )
+    if ( ( $bs == "" ) || ( $bs == "00" ) )
       $bs = 0;
     $bc = substr($base_gold, -2);
-    if ( ( $bc == '' ) || ( $bc == '00' ) )
+    if ( ( $bc == "" ) || ( $bc == "00" ) )
       $bc = 0;
 
     // Localization
@@ -335,44 +337,44 @@ function select_quantity()
 
     $output .= $isranked;
     $output .= '
-                    <br />';
+                  <br />';
 
     // Localization
     $willcost = lang("ultra", "willcost");
     $willcost = str_replace("%1", '<span id="uv_mul">'.$mul.'</span>', $willcost);
-    $cost_display = $bg.'<img src="img/gold.gif" alt="" align="middle" />'
-                      .$bs.'<img src="img/silver.gif" alt="" align="middle" />'
-                      .$bc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $cost_display = $bg.'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />'
+                      .$bs.'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />'
+                      .$bc.'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
     $willcost = str_replace("%2", $cost_display, $willcost);
 
     $output .= $willcost;
     $output .= '
-                    <br />';
+                  <br />';
 
     // Localization
     $orcost = lang("ultra", "or");
-    $or_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
-                  .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
-                  .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $or_display = $cg.'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />'
+                  .$cs.'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />'
+                  .$cc.'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
     $orcost = str_replace("%1", $or_display, $orcost);
 
     $output .= $orcost;
     $output .= '
-                    <br />
-                    <br />';
+                  <br />
+                  <br />';
 
     // Localization
     $charhas = lang("ultra", "has");
     $charhas = str_replace("%1", '<b>'.$_GET["charname"].'</b>', $charhas);
-    $money_display = $pg.'<img src="img/gold.gif" alt="" align="middle" />'
-                    .$ps.'<img src="img/silver.gif" alt="" align="middle" />'
-                    .$pc.'<img src="img/copper.gif" alt="" align="middle" />';
+    $money_display = $pg.'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />'
+                    .$ps.'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />'
+                    .$pc.'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
     $charhas = str_replace("%2", $money_display, $charhas);
 
     $output .= $charhas;
     $output .= '
-                    <br />
-                    <br />';
+                  <br />
+                  <br />';
 
     // credits
     if ( $uv_money > 0 )
@@ -388,8 +390,8 @@ function select_quantity()
         // unlimited credits
         $output .= lang("global", "credits_unlimited");
         $output .= '
-                    <br />
-                    <br />';
+                  <br />
+                  <br />';
       }
       elseif ( $credits >= 0 )
       {
@@ -404,79 +406,79 @@ function select_quantity()
 
         $output .= $credits_per_item;
         $output .= '
-                    <br />
-                    <br />';
+                  <br />
+                  <br />';
 
         $credits_avail = lang("ultra", "credits_avail");
         $credits_avail = str_replace("%1", '<b>'.(float)$credits.'</b>', $credits_avail);
 
         $output .= $credits_avail;
         $output .= '
-                    <br />
-                    <br />';
+                  <br />
+                  <br />';
       }
     }
 
     $output .= '
-                    <br />
-                    <br />
-                    <form method="get" action="ultra_vendor.php" name="form">
+                  <br />
+                  <br />
+                  <form method="get" action="ultra_vendor.php" id="form">
+                    <div>
                       <input type="hidden" name="action" value="selected_quantity" />
                       <input type="hidden" name="charname" value="'.$_GET["charname"].'" />
                       <input type="hidden" name="gold" value="'.$gold.'" />
-                      <input type="hidden" name="item" value="'.$item["entry"].'" />'
-                      .lang("ultra", "wanted").':
+                      <input type="hidden" name="item" value="'.$item["entry"].'" />
+                    </div>
+                    <div>
+                      <span>'.lang("ultra", "wanted").': </span>
                       <input type="text" name="want" value="0" />
                       <br />
                       <br />
-                      <table>
-                        <tr>
-                          <td>';
+                    </div>
+                    <table class="center">
+                      <tr>
+                        <td>';
 
     makebutton(lang("ultra", "submit"), "javascript:do_submit()\" type=\"def", 180);
 
     $output .= '
-                          </td>
-                          <td>';
+                        </td>
+                        <td>';
 
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
 
     $output .= '
-                          </td>
-                        </tr>
-                      </table>
-                    </form>
-                  </div>
-                </center>
+                        </td>
+                      </tr>
+                    </table>
+                  </form>
+                </div>
               </td>
             </tr>
           </table>';
   }
   else
   {
-
     $output .= '
           <table class="top_hidden">
             <tr>
               <td>
-                <center>
-                  <div class="half_frame fieldset_border">
-                    <span class="legend">'.lang("ultra", "denied_legend").'</span>
-                    <span>'.lang("ultra", "denied").'</span>
-                      <br />
-                      <br />
-                      <table>
-                        <tr>
-                          <td>';
+                <div class="half_frame fieldset_border center center_text">
+                  <span class="legend">'.lang("ultra", "denied_legend").'</span>
+                  <span>'.lang("ultra", "denied").'</span>
+                  <br />
+                  <br />
+                  <table>
+                    <tr>
+                      <td>';
 
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
 
     $output .= '
-                          </td>
-                        </tr>
-                      </table>
-                  </div>
-                </center>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
               </td>
             </tr>
           </table>';
@@ -530,13 +532,13 @@ function approve()
   $total = $_GET["gold"] * $_GET["want"];
   $total = str_pad($total, 4, "0", STR_PAD_LEFT);
   $cg = substr($total,  0, -4);
-  if ( $cg == '' )
+  if ( $cg == "" )
     $cg = 0;
   $cs = substr($total, -4,  2);
-  if ( ( $cs == '' ) || ( $cs == '00' ) )
+  if ( ( $cs == "" ) || ( $cs == "00" ) )
     $cs = 0;
   $cc = substr($total, -2);
-  if ( ( $cc == '' ) || ( $cc == '00' ) )
+  if ( ( $cc == "" ) || ( $cc == "00" ) )
     $cc = 0;
 
   // credits
@@ -561,10 +563,9 @@ function approve()
           <table class="top_hidden">
             <tr>
               <td>
-                <center>
-                  <div class="half_frame fieldset_border">
-                    <span class="legend">'.lang("ultra", "approvecost").'</span>
-                    <table>';
+                <div class="half_frame fieldset_border center center_text">
+                  <span class="legend">'.lang("ultra", "approvecost").'</span>
+                  <table class="center">';
 
   if ( $_GET["want"] <> 0 )
   {
@@ -577,14 +578,12 @@ function approve()
       $poor = str_replace("%3", '<b>'.$item["name1"].'</b>', $poor);
 
       $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>';
+                    <tr>
+                      <td colspan="3">';
       $output .= $poor;
       $output .= '
-                          </center>
-                        </td>
-                      </tr>';
+                      </td>
+                    </tr>';
     }
     else
     {
@@ -592,39 +591,37 @@ function approve()
       $purchase = lang("ultra", "purchase");
       $purchase = str_replace("%1", '<span id="uv_approve_quantity">'.$_GET["want"].'</span>', $purchase);
       $purchase = str_replace("%2", '<b>'.$item["name1"].'</b>', $purchase);
-      $cost_display = $cg.'<img src="img/gold.gif" alt="" align="middle" /> '
-                      .$cs.'<img src="img/silver.gif" alt="" align="middle" /> '
-                      .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+      $cost_display = $cg.'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" /> '
+                      .$cs.'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" /> '
+                      .$cc.'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
       $purchase = str_replace("%3", $cost_display, $purchase);
 
       $output .= '
-                        <tr>
-                          <td colspan="3">
-                            <center>';
+                    <tr>
+                      <td colspan="3">';
       $output .= $purchase;
       $output .= '
-                            </center>
-                          </td>
-                        </tr>';
+                      </td>
+                    </tr>';
     }
 
     if ( ( $total > $char["gold"] ) && ( ( $credit_cost > $credits ) && ( $credits >= 0 ) ) )
     {
       $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>'.lang("ultra", "and_credits").'</center>
-                        </td>
-                      </tr>';
+                    <tr>
+                      <td colspan="3">
+                        <span>'.lang("ultra", "and_credits").'</span>
+                      </td>
+                    </tr>';
     }
     else
     {
       $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>'.lang("ultra", "or_credits").'</center>
-                        </td>
-                      </tr>';
+                    <tr>
+                      <td colspan="3">
+                        <span>'.lang("ultra", "or_credits").'</span>
+                      </td>
+                    </tr>';
     }
 
     if ( $credits >= 0 )
@@ -637,14 +634,12 @@ function approve()
         $poor = str_replace("%2", '<b>'.$item["name1"].'</b>', $poor);
 
         $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>';
+                    <tr>
+                      <td colspan="3">';
         $output .= $poor;
         $output .= '
-                          </center>
-                        </td>
-                      </tr>';
+                      </td>
+                    </tr>';
       }
       else
       {
@@ -655,25 +650,23 @@ function approve()
         $purchase = str_replace("%3", $credit_cost, $purchase);
 
         $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>';
+                    <tr>
+                      <td colspan="3">';
         $output .= $purchase;
         $output .= '
-                          </center>
-                        </td>
-                      </tr>';
+                      </td>
+                    </tr>';
       }
     }
     else
     {
       // Unlimited Credits
       $output .= '
-                      <tr>
-                        <td colspan="3">
-                          <center>'.lang("ultra", "credits_unlimited").'</center>
-                        </td>
-                      </tr>';
+                    <tr>
+                      <td colspan="3">
+                        <span>'.lang("global", "credits_unlimited").'</span>
+                      </td>
+                    </tr>';
 
       // to make deciding whether to display the Use Credits button easier,
       // we'll fake our credit balance...
@@ -683,71 +676,70 @@ function approve()
     if ( ( $total > $char["gold"] ) && ( $credit_cost > $credits ) )
     {
       $output .= '
-                      <tr>
-                        <td align="left">';
+                    <tr>
+                      <td align="left">';
       makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
       $output .= '
-                        </td>
-                      </tr>';
+                      </td>
+                    </tr>';
     }
     else
     {
       $output .= '
-                        <tr>';
+                    <tr>';
       if ( $total <= $char["gold"] )
       {
         $output .= '
-                          <td>';
+                      <td>';
         makebutton(lang("ultra", "submit_money"), "ultra_vendor.php?action=purchase&amp;mode=money&amp;char=".$char["name"]."&amp;item=".$item["entry"]."&amp;want=".$_GET["want"]."&amp;total=".$total."\" type=\"def", 180);
         $output .= '
-                          </td>';
+                      </td>';
       }
       else
       {
         $output .= '
-                          <td></td>';
+                      <td></td>';
       }
 
       if ( $credit_cost <= $credits )
       {
         $output .= '
-                          <td>';
+                      <td>';
         makebutton(lang("ultra", "submit_credits"), "ultra_vendor.php?action=purchase&amp;mode=credits&amp;char=".$char["name"]."&amp;item=".$item["entry"]."&amp;want=".$_GET["want"]."&amp;total=".$credit_cost."\" type=\"def", 180);
         $output .= '
-                          </td>';
+                      </td>';
       }
       else
       {
         $output .= '
-                          <td></td>';
+                      <td></td>';
       }
 
       $output .= '
-                          <td>';
+                        <td>';
       makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
       $output .= '
-                          </td>
-                        </tr>';
+                      </td>
+                    </tr>';
     }
   }
   else
   {
     $output .= '
-                      <tr>
-                        <td>'.lang("ultra", "insufficientquantity").'</td>
-                      </tr>
-                      <tr>
-                        <td>';
+                    <tr>
+                      <td>'.lang("ultra", "insufficientquantity").'</td>
+                    </tr>
+                    <tr>
+                      <td>';
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
     $output .= '
-                        </td>
-                      </tr>';
+                      </td>
+                    </tr>';
   }
 
   $output .= '
-                    </table>
-                  </div>
-                </center>
+                  </table>
+                </div>
               </td>
             </tr>
           </table>';
@@ -899,11 +891,11 @@ switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class="error">'.lang("ultra", "failed").'</font></h1>';
+          <h1><span class="error">'.lang("ultra", "failed").'</span></h1>';
     break;
   case 3:
     $output .= '
@@ -919,7 +911,7 @@ $output .= '
         </div>';
 
 // this is a pre-filter because mail from outside mail.php is priority
-if ( $_GET['moneyresult'] )
+if ( $_GET["moneyresult"] )
   showresults();
 
 $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
@@ -945,6 +937,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

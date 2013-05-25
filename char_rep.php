@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -260,15 +261,19 @@ function char_rep()
 
     if ( ( $view_override ) || ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
     {
-      // this_is_junk: ArcEmu stores reputation in a single field
-      //               [faction id][unk1][unk2][standing],
-      //               I'm sure the two unk's are useful data, I just don't need it here.
-      //               But, we're going to break the values into two arrays
       if ( $core == 1 )
       {
-        $result = $sql["char"]->query("SELECT reputation FROM characters WHERE guid='".$id."'");
-        $result = $sql["char"]->fetch_assoc($result);
-        $result = $result["reputation"];
+        $result = $sql["char"]->query("SELECT faction, standing FROM playerreputations WHERE guid='".$id."'");
+
+        $factions = array();
+        $faction_ranks = array();
+        
+        while ( $fact = $sql["char"]->fetch_assoc($result) )
+        {
+          array_push($factions, $fact["faction"]);
+          array_push($faction_ranks, $fact["standing"]);
+        }
+        /*$result = $result["reputation"];
         $result = substr($result, 0, strlen($result) - 1);
         $result = explode(",", $result);
         $factions = array();
@@ -303,7 +308,7 @@ function char_rep()
               break;
             }
           }
-        }
+        }*/
       }
       else
       {
@@ -319,7 +324,6 @@ function char_rep()
       }
 
       $output .= '
-          <center>
             <div class="tab">
               <ul>
                 <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -351,7 +355,7 @@ function char_rep()
       $output .= '
                </ul>
             </div>
-            <div class="tab_content">
+            <div class="tab_content center">
               <div class="tab">
                 <ul>
                   <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -378,12 +382,12 @@ function char_rep()
       $output .= '
                 </ul>
               </div>
-              <div class="tab_content2">
-                <font class="bold">
+              <div class="tab_content2 center center_text">
+                <span class="bold">
                   '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                   <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                   <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-                </font>
+                </span>
                 <br />
                 <br />';
 
@@ -544,8 +548,8 @@ function char_rep()
             // this_is_junk: style left hardcoded because it's calculated.
             $temp_out[$ft][0] .= '
                         <tr>
-                          <td width="30%" align="left">'.$faction_name.'</td>
-                          <td width="55%" valign="top">
+                          <td style="width: 30%;" align="left">'.$faction_name.'</td>
+                          <td style="width: 55%;" valign="top">
                             <div class="faction-bar">
                               <div class="rep'.$rep_rank.'">
                                 <span class="rep-data">'.$rep.'/'.$rep_cap.'</span>
@@ -553,7 +557,7 @@ function char_rep()
                               </div>
                             </div>
                           </td>
-                          <td width="15%" align="left" class="rep'.$rep_rank.'">'.$rep_rank_name.'</td>
+                          <td style="width: 15%;" align="left" class="rep'.$rep_rank.'">'.$rep_rank_name.'</td>
                         </tr>';
             $temp_out[$ft][1] = 1;
           }
@@ -578,7 +582,7 @@ function char_rep()
               <br />
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -618,7 +622,6 @@ function char_rep()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_achieve.php -->';
     }
     else
@@ -643,7 +646,7 @@ char_rep();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -46,67 +46,64 @@ function menus()
     {
       $top_menus = $sqlm->query("SELECT * FROM config_top_menus");
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
+        <form action="admin.php" method="get" id="form">
+          <div>
             <input type="hidden" name="section" value="menus" />
-            <table class="simple" id="admin_top_menus">
-              <tr>
-                <th>'.lang("admin", "edit").'</th>
-                <th>'.lang("admin", "remove").'</th>
-                <th>'.lang("admin", "internalname").'</th>
-                <th>'.lang("admin", "action").'</th>
-                <th>'.lang("admin", "enabled").'</th>
-              </tr>';
+          </div>
+          <table class="simple" id="admin_top_menus">
+            <tr>
+              <th>'.lang("admin", "edit").'</th>
+              <th>'.lang("admin", "remove").'</th>
+              <th>'.lang("admin", "internalname").'</th>
+              <th>'.lang("admin", "action").'</th>
+              <th>'.lang("admin", "enabled").'</th>
+            </tr>';
       $color = "#EEEEEE";
       while ( $top_menu = $sqlm->fetch_assoc($top_menus) )
       {
         $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=menus&amp;top_menu='.$top_menu["Index"].'&amp;editmenu=editmenu">
-                      <img src="img/edit.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=menus&amp;top_menu='.$top_menu["Index"].'&amp;delmenu=delmenu">
-                      <img src="img/aff_cross.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$top_menu["Name"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$top_menu["Action"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center><img src="img/'.( ( $top_menu["Enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></center>
-                </td>
-              </tr>';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=menus&amp;top_menu='.$top_menu["Index"].'&amp;editmenu=editmenu">
+                    <img src="img/edit.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=menus&amp;top_menu='.$top_menu["Index"].'&amp;delmenu=delmenu">
+                    <img src="img/aff_cross.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$top_menu["Name"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$top_menu["Action"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span><img src="img/'.( ( $top_menu["Enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
+              </td>
+            </tr>';
         $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
       }
       $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=menus&amp;addmenu=addmenu">
-                      <img src="img/add.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'" colspan="4">
-                  <a href="admin.php?section=menus&amp;addmenu=addmenu">'.lang("admin", "addmenu").'</a>
-                </td>
-              </tr>
-            </table>
-            <!-- input type="submit" name="editmenu" value="'.lang("admin", "editmenu").'">
-            <input type="submit" name="addmenu" value="'.lang("admin", "addmenu").'">
-            <input type="submit" name="delmenu" value="'.lang("admin", "delmenu").'" -->
-          </form>
-        </center>';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=menus&amp;addmenu=addmenu">
+                    <img src="img/add.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.';" colspan="4">
+                <a href="admin.php?section=menus&amp;addmenu=addmenu">'.lang("admin", "addmenu").'</a>
+              </td>
+            </tr>
+          </table>
+        </form>';
       break;
     }
     case "edit":
@@ -114,16 +111,18 @@ function menus()
       $top_menu = $sqlm->quote_smart($_GET["top_menu"]);
       $top = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_top_menus WHERE `Index`='".$top_menu."'"));
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="menus" />
-            <input type="hidden" name="top_index" value="'.$top_menu.'" />';
+        <div class="center" id="admin_edit_menu_wrap">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="menus" />
+              <input type="hidden" name="top_index" value="'.$top_menu.'" />';
 
       if ( ( $top["Name"] == "main" ) || ( $top["Name"] == "invisible" ) )
         $output .= '
-            <input type="hidden" name="enabled" value="1" />';
+              <input type="hidden" name="enabled" value="1" />';
 
       $output .= '
+            </div>
             <table class="simple" id="admin_edit_top_menu_nameaction">
               <tr>
                 <th colspan="2">'.lang("admin", "top_menu").'</th>
@@ -159,8 +158,8 @@ function menus()
                 <th>'.lang("admin", "edit").'</th>
                 <th>'.lang("admin", "remove").'</th>
                 <th>'.lang("admin", "order").'</th>
-                <th>'.lang("admin", "internalname").'</th>
-                <th>'.lang("admin", "action").'</th>
+                <th style="width: 15%;">'.lang("admin", "internalname").'</th>
+                <th style="width: 25%;">'.lang("admin", "action").'</th>
                 <th>'.lang("admin", "view").'</th>
                 <th>'.lang("admin", "insert").'</th>
                 <th>'.lang("admin", "update").'</th>
@@ -173,69 +172,68 @@ function menus()
       {
         $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=menus&amp;top_index='.$top_menu.'&amp;menu_item='.$menu["Index"].'&amp;editmenu_item=editmenuitem">
                       <img src="img/edit.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=menus&amp;top_index='.$top_menu.'&amp;menu_item='.$menu["Index"].'&amp;delmenu_item=delmenuitem">
                       <img src="img/aff_cross.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$menu["Order"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$menu["Order"].'</span>
                 </td>
-                <td width="15%" style="background-color:'.$color.'">
-                  <center>'.$menu["Name"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$menu["Name"].'</span>
                 </td>
-                <td width="25%" style="background-color:'.$color.'">
-                  <center>'.$menu["Action"].'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.$menu["Action"].'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($menu["View"]).' ('.$menu["View"].')'.'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($menu["View"]).' ('.$menu["View"].')'.'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($menu["Insert"]).' ('.$menu["Insert"].')'.'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($menu["Insert"]).' ('.$menu["Insert"].')'.'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($menu["Update"]).' ('.$menu["Update"].')'.'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($menu["Update"]).' ('.$menu["Update"].')'.'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.sec_level_name($menu["Delete"]).' ('.$menu["Delete"].')'.'</center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>'.sec_level_name($menu["Delete"]).' ('.$menu["Delete"].')'.'</span>
                 </td>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <img src="img/'.( ( $menu["Enabled"] ) ? 'up' : 'down' ).'.gif" alt="" />
-                  </center>
+                  </span>
                 </td>
               </tr>';
         $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
       }
       $output .= '
               <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
+                <td style="background-color:'.$color.'; text-align: center;">
+                  <span>
                     <a href="admin.php?section=menus&amp;top_index='.$top_menu.'&amp;addmenu_item=addmenuitem">
                       <img src="img/add.png" alt="" />
                     </a>
-                  </center>
+                  </span>
                 </td>
                 <td style="background-color:'.$color.'" colspan="8">
                   <a href="admin.php?section=menus&amp;top_index='.$top_menu.'&amp;addmenu_item=addmenuitem">'.lang("admin", "addmenu_item").'</a>
                 </td>
               </tr>
             </table>
-            <!-- input type="submit" name="editmenu_item" value="'.lang("admin", "editmenu_item").'">
-            <input type="submit" name="addmenu_item" value="'.lang("admin", "addmenu_item").'" -->
-            <input type="submit" name="savemenu" value="'.lang("admin", "save").'" />
-            <!-- input type="submit" name="delmenu_item" value="'.lang("admin", "delmenu_item").'" -->
+            <div>
+              <input type="submit" name="savemenu" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
       break;
     }
     case "edititem":
@@ -247,12 +245,14 @@ function menus()
       $top_menu_result = $sqlm->query($top_menu_query);
 
       $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <input type="hidden" name="section" value="menus" />
-            <input type="hidden" name="action" value="savemenu" />
-            <input type="hidden" name="menu_item" value="'.$menu_item.'" />
-            <fieldset id="admin_edit_menu_field">
+        <div id="admin_edit_menu_field">
+          <form action="admin.php" method="get" id="form">
+            <div>
+              <input type="hidden" name="section" value="menus" />
+              <input type="hidden" name="action" value="savemenu" />
+              <input type="hidden" name="menu_item" value="'.$menu_item.'" />
+            </div>
+            <fieldset>
               <table class="help" id="admin_edit_menu">
                 <tr>
                   <td>
@@ -377,9 +377,11 @@ function menus()
       $output .= '
               </table>
             </fieldset>
-            <input type="submit" name="save_menu_item" value="'.lang("admin", "save").'" />
+            <div>
+              <input type="submit" name="save_menu_item" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
       break;
     }
     case "addmenu":

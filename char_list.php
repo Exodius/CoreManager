@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -18,9 +18,10 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once("libs/map_zone_lib.php");
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/map_zone_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -36,12 +37,12 @@ function browse_chars()
   if ( !is_numeric($start) )
     $start = 0;
 
-  $order_by = ( ( isset($_GET["order_by"]) ) ? $sql["logon"]->quote_smart($_GET["order_by"]) : 'guid' );
-  if ( !preg_match('/^[_[:lower:]]{1,12}$/', $order_by) )
-    $order_by = 'guid';
+  $order_by = ( ( isset($_GET["order_by"]) ) ? $sql["logon"]->quote_smart($_GET["order_by"]) : "guid" );
+  if ( !preg_match("/^[_[:lower:]]{1,12}$/", $order_by) )
+    $order_by = "guid";
 
   $dir = ( ( isset($_GET["dir"]) ) ? $sql["logon"]->quote_smart($_GET["dir"]) : 1 );
-  if ( !preg_match('/^[01]{1}$/', $dir) )
+  if ( !preg_match("/^[01]{1}$/", $dir) )
     $dir = 1;
 
   $order_dir = ( ( $dir ) ? "ASC" : "DESC" );
@@ -50,61 +51,61 @@ function browse_chars()
 
   if ( $order_by == "mapid" )
   {
-    $order_by = 'mapid, zoneid';
-    $order_hold = 'mapid';
+    $order_by = "mapid, zoneid";
+    $order_hold = "mapid";
   }
   elseif ( $order_by == "zoneid" )
   {
-    $order_by = 'zoneid, mapid';
-    $order_hold = 'zoneid';
+    $order_by = "zoneid, mapid";
+    $order_hold = "zoneid";
   }
   else
     $order_hold = $order_by;
 
   switch ( $_GET["symbol"] )
   {
-    case 'equal':
+    case "equal":
     {
-      $symbol = '=';
+      $symbol = "=";
       break;
     }
-    case 'greater_equal':
+    case "greater_equal":
     {
-      $symbol = '>=';
+      $symbol = ">=";
       break;
     }
-    case 'greater':
+    case "greater":
     {
-      $symbol = '>';
+      $symbol = ">";
       break;
     }
-    case 'less_equal':
+    case "less_equal":
     {
-      $symbol = '<=';
+      $symbol = "<=";
       break;
     }
-    case 'less':
+    case "less":
     {
-      $symbol = '<';
+      $symbol = "<";
       break;
     }
-    case 'not_equal':
+    case "not_equal":
     {
-      $symbol = '<>';
+      $symbol = "<>";
       break;
     }
   }
 
-  $search_by = '';
-  $search_value = '';
+  $search_by = "";
+  $search_value = "";
   if ( isset($_GET["search_value"]) && isset($_GET["search_by"]) )
   {
     $search_value = $sql["logon"]->quote_smart($_GET["search_value"]);
-    $search_by = ( ( isset($_GET["search_by"]) ) ? $sql["logon"]->quote_smart($_GET["search_by"]) : 'name' );
-    $search_menu = array('name', 'guid', 'account', 'level', 'greater_level', 'guild', 'race', 'class', 'mapid', 'highest_rank', 'greater_rank', 'online', 'gold', 'item');
+    $search_by = ( ( isset($_GET["search_by"]) ) ? $sql["logon"]->quote_smart($_GET["search_by"]) : "name" );
+    $search_menu = array("name", "guid", "account", "level", "greater_level", "guild", "race", "class", "mapid", "highest_rank", "greater_rank", "online", "gold", "item");
 
     if ( !in_array($search_by, $search_menu) )
-      $search_by = 'name';
+      $search_by = "name";
 
     unset($search_menu);
 
@@ -306,7 +307,6 @@ function browse_chars()
   //==========================top tage navigaion starts here========================
   $output .= '
         <script type="text/javascript" src="libs/js/check.js"></script>
-        <center>
           <table class="top_hidden">
             <tr>
               <td>';
@@ -317,8 +317,8 @@ function browse_chars()
   ( ( $search_by && $search_value ) ? makebutton(lang("char_list", "characters"), 'char_list.php" type="def', 130) : $output .= '' );
   $output .= '
               </td>
-              <td align="right" width="25%" rowspan="2">';
-  $output .= generate_pagination('char_list.php?order_by='.$order_hold.'&amp;dir='.( ($dir) ? 0 : 1 ).( ( $search_value && $search_by ) ? '&amp;symbol='.$_GET["symbol"].'&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ), $all_record, $itemperpage, $start);
+              <td align="right" style="width: 25%;" rowspan="2">';
+  $output .= generate_pagination('char_list.php?order_by='.$order_hold.'&amp;dir='.( ( $dir ) ? 0 : 1 ).( ( $search_value && $search_by ) ? '&amp;symbol='.$_GET["symbol"].'&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ), $all_record, $itemperpage, $start);
   $output .= '
               </td>
             </tr>
@@ -327,31 +327,33 @@ function browse_chars()
                 <table class="hidden">
                   <tr>
                     <td>
-                      <form action="char_list.php" method="get" name="form">
-                        <input type="hidden" name="error" value="3" />
-                        <select name="search_by">
-                          <option value="name"'.( ( $search_by == 'name' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_name").'</option>
-                          <option value="guid"'.( ( $search_by == 'guid' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_id").'</option>
-                          <option value="account"'.( ( $search_by == 'account' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_account").'</option>
-                          <option value="level"'.( ( $search_by == 'level' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_level").'</option>
-                          <option value="guild"'.( ( $search_by == 'guild' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_guild").'</option>
-                          <option value="race"'.( ( $search_by == 'race' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_race_id").'</option>
-                          <option value="class"'.( ( $search_by == 'class' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_class_id").'</option>
-                          <option value="mapid"'.( ( $search_by == 'mapid' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_map_id").'</option>
-                          <option value="highest_rank"'.( ( $search_by == 'highest_rank' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_honor_kills").'</option>
-                          <option value="online"'.( ( $search_by == 'online' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_online").'</option>
-                          <option value="gold"'.( ( $search_by == 'gold' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "chars_gold").'</option>
-                          <option value="item"'.( ( $search_by == 'item' ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_item").'</option>
-                        </select>
-                        <select name="symbol">
-                          <option value="equal"'.( ( $symbol == '=' ) ? ' selected="selected"' : '' ).'>=</option>
-                          <option value="greater_equal"'.( ( $symbol == '>=' ) ? ' selected="selected"' : '' ).'>&gt;=</option>
-                          <option value="greater"'.( ( $symbol == '>' ) ? ' selected="selected"' : '' ).'>&gt;</option>
-                          <option value="less_equal"'.( ( $symbol == '<=' ) ? ' selected="selected"' : '' ).'>&lt;=</option>
-                          <option value="less"'.( ( $symbol == '<' ) ? ' selected="selected"' : '' ).'>&lt;</option>
-                          <option value="not_equal"'.( ( $symbol == '<>' ) ? ' selected="selected"' : '' ).'>!=</option>
-                        </select>
-                        <input type="text" size="24" maxlength="50" name="search_value" value="'.$search_value.'" />
+                      <form action="char_list.php" method="get" id="form">
+                        <div>
+                          <input type="hidden" name="error" value="3" />
+                          <select name="search_by">
+                            <option value="name"'.( ( $search_by == "name" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_name").'</option>
+                            <option value="guid"'.( ( $search_by == "guid" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_id").'</option>
+                            <option value="account"'.( ( $search_by == "account" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_account").'</option>
+                            <option value="level"'.( ( $search_by == "level" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_level").'</option>
+                            <option value="guild"'.( ( $search_by == "guild" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_guild").'</option>
+                            <option value="race"'.( ( $search_by == "race" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_race_id").'</option>
+                            <option value="class"'.( ( $search_by == "class" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_class_id").'</option>
+                            <option value="mapid"'.( ( $search_by == "mapid" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_map_id").'</option>
+                            <option value="highest_rank"'.( ( $search_by == "highest_rank" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_honor_kills").'</option>
+                            <option value="online"'.( ( $search_by == "online" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_online").'</option>
+                            <option value="gold"'.( ( $search_by == "gold" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "chars_gold").'</option>
+                            <option value="item"'.( ( $search_by == "item" ) ? ' selected="selected"' : '' ).'>'.lang("char_list", "by_item").'</option>
+                          </select>
+                          <select name="symbol">
+                            <option value="equal"'.( ( $symbol == "=" ) ? ' selected="selected"' : '' ).'>=</option>
+                            <option value="greater_equal"'.( ( $symbol == ">=" ) ? ' selected="selected"' : '' ).'>&gt;=</option>
+                            <option value="greater"'.( ( $symbol == ">" ) ? ' selected="selected"' : '' ).'>&gt;</option>
+                            <option value="less_equal"'.( ( $symbol == "<=" ) ? ' selected="selected"' : '' ).'>&lt;=</option>
+                            <option value="less"'.( ( $symbol == "<" ) ? ' selected="selected"' : '' ).'>&lt;</option>
+                            <option value="not_equal"'.( ( $symbol == "<>" ) ? ' selected="selected"' : '' ).'>!=</option>
+                          </select>
+                          <input type="text" size="24" maxlength="50" name="search_value" value="'.$search_value.'" />
+                        </div>
                       </form>
                     </td>
                     <td>';
@@ -365,9 +367,11 @@ function browse_chars()
           </table>';
   //==========================top tage navigaion ENDS here ========================
   $output .= '
-          <form method="get" action="char_list.php" name="form1">
-            <input type="hidden" name="action" value="del_char_form" />
-            <input type="hidden" name="start" value="'.$start.'" />
+          <form method="get" action="char_list.php" id="form1">
+            <div>
+              <input type="hidden" name="action" value="del_char_form" />
+              <input type="hidden" name="start" value="'.$start.'" />
+            </div>
             <table class="lined">
               <tr>
                 <td colspan="6" align="left" class="hidden">';
@@ -377,31 +381,62 @@ function browse_chars()
                 </td>
               </tr>
               <tr>
-                <th width="1%"><input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.form1);" /></th>
-                <th width="1%"><a href="char_list.php?order_by=guid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'guid' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "id").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=name&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'name' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "char_name").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'acct' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "account").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=race&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'race' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "race").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=class&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'class' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "class").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=level&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'level' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "level").'</a></th>
-                <th width="10%"><a href="char_list.php?order_by=mapid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'mapid, zoneid' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "map").'</a></th>
-                <th width="10%"><a href="char_list.php?order_by=zoneid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'zoneid, mapid' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "zone").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=highest_rank&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'highest_rank' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "honor_kills").'</a></th>
-                <th width="10%"><!-- a href="char_list.php?order_by=guild&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'" -->'.( ( $order_by == 'guild' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "guild").'<!-- /a --></th>
-                <th width="1%"><a href="char_list.php?order_by=timestamp&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'logout_time' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "lastseen").'</a></th>
-                <th width="1%"><a href="char_list.php?order_by=online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == 'online' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "online").'</a></th>';
+                <th style="width: 1%;">
+                  <input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.form1);" />
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=guid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "guid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "id").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=name&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "name" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "char_name").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "acct" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "account").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=race&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "race" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "race").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=class&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "class" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "class").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=level&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "level" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "level").'</a>
+                </th>
+                <th style="width: 10%;">
+                  <a href="char_list.php?order_by=mapid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "mapid, zoneid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "map").'</a>
+                </th>
+                <th style="width: 10%;">
+                  <a href="char_list.php?order_by=zoneid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "zoneid, mapid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "zone").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=highest_rank&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "highest_rank" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "honor_kills").'</a>
+                </th>
+                <th style="width: 10%;">
+                  <!-- a href="char_list.php?order_by=guild&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'" -->'.( ( $order_by == "guild" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "guild").'<!-- /a -->
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=timestamp&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "logout_time" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "lastseen").'</a>
+                </th>
+                <th style="width: 1%;">
+                  <a href="char_list.php?order_by=online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "online" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "online").'</a>
+                </th>';
 
   if ( $showcountryflag )
   {
-    require_once 'libs/misc_lib.php';
+    require_once "libs/misc_lib.php";
+
     $output .= '
-                <th width="1%">'.lang("global", "country").'</th>';
+                <th style="width: 1%;">
+                  <span>'.lang("global", "country").'</span>
+                </th>';
   }
 
   if ( $user_lvl >= $action_permission["update"] )
   {
     $output .= '
-                <th width="1%"><img src="img/arrow_switch.png" onmousemove="oldtoolTip(\''.lang("char_list", "char_tools").'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></th>';
+                <th style="width: 1%;">
+                  <img src="img/arrow_switch.png" onmousemove="oldtoolTip(\''.lang("char_list", "char_tools").'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                </th>';
   }
 
   $output .= '
@@ -431,7 +466,7 @@ function browse_chars()
     if ( $char["timestamp"] <> 0 )
       $lastseen = date("F j, Y @ Hi", $char["timestamp"] + $time_offset);
     else
-      $lastseen = '-';
+      $lastseen = "-";
 
     if ( $core == 1 )
     {
@@ -467,32 +502,68 @@ function browse_chars()
       $output .= '
                 </td>
                 <td>'.$char["guid"].'</td>
-                <td><a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a></td>';
+                <td>
+                  <a href="char.php?id='.$char["guid"].'">'.htmlentities($char["name"], ENT_COMPAT, $site_encoding).'</a>
+                </td>';
       if ( $sn["ScreenName"] )
         $output .= '
-                <td><a href="user.php?action=edit_user&amp;error=11&amp;acct='.$char["acct"].'">'.htmlentities($sn["ScreenName"], ENT_COMPAT, $site_encoding).'</a></td>';
+                <td>
+                  <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$char["acct"].'">'.htmlentities($sn["ScreenName"], ENT_COMPAT, $site_encoding).'</a>
+                </td>';
       else
         $output .= '
-                <td><a href="user.php?action=edit_user&amp;error=11&amp;acct='.$char["acct"].'">'.htmlentities($owner_acc_name, ENT_COMPAT, $site_encoding).'</a></td>';
+                <td>
+                  <a href="user.php?action=edit_user&amp;error=11&amp;acct='.$char["acct"].'">'.htmlentities($owner_acc_name, ENT_COMPAT, $site_encoding).'</a>
+                </td>';
       $output .= '
-                <td><img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                <td><img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                <td>'.char_get_level_color($char["level"]).'</td>
-                <td class="small"><span onmousemove="oldtoolTip(\'MapID:'.$char["mapid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_map_name($char["mapid"]).'</span></td>
-                <td class="small"><span onmousemove="oldtoolTip(\'ZoneID:'.$char["zoneid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_zone_name($char["zoneid"]).'</span></td>
-                <td>'.$char["highest_rank"].'</td>
-                <td class="small"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a></td>
-                <td class="small">'.$lastseen.'</td>
-                <td>'.( ( $char["online"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>';
+                <td>
+                  <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                </td>
+                <td>
+                  <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                </td>
+                <td>
+                  <span>'.char_get_level_color($char["level"]).'</span>
+                </td>
+                <td class="small">
+                  <span onmousemove="oldtoolTip(\'MapID:'.$char["mapid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_map_name($char["mapid"]).'</span>
+                </td>
+                <td class="small">
+                  <span onmousemove="oldtoolTip(\'ZoneID:'.$char["zoneid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_zone_name($char["zoneid"]).'</span>
+                </td>
+                <td>
+                  <span>'.$char["highest_rank"].'</span>
+                </td>
+                <td class="small">
+                  <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
+                </td>
+                <td class="small">
+                  <span>'.$lastseen.'</span>
+                </td>
+                <td>
+                  <img src="img/'.( ( $char["online"] ) ? 'up' : 'down' ).'.gif" alt="" />
+                </td>';
       if ( $showcountryflag )
       {
         $country = misc_get_country_by_account($char["acct"]);
-        $output .= '
-                <td>'.( ( $country["code"] ) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-').'</td>';
+        if ( $country["code"] )
+          $output .= '
+                <td>
+                  <img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                </td>';
+        else
+          $output .= '
+                <td>
+                  <span>-</span>
+                </td>';
       }
       if ( $user_lvl >= $action_permission["update"] )
         $output .= '
-                <td><a href="char_tools.php?char='.$char["guid"].'"><img src="img/arrow_switch.png" alt="" /></a></td>';
+                <td>
+                  <a href="char_tools.php?char='.$char["guid"].'">
+                    <img src="img/arrow_switch.png" alt="" />
+                  </a>
+                </td>';
       $output .= '
               </tr>';
     }
@@ -513,7 +584,7 @@ function browse_chars()
 
   $output .= '
               <tr>
-                <td colspan="13" align="right" class="hidden" width="25%">';
+                <td colspan="13" align="right" class="hidden" style="width: 25%;">';
   $output .= generate_pagination('char_list.php?order_by='.$order_by.'&amp;dir='.( ( $dir ) ? 0 : 1 ).( ( $search_value && $search_by ) ? '&amp;symbol='.$_GET["symbol"].'&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ), $all_record, $itemperpage, $start);
   $output .= '
                 </td>
@@ -527,8 +598,7 @@ function browse_chars()
                 <td colspan="7" align="right" class="hidden">'.lang("char_list", "tot_chars").' : '.$all_record.'</td>
               </tr>
             </table>
-          </form>
-        </center>';
+          </form>';
 }
 
 
@@ -544,24 +614,24 @@ function del_char_form()
   if ( isset($_GET["check"]) )
     $check = $_GET["check"];
   else
-    redirect('char_list.php?error=1');
+    redirect("char_list.php?error=1");
 
   $output .= '
-          <center>
+          <div id="char_list_delete_wrap" class="center center_text">
             <img src="img/warn_red.gif" width="48" height="48" alt="" />
               <h1>
-                <font class="error">'.lang("global", "are_you_sure").'</font>
+                <span class="error">'.lang("global", "are_you_sure").'</span>
               </h1>
               <br />
-              <font class="bold">'.lang("char_list", "char_ids").': ';
+              <span class="bold">'.lang("char_list", "char_ids").': ';
 
   $pass_array = '';
   $n_check = count($check);
-  for ( $i=0; $i<$n_check; ++$i )
+  for ( $i = 0; $i < $n_check; ++$i )
   {
     $name = $sql["char"]->result($sql["char"]->query('SELECT name FROM characters WHERE guid = '.$check[$i].''), 0);
     $output .= '
-                <a href="char.php?id='.$check[$i].'" target="_blank">'.$name.', </a>';
+                <a href="char.php?id='.$check[$i].'" rel="external">'.$name.', </a>';
     $pass_array .= '&amp;check%5B%5D='.$check[$i].'';
   }
   unset($name);
@@ -570,7 +640,7 @@ function del_char_form()
 
   $output .= '
                 <br />'.lang("global", "will_be_erased").'
-              </font>
+              </span>
               <br /><br />
               <table width="300" class="hidden">
                 <tr>
@@ -582,7 +652,7 @@ function del_char_form()
                   </td>
                 </tr>
               </table>
-            </center>';
+            </div>';
 }
 
 
@@ -598,17 +668,16 @@ function dodel_char()
   if ( isset($_GET["check"]) )
     $check = $sql["char"]->quote_smart($_GET["check"]);
   else
-    redirect('char_list.php?error=1');
+    redirect("char_list.php?error=1");
 
   $deleted_chars = 0;
-  require_once 'libs/del_lib.php';
+
+  require_once "libs/del_lib.php";
 
   $n_check = count($check);
-  for ( $i=0; $i<$n_check; ++$i )
+  for ( $i = 0; $i < $n_check; ++$i )
   {
-    if ( $check[$i] == '' )
-      ;
-    else
+    if ( !($check[$i] == "") )
       if ( del_char($check[$i], $realm_id) )
         $deleted_chars++;
   }
@@ -616,13 +685,13 @@ function dodel_char()
   unset($check);
 
   $output .= '
-          <center>';
+          <div class="center">';
   if ( $deleted_chars )
     $output .= '
-            <h1><font class="error">'.lang("char_list", "total").' <font color=blue>'.$deleted_chars.'</font> '.lang("char_list", "chars_deleted").'</font></h1>';
+            <h1><span class="error">'.lang("char_list", "total").' <span style="color: blue;">'.$deleted_chars.'</span> '.lang("char_list", "chars_deleted").'</span></h1>';
   else
     $output .= '
-            <h1><font class="error">'.lang("char_list", "no_chars_del").'</font></h1>';
+            <h1><span class="error">'.lang("char_list", "no_chars_del").'</span></h1>';
   unset($deleted_chars);
   $output .= '
             <br /><br />';
@@ -630,13 +699,13 @@ function dodel_char()
             <table class="hidden">
               <tr>
                 <td>';
-                  makebutton(lang("char_list", "back_browse_chars"), 'char_list.php', 220);
+  makebutton(lang("char_list", "back_browse_chars"), "char_list.php", 220);
   $output .= '
                 </td>
               </tr>
             </table>
             <br />
-          </center>';
+          </div>';
 }
 
 
@@ -654,15 +723,15 @@ switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_no_search_passed").'</font></h1>';
+          <h1><span class="error">'.lang("global", "err_no_search_passed").'</span></h1>';
     break;
   case 3:
     $output .= '
-          <h1><font class="error">'.lang("char_list", "search_results").':</font></h1>';
+          <h1><span class="error">'.lang("char_list", "search_results").':</span></h1>';
     break;
   default:
     $output .= '
@@ -691,6 +760,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

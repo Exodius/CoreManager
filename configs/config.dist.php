@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -31,11 +31,11 @@ $core = 0;
 //#############################################################################
 // CoreManager Database Configuration
 
-$corem_db['addr']     = '127.0.0.1:3306';         // SQL server IP:port your CoreManager DB is located on
-$corem_db['user']     = 'root';                   // SQL server login your CoreManager DB is located on
-$corem_db['pass']     = 'password';               // SQL server pass your CoreManager DB is located on
-$corem_db['name']     = 'db name';                // CoreManager DB name
-$corem_db['encoding'] = 'utf8';                   // SQL connection encoding
+$corem_db["addr"]     = "127.0.0.1:3306";         // SQL server IP:port your CoreManager DB is located on
+$corem_db["user"]     = "root";                   // SQL server login your CoreManager DB is located on
+$corem_db["pass"]     = "password";               // SQL server pass your CoreManager DB is located on
+$corem_db["name"]     = "db name";                // CoreManager DB name
+$corem_db["encoding"] = "utf8";                   // SQL connection encoding
 
 //#############################################################################
 // SQL Configuration
@@ -43,11 +43,11 @@ $corem_db['encoding'] = 'utf8';                   // SQL connection encoding
 //  NOTICE: ONLY MySQL IS KNOWN TO BE FUNCTIONAL
 //
 //  SQL server type  :
-//  'MySQL'   - MySQL
-//  'PgSQL'   - PostgreSQL
-//  'MySQLi'  - MySQLi
-//  'SQLLite' - SQLite
+//  "MySQL"   - MySQL
+//  "PgSQL"   - PostgreSQL
+//  "MySQLi"  - MySQLi
+//  "SQLLite" - SQLite
 
-$db_type          = 'MySQL';
+$db_type          = "MySQL";
 
 ?>

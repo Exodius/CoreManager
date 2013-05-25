@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -71,7 +71,8 @@ function achieve_get_id_category($id)
 
   $achieve_cat = array();
   $result = ($sql["dbc"]->query("SELECT id, name, description, reward, points FROM achievement WHERE category='".$id."' ORDER BY `orderInGroup` DESC"));
-  while ($achieve_cat[] = $sql["dbc"]->fetch_assoc($result));
+  while ( $achieve_cat[] = $sql["dbc"]->fetch_assoc($result) )
+    ;
   return $achieve_cat;
 }
 
@@ -85,7 +86,8 @@ function achieve_get_main_category()
 
   $main_cat = array();
   $result = $sql["dbc"]->query("SELECT ID, Name FROM achievement_category WHERE ParentID=-1 and ID<>1 ORDER BY `GroupID` ASC");
-  while ($main_cat[] = $sql["dbc"]->fetch_assoc($result));
+  while ( $main_cat[] = $sql["dbc"]->fetch_assoc($result) )
+    ;
   return $main_cat;
 }
 
@@ -100,7 +102,7 @@ function achieve_get_sub_category()
   $sub_cat = array();
   $result = $sql["dbc"]->query("SELECT ID, ParentID, Name FROM achievement_category WHERE ParentID<>-1 ORDER BY `GroupID` ASC");
   $temp = $sql["dbc"]->fetch_assoc($result);
-  while ($sub_cat[$temp["ParentID"]][$temp["ID"]] = $temp["Name"])
+  while ( $sub_cat[$temp["ParentID"]][$temp["ID"]] = $temp["Name"] )
   {
     $temp = $sql["dbc"]->fetch_assoc($result);
   }
@@ -131,16 +133,16 @@ function achieve_get_icon($achieveid)
   $result = $sql["dbc"]->query("SELECT spellIcon FROM achievement WHERE id='".$achieveid."' LIMIT 1");
 
 
-  if ($result)
+  if ( $result )
     $displayid = $sql["dbc"]->result($result, 0);
   else
     $displayid = 0;
 
-  if ($displayid)
+  if ( $displayid )
   {
     $result = $sql["dbc"]->query("SELECT Name FROM spellicon WHERE ID='".$displayid."' LIMIT 1");
 
-    if($result)
+    if ( $result )
     {
       $achieve = $sql["dbc"]->result($result, 0);
       // this_is_junk: we now extract data unaltered from the DBCs, so the spell icons have paths,
@@ -152,13 +154,13 @@ function achieve_get_icon($achieveid)
       $achieve = $temp[count($temp) - 1];
       
 
-      if ($achieve)
+      if ( $achieve )
       {
         //if (file_exists(''.$item_icons.'/'.$achieve.'.png'))
         //{
           //if (filesize(''.$item_icons.'/'.$achieve.'.png') > 349)
           //{
-            return ''.$item_icons.'/'.$achieve.'.png';
+            return "".$item_icons."/".$achieve.".png";
           //}
           //else
           //{
@@ -173,13 +175,13 @@ function achieve_get_icon($achieveid)
           //$achieve = '';
       }
       else
-        $achieve = '';
+        $achieve = "";
     }
     else
-      $achieve = '';
+      $achieve = "";
   }
   else
-    $achieve = '';
+    $achieve = "";
 
   // this_is_junk: yeah, this doesn't work, live with it. :)
   /*if($get_icons_from_web)

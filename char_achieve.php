@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -20,9 +20,10 @@
 
 
 // page header, and any additional required libraries
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/achieve_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/achieve_lib.php";
+
 // minimum permission to view page
 valid_login($action_permission["view"]);
 
@@ -57,15 +58,11 @@ function char_achievements()
   //-------------------SQL Injection Prevention--------------------------------
   // no point going further if we don have a valid ID
   $id = $sql["char"]->quote_smart($_GET["id"]);
-  if ( is_numeric($id) )
-    ;
-  else
+  if ( !is_numeric($id) )
     error(lang("global", "empty_fields"));
 
   $show_type = ( ( isset($_POST["show_type"]) ) ? $sql["char"]->quote_smart($_POST["show_type"]) : 0 );
-  if ( is_numeric($show_type) )
-    ;
-  else
+  if ( !is_numeric($show_type) )
     $show_type = 0;
 
   // getting character data from database
@@ -214,29 +211,28 @@ function char_achievements()
       //  keep html indent in sync, so debuging from browser source would be easy to read
       $output .= '
           <!-- start of char_achieve.php -->
-          <center>
             <script type="text/javascript">
               function expand(thistag)
               {
                 var i = 0;
                 %%REPLACE%%
 
-                if (thistag == \'tsummary\')
+                if ( thistag == \'tsummary\' )
                 {
                   document.getElementById(\'tsummary\').style.display="table";
                   document.getElementById(\'divsummary\').innerHTML = \'[-] '.lang("char", "summary").'\' ;
-                  for(x in main_cats)
+                  for ( x in main_cats )
                   {
-                    if(document.getElementById(main_cats[x]).style.display=="table")
+                    if ( document.getElementById(main_cats[x]).style.display=="table" )
                     {
                       document.getElementById(main_cats[x]).style.display="none";
                       document.getElementById(main_cats_achieve[x]).style.display="none";
                       document.getElementById(main_cats_div[x]).innerHTML = \'[+] \' + main_cats_name[x];
                     }
                   }
-                  for(x in main_sub_cats)
+                  for ( x in main_sub_cats )
                   {
-                    if(document.getElementById(main_sub_cats_achieve[x]).style.display=="table")
+                    if ( document.getElementById(main_sub_cats_achieve[x]).style.display=="table" )
                     {
                       document.getElementById(main_sub_cats_achieve[x]).style.display="none";
                       document.getElementById(main_sub_cats_div[x]).innerHTML = \'[+] \' + main_sub_cats_name[x];
@@ -245,26 +241,26 @@ function char_achievements()
                 }
                 else
                 {
-                  if (document.getElementById(\'tsummary\').style.display="table")
+                  if ( document.getElementById(\'tsummary\').style.display="table" )
                   {
                     document.getElementById(\'tsummary\').style.display="none";
                     document.getElementById(\'divsummary\').innerHTML = \'[+] '.lang("char", "summary").'\' ;
                   }
-                  for(x in main_cats)
+                  for ( x in main_cats )
                   {
-                    if (main_cats[x] == thistag)
+                    if ( main_cats[x] == thistag )
                     {
                       i = 1;
                     }
                   }
 
-                  if (i == 1)
+                  if ( i == 1 )
                   {
-                    for(x in main_cats)
+                    for ( x in main_cats )
                     {
-                      if (main_cats[x] == thistag)
+                      if ( main_cats[x] == thistag )
                       {
-                        if(document.getElementById(main_cats[x]).style.display=="table")
+                        if ( document.getElementById(main_cats[x]).style.display=="table" )
                         {
                           document.getElementById(main_cats[x]).style.display="none";
                           document.getElementById(main_cats_achieve[x]).style.display="none";
@@ -281,7 +277,7 @@ function char_achievements()
                       }
                       else
                       {
-                        if(document.getElementById(main_cats[x]).style.display=="table")
+                        if ( document.getElementById(main_cats[x]).style.display=="table" )
                         {
                           document.getElementById(main_cats[x]).style.display="none";
                           document.getElementById(main_cats_achieve[x]).style.display="none";
@@ -289,22 +285,22 @@ function char_achievements()
                         }
                       }
                     }
-                    for(x in main_sub_cats)
+                    for ( x in main_sub_cats )
                     {
-                      if(document.getElementById(main_sub_cats_achieve[x]).style.display=="table")
+                      if ( document.getElementById(main_sub_cats_achieve[x]).style.display=="table" )
                       {
                         document.getElementById(main_sub_cats_achieve[x]).style.display="none";
                         document.getElementById(main_sub_cats_div[x]).innerHTML = \'[+] \' + main_sub_cats_name[x];
                       }
                     }
                   }
-                  else if (i == 0)
+                  else if ( i == 0 )
                   {
-                    for(x in main_sub_cats)
+                    for ( x in main_sub_cats )
                     {
-                      if (main_sub_cats[x] == thistag)
+                      if ( main_sub_cats[x] == thistag )
                       {
-                        if(document.getElementById(main_sub_cats_achieve[x]).style.display=="table")
+                        if ( document.getElementById(main_sub_cats_achieve[x]).style.display=="table" )
                         {
                           document.getElementById(main_sub_cats_achieve[x]).style.display="none";
                           document.getElementById(main_sub_cats_div[x]).innerHTML = \'[+] \' + main_sub_cats_name[x];
@@ -317,16 +313,16 @@ function char_achievements()
                       }
                       else
                       {
-                        if(document.getElementById(main_sub_cats_achieve[x]).style.display=="table")
+                        if ( document.getElementById(main_sub_cats_achieve[x]).style.display=="table" )
                         {
                           document.getElementById(main_sub_cats_achieve[x]).style.display="none";
                           document.getElementById(main_sub_cats_div[x]).innerHTML = \'[+] \' + main_sub_cats_name[x];
                         }
                       }
                     }
-                    for(x in main_cats)
+                    for ( x in main_cats )
                     {
-                      if(document.getElementById(main_cats_achieve[x]).style.display=="table")
+                      if ( document.getElementById(main_cats_achieve[x]).style.display=="table" )
                       {
                         document.getElementById(main_cats_achieve[x]).style.display="none";
                       }
@@ -365,33 +361,37 @@ function char_achievements()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">
+            <div class="tab_content center center_text">
+              <span class="bold">
                 '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                 <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-              </font>
+              </span>
               <br /><br />';
       //---------------Page Specific Data Starts Here--------------------------
 
       $output .= '
               <table class="top_hidden" id="ch_ach_info">
                 <tr>
-                  <td width="30%">
+                  <td style="width: 30%;">
                   </td>
-                  %%REPLACE_POINTS%%
-                  <td align="right">
-                    <form action="char_achieve.php?id='.$id.'&amp;realm='.$realmid.'" method="post" name="form">
-                      '.lang("char", "show").' :
-                      <select name="show_type">
-                        <option value="1"'.( ( $show_type == 1 ) ? ' selected="selected"' : '' ).'>'.lang("char", "all").'</option>
-                        <option value="0"'.( ( $show_type == 0 ) ? ' selected="selected"' : '' ).'>'.lang("char", "earned").'</option>
-                        <option value="2"'.( ( $show_type == 2 ) ? ' selected="selected"' : '' ).'>'.lang("char", "incomplete").'</option>
-                      </select>
+                  <td align="center">
+                    %%REPLACE_POINTS%%
+                  </td>
+                  <td align="right" style="width: 20%;">
+                    <div style="position: relative; float: left; top: 2px;">'.lang("char", "show").' :</div>
+                    <form action="char_achieve.php?id='.$id.'&amp;realm='.$realmid.'" method="post" id="form">
+                      <div>
+                        <select name="show_type">
+                          <option value="1"'.( ( $show_type == 1 ) ? ' selected="selected"' : '' ).'>'.lang("char", "all").'</option>
+                          <option value="0"'.( ( $show_type == 0 ) ? ' selected="selected"' : '' ).'>'.lang("char", "earned").'</option>
+                          <option value="2"'.( ( $show_type == 2 ) ? ' selected="selected"' : '' ).'>'.lang("char", "incomplete").'</option>
+                        </select>
+                      </div>
                     </form>
                   </td>
-                  <td align="right">';
-      makebutton('View', 'javascript:do_submit()', 130);
+                  <td align="right" style="width: 20%;">';
+      makebutton("View", 'javascript:do_submit()', 130);
       $output .= '
                   </td>
                 </tr>
@@ -456,18 +456,18 @@ function char_achievements()
                   $cid["rewarddesc01"] = str_replace('&', '&amp;', $cid["reward"]);
                   $output_achieve_main_cat[$cat_id] .= '
                       <tr>
-                        <td width="1%" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">
+                        <td style="width: 1%;" align="left">
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">
                             <img src="'.achieve_get_icon($cid["id"]).'" width="36" height="36" class="icon_border_0" alt="" />
                           </a>
                         </td>
                         <td colspan="2" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">'.$cid["name"].'</a><br />
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">'.$cid["name"].'</a><br />
                           '.$cid["description"].'<br />
                           '.$cid["reward"].'
                         </td>
-                        <td width="5%" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
-                        <td width="15%" align="right">'.date('o-m-d', $char_achieve[$cid["id"]]).'</td>
+                        <td style="width: 5%;" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
+                        <td style="width: 15%;" align="right">'.date('o-m-d', $char_achieve[$cid["id"]]).'</td>
                       </tr>';
                   ++$i;
                 }
@@ -480,20 +480,20 @@ function char_achievements()
                 $cid["reward"] = str_replace('&', '&amp;', $cid["reward"]);
                 $output_u_achieve_main_cat[$cat_id] .= '
                       <tr>
-                        <td width="1%" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">
+                        <td style="width: 1%;" align="left">
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">
                             <span id="ch_ach_opacity">
                               <img src="'.achieve_get_icon($cid["id"]).'" width="36" height="36" class="icon_border_0" alt="" />
                             </span>
                           </a>
                         </td>
                         <td colspan="2" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">'.$cid["name"].'</a><br />
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">'.$cid["name"].'</a><br />
                           '.$cid["description"].'<br />
                           '.$cid["reward"].'
                         </td>
-                        <td width="5%" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
-                        <td width="15%" align="right">'.lang("char", "incomplete").'</td>
+                        <td style="width: 5%;" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
+                        <td style="width: 15%;" align="right">'.lang("char", "incomplete").'</td>
                       </tr>';
                 ++$i;
               }
@@ -505,8 +505,8 @@ function char_achievements()
                     <table class="hidden" id="ta'.$cat_id.'" style="width: 100%; display: none;">
                       <tr>
                         <th colspan="3" align="left">'.lang("char", "achievement_title").'</th>
-                        <th width="5%">'.lang("char", "achievement_points").'</th>
-                        <th width="15%">'.lang("char", "achievement_date").'</th>
+                        <th style="width: 5%;">'.lang("char", "achievement_points").'</th>
+                        <th style="width: 15%;">'.lang("char", "achievement_date").'</th>
                       </tr>'.$output_achieve_main_cat[$cat_id].$output_u_achieve_main_cat[$cat_id].'
                     </table>';
           unset($output_u_achieve_main_cat);
@@ -539,18 +539,18 @@ function char_achievements()
                         $cid["reward"] = str_replace('&', '&amp;', $cid["reward"]);
                         $output_achieve_sub_cat[$sub_cat_id] .= '
                             <tr>
-                              <td width="1%" align="left">
-                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">
+                              <td style="width: 1%;" align="left">
+                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">
                                   <img src="'.achieve_get_icon($cid["id"]).'" width="36" height="36" class="icon_border_0" alt="" />
                                 </a>
                               </td>
                               <td colspan="2" align="left">
-                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">'.$cid["name"].'</a><br />
+                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">'.$cid["name"].'</a><br />
                                 '.$cid["description"].'<br />
                                 '.$cid["rewarddesc"].'
                               </td>
-                              <td width="5%" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
-                              <td width="15%" align="right">'.date('o-m-d', $char_achieve[$cid["id"]]).'</td>
+                              <td style="width: 5%;" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
+                              <td style="width: 15%;" align="right">'.date('o-m-d', $char_achieve[$cid["id"]]).'</td>
                             </tr>';
                         ++$j;
                       }
@@ -563,20 +563,20 @@ function char_achievements()
                       $cid["reward"] = str_replace('&', '&amp;', $cid["reward"]);
                       $output_u_achieve_sub_cat[$sub_cat_id] .= '
                             <tr>
-                              <td width="1%" align="left">
-                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">
+                              <td style="width: 1%;" align="left">
+                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">
                                   <span id="ch_ach_opacity">
                                     <img src="'.achieve_get_icon($cid["id"]).'" width="36" height="36" class="icon_border_0" alt="" />
                                   </span>
                                 </a>
                               </td>
                               <td colspan="2" align="left">
-                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">'.$cid["name"].'</a><br />
+                                <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">'.$cid["name"].'</a><br />
                                 '.$cid["description"].'<br />
                                 '.$cid["reward"].'
                               </td>
-                              <td width="5%" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
-                              <td width="15%" align="right">'.lang("char", "incomplete").'</td>
+                              <td style="width: 5%;" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
+                              <td style="width: 15%;" align="right">'.lang("char", "incomplete").'</td>
                             </tr>';
                       ++$j;
                     }
@@ -602,8 +602,8 @@ function char_achievements()
                       <table class="hidden" id="tsa'.$sub_cat_id.'" style="width: 100%; display: none;">
                         <tr>
                           <th colspan="3" align="left">'.lang("char", "achievement_title").'</th>
-                          <th width="5%">'.lang("char", "achievement_points").'</th>
-                          <th width="15%">'.lang("char", "achievement_date").'</th>
+                          <th style="width: 5%;">'.lang("char", "achievement_points").'</th>
+                          <th style="width: 15%;">'.lang("char", "achievement_date").'</th>
                         </tr>'.$output_achieve_sub_cat[$sub_cat_id].$output_u_achieve_sub_cat[$sub_cat_id].'
                       </table>';
                   unset($output_u_achieve_sub_cat);
@@ -626,7 +626,8 @@ function char_achievements()
                         </tr>
                         <tr>
                           <td>
-                            <table class="hidden" id="t'.$cat_id.'" style="width: 100%; display: none;">'.$output_sub_cat.'
+                            <table class="hidden" id="t'.$cat_id.'" style="width: 100%; display: none;">
+                              '.( ( $output_sub_cat != "" ) ? $output_sub_cat : '<tr><td></td></tr>' ).'
                             </table>
                           </td>
                         </tr>';
@@ -645,9 +646,7 @@ function char_achievements()
       $output = str_replace('%%REPLACE%%', $js_main_cats, $output);
       unset($js_main_cats);
       $output = str_replace('%%REPLACE_POINTS%%', '
-                  <td align="right">
-                    '.lang("char", "achievements").' '.lang("char", "achievement_points").': '.$points.'
-                  </td>', $output);
+                    '.lang("char", "achievements").' '.lang("char", "achievement_points").': '.$points.'', $output);
       unset($point);
       $output .= '
                     </table>
@@ -672,8 +671,8 @@ function char_achievements()
                       </tr>
                       <tr>
                         <th colspan="3" align="left">'.lang("char", "achievement_title").'</th>
-                        <th width="5%">'.lang("char", "achievement_points").'</th>
-                        <th width="15%">'.lang("char", "achievement_date").'</th>
+                        <th style="width: 5%;">'.lang("char", "achievement_points").'</th>
+                        <th style="width: 15%;">'.lang("char", "achievement_date").'</th>
                       </tr>';
       while ( $temp = $sql["char"]->fetch_assoc($result) )
       {
@@ -683,18 +682,18 @@ function char_achievements()
         $cid["reward"] = str_replace('&', '&amp;', $cid["reward"]);
         $output .= '
                       <tr>
-                        <td width="1%" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">
+                        <td style="width: 1%;" align="left">
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">
                             <img src="'.achieve_get_icon($cid["id"]).'" width="36" height="36" class="icon_border_0" alt="" />
                           </a>
                         </td>
                         <td colspan="2" align="left">
-                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" target="_blank">'.$cid["name"].'</a><br />
+                          <a href="'.$base_datasite.$achievement_datasite.$cid["id"].'" rel="external">'.$cid["name"].'</a><br />
                           '.$cid["description"].'<br />
                           '.$cid["reward"].'
                         </td>
-                        <td width="5%" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
-                        <td width="15%" align="right">'.date('o-m-d', $temp["date"]).'</td>
+                        <td style="width: 5%;" align="right">'.$cid["points"].' <img src="img/money_achievement.gif" alt="" /></td>
+                        <td style="width: 15%;" align="right">'.date('o-m-d', $temp["date"]).'</td>
                       </tr>';
       }
       unset($cid);
@@ -750,7 +749,6 @@ function char_achievements()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_achieve.php -->';
     }
     else
@@ -776,7 +774,7 @@ char_achievements();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

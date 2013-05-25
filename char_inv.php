@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -23,6 +23,7 @@
 require_once "header.php";
 require_once "libs/char_lib.php";
 require_once "libs/item_lib.php";
+
 // minimum permission to view page
 valid_login($action_permission["view"]);
 
@@ -250,24 +251,24 @@ function char_inv()
       // character bags, 1 main + 4 additional
       $bag = array
       (
-        0=>array(),
-        1=>array(),
-        2=>array(),
-        3=>array(),
-        4=>array()
+        0 => array(),
+        1 => array(),
+        2 => array(),
+        3 => array(),
+        4 => array()
       );
 
       // character bank, 1 main + 7 additional
       $bank = array
       (
-        0=>array(),
-        1=>array(),
-        2=>array(),
-        3=>array(),
-        4=>array(),
-        5=>array(),
-        6=>array(),
-        7=>array()
+        0 => array(),
+        1 => array(),
+        2 => array(),
+        3 => array(),
+        4 => array(),
+        5 => array(),
+        6 => array(),
+        7 => array()
       );
 
       // this is where we will put items that are in main bag
@@ -463,7 +464,6 @@ function char_inv()
       //  keep html indent in sync, so debuging from browser source would be easy to read
       $output .= '
           <!-- start of char_inv.php -->
-          <center>
             <div class="tab">
               <ul>
                 <li><a href="char.php?id='.$cid.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -494,14 +494,14 @@ function char_inv()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
-              <font class="bold">
+            <div class="tab_content center" id="ch_inv_bags_wrap">
+              <span class="bold">
                 '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                 <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif"
                   onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 <img src="img/c_icons/'.$char["class"].'.gif"
                   onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-              </font>
+              </span>
               <br />
               <br />
               <table class="lined" id="ch_inv_bags">
@@ -517,11 +517,11 @@ function char_inv()
         if ( $equiped_bag_id[$i] )
         {
           $output .= '
-                    <a href="'.$base_datasite.$item_datasite.$equiped_bag_id[$i][0].'" target="_blank">
+                    <a href="'.$base_datasite.$item_datasite.$equiped_bag_id[$i][0].'" rel="external">
                       <img class="bag_icon" src="'.get_item_icon($equiped_bag_id[$i][0]).'" alt="" />
                     </a>
                     '.lang("item", "bag").' '.$i.'<br />
-                    <font class="small">'.$equiped_bag_id[$i][1].' '.lang("item", "slots").'</font>';
+                    <span class="small">'.$equiped_bag_id[$i][1].' '.lang("item", "slots").'</span>';
         }
         $output .= '
                   </th>';
@@ -549,7 +549,7 @@ function char_inv()
           $item[2] = ( ( $item[2] == 1 ) ? '' : $item[2] );
           $output .= '
                       <div class="bag_slot" style="left: '.((($pos+$dsp)%4*43)+4).'px; top: '.((floor(($pos+$dsp)/4)*41)+4).'px;">
-                        <a href="'.$base_datasite.$item_datasite.$item[0].'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.$t.'p'.$pos.(($pos+$dsp)%4*42).'x'.(floor(($pos+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_b'.$t.'p'.$pos.(($pos+$dsp)%4*42).'x'.(floor(($pos+$dsp)/4)*41).'\');">
+                        <a href="'.$base_datasite.$item_datasite.$item[0].'" rel="external" onmouseover="ShowTooltip(this,\'_b'.$t.'p'.$pos.(($pos+$dsp)%4*42).'x'.(floor(($pos+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_b'.$t.'p'.$pos.(($pos+$dsp)%4*42).'x'.(floor(($pos+$dsp)/4)*41).'\');">
                           <img src="'.get_item_icon($item[0]).'" alt="" class="inv_icon" />
                         </a>';
           if ( $mode )
@@ -585,16 +585,16 @@ function char_inv()
                 </tr>
                 <tr>
                   <th colspan="2" align="left">
-                    <img class="bag_icon" src="'.get_item_icon(3960).'" alt="" align="middle" id="ch_backpack_icon_margin" />
-                    <font id="ch_backpack_name_margin">'.lang("char", "backpack").'</font>
+                    <img class="bag_icon" src="'.get_item_icon(3960).'" alt="" id="ch_backpack_icon_margin" />
+                    <span id="ch_backpack_name_margin">'.lang("char", "backpack").'</span>
                   </th>
                   <th colspan="2">
                     '.lang("char", "bank_items").'
                   </th>
                 </tr>
                 <tr>
-                  <td colspan="2" align="center" height="220px">
-                    <div class="bag" style="width: '.(4*43).'px; height: '.(ceil(16/4)*41).'px;">';
+                  <td colspan="2" style="height: 220px; text-align: center;">
+                    <div class="bag" id="ch_backpack" style="width: '.(4*43).'px; height: '.(ceil(16/4)*41).'px;">';
 
       // inventory items
       foreach ( $bag[0] as $pos => $item )
@@ -603,7 +603,7 @@ function char_inv()
         $item[2] = ( ( $item[2] == 1 ) ? '' : $item[2] );
         $output .= '
                       <div class="bag_slot" style="left: '.(($pos%4*43)+4).'px; top: '.((floor($pos/4)*41)+4).'px;">
-                        <a href="'.$base_datasite.$item_datasite.$item[0].'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.$t.'p'.$pos.($pos%4*42).'x'.(floor($pos/4)*41).'\');" onmouseout="HideTooltip(\'_b'.$t.'p'.$pos.($pos%4*42).'x'.(floor($pos/4)*41).'\');">
+                        <a href="'.$base_datasite.$item_datasite.$item[0].'" rel="external" onmouseover="ShowTooltip(this,\'_b'.$t.'p'.$pos.($pos%4*42).'x'.(floor($pos/4)*41).'\');" onmouseout="HideTooltip(\'_b'.$t.'p'.$pos.($pos%4*42).'x'.(floor($pos/4)*41).'\');">
                           <img src="'.get_item_icon($item[0]).'" class="inv_icon" alt="" />
                         </a>';
           if ( $mode )
@@ -634,9 +634,9 @@ function char_inv()
                     </div>
                     <div id="ch_money">
                       <b>
-                        '.substr($char["gold"],  0, -4).'<img src="img/gold.gif" alt="" align="middle" />
-                        '.substr($char["gold"], -4,  2).'<img src="img/silver.gif" alt="" align="middle" />
-                        '.substr($char["gold"], -2).'<img src="img/copper.gif" alt="" align="middle" />
+                        '.substr($char["gold"],  0, -4).'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                        '.substr($char["gold"], -4,  2).'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                        '.substr($char["gold"], -2).'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />
                       </b>
                     </div>
                   </td>
@@ -650,7 +650,7 @@ function char_inv()
         $item[2] = ( ( $item[2] == 1 ) ? '' : $item[2] );
         $output .= '
                       <div class="bag_slot" style="left: '.(($pos%7*43)+4).'px; top: '.((floor($pos/7)*41)+4).'px;">
-                        <a href="'.$base_datasite.$item_datasite.$item[0].'" target="_blank" onmouseover="ShowTooltip(this,\'_bbp'.$pos.($pos%7*43).'x'.(floor($pos/7)*41).'\');" onmouseout="HideTooltip(\'_bbp'.$pos.($pos%7*43).'x'.(floor($pos/7)*41).'\');">
+                        <a href="'.$base_datasite.$item_datasite.$item[0].'" rel="external" onmouseover="ShowTooltip(this,\'_bbp'.$pos.($pos%7*43).'x'.(floor($pos/7)*41).'\');" onmouseout="HideTooltip(\'_bbp'.$pos.($pos%7*43).'x'.(floor($pos/7)*41).'\');">
                           <img src="'.get_item_icon($item[0]).'" class="inv_icon" alt="" />
                         </a>';
           if ( $mode )
@@ -690,11 +690,11 @@ function char_inv()
         if ( $equip_bnk_bag_id[$i] )
         {
           $output .= '
-                    <a href="'.$base_datasite.$item_datasite.$equip_bnk_bag_id[$i][0].'" target="_blank">
+                    <a href="'.$base_datasite.$item_datasite.$equip_bnk_bag_id[$i][0].'" rel="external">
                       <img class="bag_icon" src="'.get_item_icon($equip_bnk_bag_id[$i][0]).'" alt="" />
                     </a>
                     '.lang("item", "bag").' '.$i.'<br />
-                    <font class="small">'.$equip_bnk_bag_id[$i][1].' '.lang("item", "slots").'</font>';
+                    <span class="small">'.$equip_bnk_bag_id[$i][1].' '.lang("item", "slots").'</span>';
         }
         $output .= '
                   </th>';
@@ -719,11 +719,11 @@ function char_inv()
             if ( $equip_bnk_bag_id[$i] )
             {
               $output .= '
-                    <a href="'.$base_datasite.$item_datasite.$equip_bnk_bag_id[$i][0].'" target="_blank">
+                    <a href="'.$base_datasite.$item_datasite.$equip_bnk_bag_id[$i][0].'" rel="external">
                       <img class="bag_icon" src="'.get_item_icon($equip_bnk_bag_id[$i][0]).'" alt="" />
                     </a>
                     '.lang("item", "bag").' '.$i.'<br />
-                    <font class="small">'.$equip_bnk_bag_id[$i][1].' '.lang("item", "slots").'</font>';
+                    <span class="small">'.$equip_bnk_bag_id[$i][1].' '.lang("item", "slots").'</span>';
             }
             $output .= '
                   </th>';
@@ -748,7 +748,7 @@ function char_inv()
           $item[2] = ( ( $item[2] == 1 ) ? '' : $item[2] );
           $output .= '
                       <div class="bag_slot" style="left: '.((($pos+$dsp)%4*43)+4).'px; top: '.((floor(($pos+$dsp)/4)*41)+4).'px;">
-                        <a href="'.$base_datasite.$item_datasite.$item[0].'" target="_blank" onmouseover="ShowTooltip(this,\'_bb'.$t.'p'.$pos.(($pos+$dsp)%4*43).'x'.(floor(($pos+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_bb'.$t.'p'.$pos.(($pos+$dsp)%4*43).'x'.(floor(($pos+$dsp)/4)*41).'\');">
+                        <a href="'.$base_datasite.$item_datasite.$item[0].'" rel="external" onmouseover="ShowTooltip(this,\'_bb'.$t.'p'.$pos.(($pos+$dsp)%4*43).'x'.(floor(($pos+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_bb'.$t.'p'.$pos.(($pos+$dsp)%4*43).'x'.(floor(($pos+$dsp)/4)*41).'\');">
                           <img src="'.get_item_icon($item[0]).'" class="inv_icon" alt="" />
                         </a>';
           if ( $mode )
@@ -838,7 +838,6 @@ function char_inv()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_inv.php -->';
     }
     else
@@ -860,17 +859,17 @@ function delete_item()
   valid_login($action_permission["delete"]);
 
   $output .= '
-          <center>
+          <div>
             <img src="img/warn_red.gif" width="48" height="48" alt="" />
               <h1>
-                <font class="error">'.lang("global", "are_you_sure").'</font>
+                <span class="error">'.lang("global", "are_you_sure").'</span>
               </h1>
               <br />
-              <font class="bold">'.
+              <span class="bold">'.
                 lang("char", "thisitem").'
                 <br />'.
                 lang("global", "will_be_erased").'
-              </font>
+              </span>
               <br /><br />
               <table width="300" class="hidden">
                 <tr>
@@ -881,7 +880,7 @@ function delete_item()
                   </td>
                 </tr>
               </table>
-            </center>';
+            </div>';
 }
 
 

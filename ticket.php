@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,8 @@
 */
 
 
-require_once 'header.php';
+require_once "header.php";
+
 valid_login($action_permission["view"]);
 
 //#############################################################################
@@ -85,101 +86,101 @@ function browse_tickets()
 
   $output .= '
         <script type="text/javascript" src="libs/js/check.js"></script>
-        <center>
-          <table class="top_hidden">
-            <tr>
-              <td width="25%" align="right">';
+        <table class="top_hidden">
+          <tr>
+            <td style="width: 25%;" align="right">';
   $output .= generate_pagination("ticket.php?action=browse_tickets&amp;order_by=".$order_by."&amp;dir=".!$dir, $all_record, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>';
+            </td>
+          </tr>
+        </table>';
   $output .= '
-          <form method="get" action="ticket.php" name="form">
+        <form method="get" action="ticket.php" id="form">
+          <div>
             <input type="hidden" name="action" value="delete_tickets" />
             <input type="hidden" name="start" value="'.$start.'" />
-            <table class="lined">
-              <tr>
-                <td colspan="3" align="left" class="hidden">';
+          </div>
+          <table class="lined">
+            <tr>
+              <td colspan="3" align="left" class="hidden">';
   if ( $user_lvl >= $action_permission["delete"] )
     makebutton(lang("ticket", "del_selected_tickets"), "javascript:do_submit()\" type=\"wrn", 230);
   $output .= '
-                </td>
-              </tr>
-              <tr>';
+              </td>
+            </tr>
+            <tr>';
   if ( $user_lvl >= $action_permission["delete"] )
     $output .= '
-                <th width="7%">
-                  <input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.form);" />
-                </th>';
+              <th style="width: 7%;">
+                <input name="allbox" type="checkbox" value="Check All" onclick="CheckAll(document.getElementById(\'form\'));" />
+              </th>';
   if ( $user_lvl >= $action_permission["update"] )
     $output .= '
-                <th width="7%">'.lang("global", "edit").'</th>';
+              <th style="width: 7%;">'.lang("global", "edit").'</th>';
   $output .= '
-                <th width="10%">
-                  <a href="ticket.php?order_by=guid&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'guid' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).''.lang("ticket", "id").'</a>
-                </th>
-                <th width="16%">
-                  <a href="ticket.php?order_by=opener&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'opener' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '').''.lang("ticket", "sender").'</a>
-                </th>';
-  $output .= '
-                <th width="40%">'.lang("ticket", "message").'</th>
-                <th width="10%">'.lang("ticket", "date").'</th>';
+              <th style="width: 10%;">
+                <a href="ticket.php?order_by=guid&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'guid' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).''.lang("ticket", "id").'</a>
+              </th>
+              <th style="width: 16%;">
+                <a href="ticket.php?order_by=opener&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'opener' ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '').''.lang("ticket", "sender").'</a>
+              </th>';
+$output .= '
+              <th style="width: 40%;">'.lang("ticket", "message").'</th>
+              <th style="width: 10%;">'.lang("ticket", "date").'</th>';
   if ( $core == 3 )
     $output .= '
-                <th width="40%">'.lang("ticket", "closedby").'</th>';
+              <th style="width: 40%;">'.lang("ticket", "closedby").'</th>';
   $output .= '
-              </tr>';
+            </tr>';
   while ( $ticket = $sql["char"]->fetch_assoc($query) )
   {
     $output .= '
-              <tr>';
+            <tr>';
     if ( $user_lvl >= $action_permission["delete"] )
       $output .= '
-                <td>
-                  <input type="checkbox" name="check[]" value="'.$ticket["guid"].'" onclick="CheckCheckAll(document.form);" />
-                </td>';
+              <td>
+                <input type="checkbox" name="check[]" value="'.$ticket["guid"].'" onclick="CheckCheckAll(getElementById(\'form\'));" />
+              </td>';
     if ( $user_lvl >= $action_permission["update"] )
       $output .= '
-                <td>
-                  <a href="ticket.php?action=edit_ticket&amp;error=4&amp;id='.$ticket["guid"].'"><img src="img/edit.png" alt="'.lang("global", "edit").'" /></a>
-                </td>';
+              <td>
+                <a href="ticket.php?action=edit_ticket&amp;error=4&amp;id='.$ticket["guid"].'"><img src="img/edit.png" alt="'.lang("global", "edit").'" /></a>
+              </td>';
     $output .= '
-                <td>'.$ticket["guid"].'</td>
-                <td>
-                  <a href="char.php?id='.$ticket["player"].'">'.htmlentities($ticket["opener"], ENT_COMPAT, $site_encoding).'</a>
-                </td>
-                <td>'.htmlentities($ticket["message"], ENT_COMPAT, $site_encoding).'</td>
-                <td>'.date('G:i:s m-d-Y', $ticket["timestamp"]).'</td>';
+              <td>'.$ticket["guid"].'</td>
+              <td>
+                <a href="char.php?id='.$ticket["player"].'">'.htmlentities($ticket["opener"], ENT_COMPAT, $site_encoding).'</a>
+              </td>
+              <td>'.htmlentities($ticket["message"], ENT_COMPAT, $site_encoding).'</td>
+              <td>'.date('G:i:s m-d-Y', $ticket["timestamp"]).'</td>';
     if ( $core == 3 )
       $output .= '
-                <td>
-                  <a href="char.php?id='.$ticket["status"].'">'.htmlentities($ticket["closer"], ENT_COMPAT, $site_encoding).'</a>
-                </td>';
+              <td>
+                <a href="char.php?id='.$ticket["status"].'">'.htmlentities($ticket["closer"], ENT_COMPAT, $site_encoding).'</a>
+              </td>';
     $output .= '
-              </tr>';
+            </tr>';
   }
   unset($query);
   unset($ticket);
   $output .= '
-              <tr>
-                <td colspan="5" align="right" class="hidden" width="25%">';
+            <tr>
+              <td colspan="5" align="right" class="hidden" style="width: 25%;">';
   $output .= generate_pagination("ticket.php?action=browse_tickets&amp;order_by=".$order_by."&amp;dir=".!$dir, $all_record, $itemperpage, $start);
   $output .= '
-                </td>
-              </tr>
-              <tr>
-                <td colspan="3" align="left" class="hidden">';
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" align="left" class="hidden">';
   if ( $user_lvl >= $action_permission["delete"] )
     makebutton(lang("ticket", "del_selected_tickets"), "javascript:do_submit()\" type=\"wrn", 230);
   $output .= '
-                </td>
-                <td colspan="2" align="right" class="hidden">'.lang("ticket", "tot_tickets").': '.$all_record.'</td>
-              </tr>
-            </table>
-          </form>
-          <br />
-        </center>';
+              </td>
+              <td colspan="2" align="right" class="hidden">'.lang("ticket", "tot_tickets").': '.$all_record.'</td>
+            </tr>
+          </table>
+        </form>
+        <br />';
 
 }
 
@@ -265,50 +266,51 @@ function edit_ticket()
   if ( $ticket = $sql["char"]->fetch_assoc($query) )
   {
     $output .= '
-        <center>
-          <div id="ticket_edit_field" class="fieldset_border">
+          <div id="ticket_edit_field" class="fieldset_border center">
             <span class="legend">'.lang("ticket", "edit_reply").'</span>
-            <form method="post" action="ticket.php?action=do_edit_ticket" name="form">
-              <input type="hidden" name="id" value="'.$id.'" />
-                <table class="flat">
-                  <tr>
-                    <td>'.lang("ticket", "id").'</td>
-                    <td>'.$id.'</td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("ticket", "submitted_by").':</td>
-                    <td>
-                      <a href="char.php?id='.$ticket["player"].'">'.htmlentities($ticket["opener"], ENT_COMPAT, $site_encoding).'</a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("ticket", "date").':</td>
-                    <td>'.date('G:i:s m-d-Y', $ticket["timestamp"]).'</td>
-                  </tr>
-                  <tr>
-                    <td valign="top">'.lang("ticket", "message").'</td>
-                    <td>
-                      <textarea name="new_text" rows="5" cols="40">'.htmlentities($ticket["message"], ENT_COMPAT, $site_encoding).'</textarea>
-                    </td>
-                  </tr>';
+            <form method="post" action="ticket.php?action=do_edit_ticket" id="form">
+              <div>
+                <input type="hidden" name="id" value="'.$id.'" />
+              </div>
+              <table class="flat">
+                <tr>
+                  <td>'.lang("ticket", "id").'</td>
+                  <td>'.$id.'</td>
+                </tr>
+                <tr>
+                  <td>'.lang("ticket", "submitted_by").':</td>
+                  <td>
+                    <a href="char.php?id='.$ticket["player"].'">'.htmlentities($ticket["opener"], ENT_COMPAT, $site_encoding).'</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.lang("ticket", "date").':</td>
+                  <td>'.date('G:i:s m-d-Y', $ticket["timestamp"]).'</td>
+                </tr>
+                <tr>
+                  <td valign="top">'.lang("ticket", "message").'</td>
+                  <td>
+                    <textarea name="new_text" rows="5" cols="40">'.htmlentities($ticket["message"], ENT_COMPAT, $site_encoding).'</textarea>
+                  </td>
+                </tr>';
     if ( $core == 3 )
       $output .= '
-                  <tr>
-                    <td>'.lang("ticket", "closedby").':</td>
-                    <td>'.( ( $ticket["status"] <> 0 ) ? '<a href="char.php?id='.$ticket["status"].'">'.htmlentities($ticket["closer"], ENT_COMPAT, $site_encoding).'</a>' : '' ).'</td>
-                  </tr>';
+                <tr>
+                  <td>'.lang("ticket", "closedby").':</td>
+                  <td>'.( ( $ticket["status"] <> 0 ) ? '<a href="char.php?id='.$ticket["status"].'">'.htmlentities($ticket["closer"], ENT_COMPAT, $site_encoding).'</a>' : '' ).'</td>
+                </tr>';
     $output .= '
-                  <tr>
-                    <td>';
+                <tr>
+                  <td>';
     makebutton(lang("ticket", "update"), "javascript:do_submit()\" type=\"wrn", 140);
     $output .= '
-                    </td>
-                    <td>';
+                  </td>
+                  <td>';
     // MaNGOS just deletes a ticket to close it
     // so we don't need this button
     if ( $core == 2 )
       $output .= '
-                            &nbsp;';
+                    &nbsp;';
     else
     {
       if ( !$ticket["status"] )
@@ -317,24 +319,23 @@ function edit_ticket()
         makebutton(lang("ticket", "abandon".( ( $core == 1 ) ? "A" : "MT" )), 'ticket.php', 230);
     }
     $output .= '
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>';
+                  </td>
+                </tr>
+                <tr>
+                  <td>';
     makebutton(lang("ticket", "send_ingame_mail"), "mail.php?type=ingame_mail&amp;to=".$ticket["opener"], 140);
     $output .= '
-                    </td>
-                    <td>';
+                  </td>
+                  <td>';
     makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
     $output .= '
-                    </td>
-                  </tr>
-                </table>
-              </form>
-            </div>
+                  </td>
+                </tr>
+              </table>
+            </form>
             <br />
             <br />
-          </center>';
+          </div>';
   }
   else
     error(lang("global", "err_no_records_found"));
@@ -426,15 +427,15 @@ switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class=\"error\">'.lang("ticket", "ticked_deleted").'</font></h1>';
+          <h1><span class=\"error\">'.lang("ticket", "ticked_deleted").'</span></h1>';
     break;
   case 3:
     $output .= '
-          <h1><font class="error">'.lang("ticket", "ticket_not_deleted").'</font></h1>';
+          <h1><span class="error">'.lang("ticket", "ticket_not_deleted").'</span></h1>';
     break;
   case 4:
     $output .= '
@@ -442,11 +443,11 @@ switch ( $err )
     break;
   case 5:
     $output .= '
-          <h1><font class="error">'.lang("ticket", "ticket_updated").'</font></h1>';
+          <h1><span class="error">'.lang("ticket", "ticket_updated").'</span></h1>';
     break;
   case 6:
     $output .= '
-          <h1><font class="error">'.lang("ticket", "ticket_update_err").'</font></h1>';
+          <h1><span class="error">'.lang("ticket", "ticket_update_err").'</span></h1>';
     break;
   default: //no error
     $output .= '
@@ -484,6 +485,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 ?>

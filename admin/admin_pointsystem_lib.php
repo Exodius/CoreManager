@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -113,10 +113,12 @@ function pointsystem()
         $hearth_credits = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Hearthstone_Credits'"));
 
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="pointsystem" />
-          <input type="hidden" name="subaction" value="savepoints" />
-          <input type="hidden" name="subsection" value="basic" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="pointsystem" />
+            <input type="hidden" name="subaction" value="savepoints" />
+            <input type="hidden" name="subsection" value="basic" />
+          </div>
           <table class="simple" id="admin_more">
             <tr>
               <td class="help">
@@ -253,7 +255,9 @@ function pointsystem()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -324,25 +328,27 @@ function pointsystem()
       if ( !$coupon_action )
       {
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="pointsystem" />
-          <input type="hidden" name="subsection" value="coupons" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="pointsystem" />
+            <input type="hidden" name="subsection" value="coupons" />
+          </div>
           <table class="simple" id="admin_point_coupon_list">
             <tr>
-              <th width="1%"></th>
-              <th width="1%"></th>
-              <th width="3%">'.lang("admin", "coupon_id").'</th>
-              <th width="15%">'.lang("admin", "coupon_title").'</th>
-              <th width="15%">'.lang("admin", "coupon_target").'</th>
-              <th width="15%">'.lang("admin", "coupon_issued").'</th>
+              <th style="width: 1%;"></th>
+              <th style="width: 1%;"></th>
+              <th style="width: 3%;">'.lang("admin", "coupon_id").'</th>
+              <th style="width: 15%;">'.lang("admin", "coupon_title").'</th>
+              <th style="width: 15%;">'.lang("admin", "coupon_target").'</th>
+              <th style="width: 15%;">'.lang("admin", "coupon_issued").'</th>
               <!-- th width="15%">'.lang("admin", "coupon_expiration").'</th -->
-              <th width="10%">'.lang("admin", "coupon_credits").'</th>
-              <th width="5%">'.lang("admin", "coupon_money").'</th>
-              <th width="5%">'.lang("admin", "coupon_item").'</th>
-              <th width="5%">'.lang("admin", "coupon_count").'</th>
-              <th width="5%">'.lang("admin", "coupon_raffle").'</th>
-              <th width="5%">'.lang("admin", "coupon_usage").'</th>
-              <th width="5%">'.lang("admin", "enabled").'</th>
+              <th style="width: 10%;">'.lang("admin", "coupon_credits").'</th>
+              <th style="width: 5%;">'.lang("admin", "coupon_money").'</th>
+              <th style="width: 5%;">'.lang("admin", "coupon_item").'</th>
+              <th style="width: 5%;">'.lang("admin", "coupon_count").'</th>
+              <th style="width: 5%;">'.lang("admin", "coupon_raffle").'</th>
+              <th style="width: 5%;">'.lang("admin", "coupon_usage").'</th>
+              <th style="width: 5%;">'.lang("admin", "enabled").'</th>
             </tr>';
         $color = "#EEEEEE";
         while ( $coupon = $sqlm->fetch_assoc($result) )
@@ -375,55 +381,55 @@ function pointsystem()
 
           $output .= '
             <tr>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;editcoupon=editcoupon" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/edit.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;delcoupon=deletecoupon" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/aff_cross.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["entry"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["entry"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["title"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["title"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$target.'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$target.'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["date_issued"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["date_issued"].'</span>
               </td>
               <!-- td style="background-color:'.$color.'">
-                <center>'.$coupon["expiration"].'</center>
+                <span>'.$coupon["expiration"].'</span>
               </td -->
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["credits"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["credits"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["money"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["money"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["item_id"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["item_id"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["item_count"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["item_count"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$coupon["raffle_id"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$coupon["raffle_id"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$usage.'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$usage.'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center><img src="img/'.( ( $coupon["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span><img src="img/'.( ( $coupon["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
               </td>
             </tr>';
 
@@ -490,15 +496,17 @@ function pointsystem()
               $accounts_result = $sqll->query($accounts_query);
 
               $output .= '
-              <center>
-                <form name="form" action="admin.php" method="get">
+              <div>
+                <form action="admin.php" method="get" id="form">
                   <fieldset id="admin_edit_coupon">
-                    <input type="hidden" name="section" value="pointsystem" />
-                    <input type="hidden" name="subsection" value="coupons" />
-                    <input type="hidden" name="editcoupon" value="editcoupon" />
-                    <input type="hidden" name="subaction" value="savecoupon" />
-                    <input type="hidden" name="sel_coupon" value="'.$coupon["entry"].'" />
-                    <input type="hidden" name="oldcreation" value="'.$coupon["date_issued"].'" />
+                    <div>
+                      <input type="hidden" name="section" value="pointsystem" />
+                      <input type="hidden" name="subsection" value="coupons" />
+                      <input type="hidden" name="editcoupon" value="editcoupon" />
+                      <input type="hidden" name="subaction" value="savecoupon" />
+                      <input type="hidden" name="sel_coupon" value="'.$coupon["entry"].'" />
+                      <input type="hidden" name="oldcreation" value="'.$coupon["date_issued"].'" />
+                    </div>
                     <table>
                       <tr>
                         <td>'.lang("admin", "coupon_id").': </td>
@@ -632,9 +640,11 @@ function pointsystem()
                       </tr>
                     </table>
                   </fieldset>
-                  <input type="submit" name="savecoupon" value="'.lang("admin", "save").'" />
+                  <div>
+                    <input type="submit" name="savecoupon" value="'.lang("admin", "save").'" />
+                  </div>
                 </form>
-              </center>';
+              </div>';
             }
             else
             {
@@ -726,23 +736,25 @@ function pointsystem()
       if ( !$raffle_action )
       {
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="pointsystem" />
-          <input type="hidden" name="subsection" value="raffle" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="pointsystem" />
+            <input type="hidden" name="subsection" value="raffle" />
+          </div>
           <table class="simple" id="admin_point_coupon_list">
             <tr>
-              <th width="1%"></th>
-              <th width="1%"></th>
-              <th width="3%">'.lang("admin", "raffle_id").'</th>
-              <th width="15%">'.lang("admin", "raffle_title").'</th>
-              <th width="15%">'.lang("admin", "raffle_drawing").'</th>
-              <th width="10%">'.lang("admin", "raffle_credits").'</th>
-              <th width="5%">'.lang("admin", "raffle_money").'</th>
-              <th width="5%">'.lang("admin", "raffle_item").'</th>
-              <th width="5%">'.lang("admin", "raffle_count").'</th>
-              <th width="5%">'.lang("admin", "raffle_usage").'</th>
-              <th width="5%">'.lang("admin", "enabled").'</th>
-              <th width="5%">'.lang("admin", "raffle_completed").'</th>
+              <th style="width: 1%;"></th>
+              <th style="width: 1%;"></th>
+              <th style="width: 3%;">'.lang("admin", "raffle_id").'</th>
+              <th style="width: 15%;">'.lang("admin", "raffle_title").'</th>
+              <th style="width: 15%;">'.lang("admin", "raffle_drawing").'</th>
+              <th style="width: 10%;">'.lang("admin", "raffle_credits").'</th>
+              <th style="width: 5%;">'.lang("admin", "raffle_money").'</th>
+              <th style="width: 5%;">'.lang("admin", "raffle_item").'</th>
+              <th style="width: 5%;">'.lang("admin", "raffle_count").'</th>
+              <th style="width: 5%;">'.lang("admin", "raffle_usage").'</th>
+              <th style="width: 5%;">'.lang("admin", "enabled").'</th>
+              <th style="width: 5%;">'.lang("admin", "raffle_completed").'</th>
             </tr>';
         $color = "#EEEEEE";
         while ( $raffle = $sqlm->fetch_assoc($result) )
@@ -755,49 +767,49 @@ function pointsystem()
 
           $output .= '
             <tr>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;editraffle=editraffle" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/edit.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;delraffle=deleteraffle" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/aff_cross.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["entry"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["entry"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["title"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["title"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["drawing"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["drawing"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["credits"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["credits"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["money"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["money"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["item_id"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["item_id"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$raffle["item_count"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$raffle["item_count"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$tickets_sold.'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$tickets_sold.'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center><img src="img/'.( ( $raffle["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span><img src="img/'.( ( $raffle["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center><img src="img/'.( ( $raffle["completed"] ) ? 'aff_tick.png' : '' ).'" alt="" /></center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span><img src="img/'.( ( $raffle["completed"] ) ? 'aff_tick.png' : '' ).'" alt="" /></span>
               </td>
             </tr>';
 
@@ -863,14 +875,16 @@ function pointsystem()
                 $drawing_year = date("Y");
 
               $output .= '
-              <center>
-                <form name="form" action="admin.php" method="get">
+              <div>
+                <form action="admin.php" method="get" id="form">
                   <fieldset id="admin_edit_coupon">
-                    <input type="hidden" name="section" value="pointsystem" />
-                    <input type="hidden" name="subsection" value="raffles" />
-                    <input type="hidden" name="editraffle" value="editraffle" />
-                    <input type="hidden" name="subaction" value="saveraffle" />
-                    <input type="hidden" name="sel_raffle" value="'.$raffle["entry"].'" />
+                    <div>
+                      <input type="hidden" name="section" value="pointsystem" />
+                      <input type="hidden" name="subsection" value="raffles" />
+                      <input type="hidden" name="editraffle" value="editraffle" />
+                      <input type="hidden" name="subaction" value="saveraffle" />
+                      <input type="hidden" name="sel_raffle" value="'.$raffle["entry"].'" />
+                    </div>
                     <table>
                       <tr>
                         <td>'.lang("admin", "raffle_id").': </td>
@@ -928,7 +942,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_item").':</td>
+                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_item").':</a></td>
                         <td>
                           <input type="text" name="raffle_item" value="'.$raffle["item_id"].'" size="6" />
                         </td>
@@ -1028,9 +1042,11 @@ function pointsystem()
                       </tr>
                     </table>
                   </fieldset>
-                  <input type="submit" name="saveraffle" value="'.lang("admin", "save").'" />
+                  <div>
+                    <input type="submit" name="saveraffle" value="'.lang("admin", "save").'" />
+                  </div>
                 </form>
-              </center>';
+              </div>';
             }
             else
             {
@@ -1135,17 +1151,19 @@ function pointsystem()
       if ( !$bag_action )
       {
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="pointsystem" />
-          <input type="hidden" name="subsection" value="raffle" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="pointsystem" />
+            <input type="hidden" name="subsection" value="raffle" />
+          </div>
           <table class="simple" id="admin_point_bag_list">
             <tr>
-              <th width="1%"></th>
-              <th width="1%"></th>
-              <th width="4%">'.lang("admin", "bag_id").'</th>
-              <th width="37%">'.lang("admin", "bag_slots").'</th>
-              <th width="37%">'.lang("admin", "bag_owner").'</th>
-              <th width="20%">'.lang("admin", "bag_template").'</th>
+              <th style="width: 1%;"></th>
+              <th style="width: 1%;"></th>
+              <th style="width: 4%;">'.lang("admin", "bag_id").'</th>
+              <th style="width: 37%;">'.lang("admin", "bag_slots").'</th>
+              <th style="width: 37%;">'.lang("admin", "bag_owner").'</th>
+              <th style="width: 20%;">'.lang("admin", "bag_template").'</th>
             </tr>';
         $color = "#EEEEEE";
         while ( $bag = $sqlm->fetch_assoc($result) )
@@ -1167,36 +1185,36 @@ function pointsystem()
 
           $output .= '
             <tr>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;editbag=editbag" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/edit.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
                   <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;delbag=deletebag" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
                     <img src="img/aff_cross.png" alt="" />
                   </a>
-                </center>
+                </span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$bag["entry"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$bag["entry"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$bag["slots"].'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$bag["slots"].'</span>
               </td>
-              <td style="background-color:'.$color.'">
-                <center>'.$owner.'</center>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$owner.'</span>
               </td>
-              <td style="background-color:'.$color.'">';
+              <td style="background-color:'.$color.'; text-align: center;">';
 
         if ( $bag["is_template"] )
           $output .= '
-                <center>
+                <span>
                   <img src="img/star.png" alt="" />
-                </center>';
+                </span>';
         else
           $output .= '
                 &nbsp;';
@@ -1248,15 +1266,17 @@ function pointsystem()
                 $owner = '<b>'.lang("admin", "bag_no_owner").'</b>';
 
               $output .= '
-              <center>
-                <form name="form" action="admin.php" method="get">
-                  <fieldset id="admin_edit_coupon">
-                    <input type="hidden" name="section" value="pointsystem" />
-                    <input type="hidden" name="subsection" value="bags" />
-                    <input type="hidden" name="editbag" value="editbag" />
-                    <input type="hidden" name="subaction" value="savebag" />
-                    <input type="hidden" name="sel_bag" value="'.$bag["entry"].'" />
-                    <table>
+              <div>
+                <form action="admin.php" method="get" id="form">
+                  <fieldset>
+                    <div>
+                      <input type="hidden" name="section" value="pointsystem" />
+                      <input type="hidden" name="subsection" value="bags" />
+                      <input type="hidden" name="editbag" value="editbag" />
+                      <input type="hidden" name="subaction" value="savebag" />
+                      <input type="hidden" name="sel_bag" value="'.$bag["entry"].'" />
+                    </div>
+                    <table id="admin_edit_coupon">
                       <tr>
                         <td>'.lang("admin", "bag_id").': </td>
                         <td>'.$bag["entry"].'</td>
@@ -1374,9 +1394,11 @@ function pointsystem()
                       </tr>
                     </table>
                   </fieldset>
-                  <input type="submit" name="savebag" value="'.lang("admin", "save").'" />
+                  <div>
+                    <input type="submit" name="savebag" value="'.lang("admin", "save").'" />
+                  </div>
                 </form>
-              </center>';
+              </div>';
             }
             else
             {

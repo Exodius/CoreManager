@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -48,9 +48,9 @@ function banner()
 
   $trans = imagecolorallocatealpha($img_temp, 0, 0, 0, 127);
 
-  for ( $y=0; $y<$height; $y++ )
+  for ( $y = 0; $y < $height; $y++ )
   {
-    for ( $x=0; $x<$width; $x++ )
+    for ( $x = 0; $x < $width; $x++ )
     {
       $rgb = imagecolorat($img, $x, $y);
 
@@ -104,9 +104,9 @@ function border()
 
   $trans = imagecolorallocatealpha($img_temp, 0, 0, 0, 127);
 
-  for ( $y=0; $y<$height; $y++ )
+  for ( $y = 0; $y < $height; $y++ )
   {
-    for ( $x=0; $x<$width; $x++ )
+    for ( $x = 0; $x < $width; $x++ )
     {
       $rgb = imagecolorat($img, $x, $y);
 
@@ -167,9 +167,9 @@ function emblem()
   imagealphablending($img_out, false);
   imagesavealpha($img_out, true);
 
-  for ( $y=0; $y<$height; $y++ )
+  for ( $y = 0; $y < $height; $y++ )
   {
-    for ( $x=0; $x<$width; $x++ )
+    for ( $x = 0; $x < $width; $x++ )
     {
       $rgb = imagecolorat($img, $x, $y);
 

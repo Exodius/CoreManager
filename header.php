@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -47,14 +47,15 @@ if ( !ini_get("session.auto_start") )
 if ( file_exists("configs/config.php") )
 {
   if ( !file_exists("configs/config.dist.php") )
-    exit('<center><br><code>\'configs/config.dist.php\'</code> not found,<br>
-          please restore <code>\'configs/config.dist.php\'</code></center>');
+    exit('<span style="width: 100%; text-align: center;"><br /><code>\'configs/config.dist.php\'</code> not found,<br />
+          please restore <code>\'configs/config.dist.php\'</code></span>');
+
   require_once "configs/config.php";
 }
 else
-  exit('<center><br><code>\'configs/config.php\'</code> not found,<br>
+  exit('<span style="width: 100%; text-align: center;"><br /><code>\'configs/config.php\'</code> not found,<br />
         please copy <code>\'configs/config.dist.php\'</code> to
-        <code>\'configs/config.php\'</code> and make appropriate changes.');
+        <code>\'configs/config.php\'</code> and make appropriate changes.</span>');
 
 require_once("libs/config_lib.php");
 
@@ -75,21 +76,21 @@ else
 if ( isset($_COOKIE["corem_theme"]) )
 {
   if ( is_dir("themes/".$_COOKIE["corem_theme"]) )
-    if ( is_file("themes/".$_COOKIE["corem_theme"].'/'.$_COOKIE["corem_theme"]."_1024.css") )
+    if ( is_file("themes/".$_COOKIE["corem_theme"]."/".$_COOKIE["corem_theme"]."_1024.css") )
       $theme = $_COOKIE["corem_theme"];
 }
 
 if ( isset($_COOKIE["corem_lang"]) )
 {
   $lang = $_COOKIE["corem_lang"];
-  if ( !file_exists('lang/'.$lang.'.php') )
+  if ( !file_exists("lang/".$lang.".php") )
     $lang = $language;
 }
 else
 {
   $lang = $language;
   // if we didn't get a cookie for language, create one
-  setcookie("corem_lang", $language, time()+60*60*24*30*6); // six months
+  setcookie("corem_lang", $language, time() + 60 * 60 * 24 * 30 * 6); // six months
 }
 
 //---------------------Current Filename----------------------------------------
@@ -142,14 +143,9 @@ if ( !isset($_SESSION["pub_key"]) )
 header("Content-Type: text/html; charset=".$site_encoding);
 // the webserver should be adding this directive, but just in case...
 header("Cache-Control: private, must-revalidate, post-check=0, pre-check=0");
-// dynamic pages can't be cached
-//header('Date: '.gmdate('D, d M Y H:i:s').' GMT');
-//header('Last-Modified: '.gmdate('D, d M Y H:i:s', filemtime($cur_filename)).' GMT');
-//header("Expires: " . gmdate("D, d M Y H:i:s", time() + $expire_offset) . " GMT");
-//header('Cache-Control: must-revalidate');
-//header('Cache-Control: post-check=0, pre-check=0', false);
+
 $output .= '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>'.$title.'</title>
@@ -176,7 +172,6 @@ else
   <body onload="dynamicLayout();">';
 
 $output .= '
-    <center>
       <div class="table_top">
         <div class="header_logo">';
 
@@ -469,17 +464,14 @@ $filename = $filename[count($filename) - 1];
 if ( ( $allow_anony && empty($_SESSION["logged_in"]) ) && ( ( $filename != "login.php" ) && ( $filename != "register.php" ) ) )
 {
   $output .= '
-      <center>
-        <table>
-          <tr>
-            <td>
-              <a class="button footer_register_login" href="register.php">'.lang("header", "register").'</a>
-              <a class="button footer_register_login" href="login.php">'.lang("header", "login").'</a>
-            </td>
-          </tr>
-        </table>
-        <br />
-      </center>';
+      <table class="center">
+        <tr>
+          <td>
+            <a class="button footer_register_login" href="register.php">'.lang("header", "register").'</a>
+            <a class="button footer_register_login" href="login.php">'.lang("header", "login").'</a>
+          </td>
+        </tr>
+      </table>';
 }
 
 //---------------------Start of Body-------------------------------------------

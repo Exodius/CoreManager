@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,60 +18,64 @@
 */
 
 
-require_once("header.php");
-require_once 'libs/char_lib.php';
+require_once "header.php" ;
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 $creature_types = Array(
-  0 => array(0, lang('creature', 'other')),
-  1 => array(1, lang('creature', 'beast')),
-  2 => array(2, lang('creature', 'dragonkin')),
-  3 => array(3, lang('creature', 'demon')),
-  4 => array(4, lang('creature', 'elemental')),
-  5 => array(5, lang('creature', 'giant')),
-  6 => array(6, lang('creature', 'undead')),
-  7 => array(7, lang('creature', 'humanoid')),
-  8 => array(8, lang('creature', 'critter')),
-  9 => array(9, lang('creature', 'mechanical')),
-  10 => array(10, lang('creature', 'not_specified')),
+   0 => array( 0, lang("creature", "other")),
+   1 => array( 1, lang("creature", "beast")),
+   2 => array( 2, lang("creature", "dragonkin")),
+   3 => array( 3, lang("creature", "demon")),
+   4 => array( 4, lang("creature", "elemental")),
+   5 => array( 5, lang("creature", "giant")),
+   6 => array( 6, lang("creature", "undead")),
+   7 => array( 7, lang("creature", "humanoid")),
+   8 => array( 8, lang("creature", "critter")),
+   9 => array( 9, lang("creature", "mechanical")),
+  10 => array(10, lang("creature", "not_specified")),
+  11 => array(11, lang("creature", "totem")),
+  12 => array(12, lang("creature", "pet")),
+  13 => array(13, lang("creature", "cloud")),
 );
 
 $creature_ranks = Array(
-  0 => array(0, lang('creature', 'normal')),
-  1 => array(1, lang('creature', 'elite')),
-  2 => array(2, lang('creature', 'rare_elite')),
-  3 => array(3, lang('creature', 'world_boss')),
-  4 => array(4, lang('creature', 'rare'))
+  0 => array(0, lang("creature", "normal")),
+  1 => array(1, lang("creature", "elite")),
+  2 => array(2, lang("creature", "rare_elite")),
+  3 => array(3, lang("creature", "world_boss")),
+  4 => array(4, lang("creature", "rare"))
 );
 
 $creature_families = Array(
-  0 => array(0, lang('creature', 'other')),
-  1 => array(1, lang('creature', 'wolf')),
-  2 => array(2, lang('creature', 'cat')),
-  3 => array(3, lang('creature', 'spider')),
-  4 => array(4, lang('creature', 'bear')),
-  5 => array(5, lang('creature', 'boar')),
-  6 => array(6, lang('creature', 'crocolisk')),
-  7 => array(7, lang('creature', 'carrion_bird')),
-  8 => array(8, lang('creature', 'crab')),
-  9 => array(9, lang('creature', 'gorilla')),
-  11 => array(11, lang('creature', 'raptor')),
-  12 => array(12, lang('creature', 'tallstrider')),
-  13 => array(13, lang('creature', 'other')),
-  14 => array(14, lang('creature', 'other')),
-  15 => array(15, lang('creature', 'felhunter')),
-  16 => array(16, lang('creature', 'voidwalker')),
-  17 => array(17, lang('creature', 'succubus')),
-  18 => array(18, lang('creature', 'other')),
-  19 => array(19, lang('creature', 'doomguard')),
-  20 => array(20, lang('creature', 'scorpid')),
-  21 => array(21, lang('creature', 'turtle')),
-  22 => array(22, lang('creature', 'scorpid')),
-  23 => array(23, lang('creature', 'imp')),
-  24 => array(24, lang('creature', 'bat')),
-  25 => array(25, lang('creature', 'hyena')),
-  26 => array(26, lang('creature', 'owl')),
-  27 => array(27, lang('creature', 'wind_serpent')),
+   0 => array( 0, lang("creature", "other")),
+   1 => array( 1, lang("creature", "wolf")),
+   2 => array( 2, lang("creature", "cat")),
+   3 => array( 3, lang("creature", "spider")),
+   4 => array( 4, lang("creature", "bear")),
+   5 => array( 5, lang("creature", "boar")),
+   6 => array( 6, lang("creature", "crocolisk")),
+   7 => array( 7, lang("creature", "carrion_bird")),
+   8 => array( 8, lang("creature", "crab")),
+   9 => array( 9, lang("creature", "gorilla")),
+  11 => array(11, lang("creature", "raptor")),
+  12 => array(12, lang("creature", "tallstrider")),
+  13 => array(13, lang("creature", "other")),
+  14 => array(14, lang("creature", "other")),
+  15 => array(15, lang("creature", "felhunter")),
+  16 => array(16, lang("creature", "voidwalker")),
+  17 => array(17, lang("creature", "succubus")),
+  18 => array(18, lang("creature", "other")),
+  19 => array(19, lang("creature", "doomguard")),
+  20 => array(20, lang("creature", "scorpid")),
+  21 => array(21, lang("creature", "turtle")),
+  22 => array(22, lang("creature", "scorpid")),
+  23 => array(23, lang("creature", "imp")),
+  24 => array(24, lang("creature", "bat")),
+  25 => array(25, lang("creature", "hyena")),
+  26 => array(26, lang("creature", "owl")),
+  27 => array(27, lang("creature", "wind_serpent")),
 );
 
 function get_creature_type($type)
@@ -239,163 +243,164 @@ function search()
     $rank = -1;
 
   $output .= '
-        <center>
-          <div class="fieldset_border">
-            <span class="legend">'.lang("creature", "search_template").'</span>
-            <br />
-            <form action="npc.php" method="get" name="form">
+        <div class="fieldset_border">
+          <span class="legend">'.lang("creature", "search_template").'</span>
+          <br />
+          <form action="npc.php" method="get" id="form">
+            <div>
               <!-- input type="hidden" name="action" value="do_search" / -->
               <input type="hidden" name="error" value="2" />
-              <table class="hidden">
-                <tr>
-                  <td>'.lang("creature", "entry").':</td>
-                  <td>
-                    <input type="text" size="14" maxlength="11" name="entry" value="'.$entry.'" />
-                  </td>
-                  <td>'.lang("creature", "name").':</td>
-                  <td colspan="3">
-                    <input type="text" size="45" maxlength="100" name="name" value="'.$name.'" />
-                  </td>
-                </tr>
-                <tr>
-                  <td colspan="4">'.lang("creature", "npc_flag").':</td>
-                  <td>'.lang("creature", "level").':</td>
-                  <td align="left">
-                    <input type="text" size="15" maxlength="11" name="level" value="'.$level.'" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" name="flag_gossip" value="1" '.( ( $flags & 1 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "gossip").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_quest_giver" value="2" '.( ( $flags & 2 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "quest_giver").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_trainer" value="16" '.( ( $flags & 16 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "trainer").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_vendor" value="128" '.( ( $flags & 128 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "vendor").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_armorer" value="4096" '.( ( $flags & 4096 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "armorer").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_taxi" value="8192" '.( ( $flags & 8192 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "taxi").'
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" name="flag_spirit_healer" value="16384" '.( ( $flags & 16384 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "spirit_healer").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_inn_keeper" value="65536" '.( ( $flags & 65536 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "inn_keeper").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_banker" value="131072" '.( ( $flags & 131072 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "banker").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_retitioner" value="262144" '.( ( $flags & 262144 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "retitioner").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_tabard_vendor" value="524288" '.( ( $flags & 524288 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "tabard_vendor").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_battlemaster" value="1048576" '.( ( $flags & 1048576 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "battlemaster").'
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <input type="checkbox" name="flag_auctioneer" value="2097152" '.( ( $flags & 2097152 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "auctioneer").'
-                  </td>
-                  <td>
-                    <input type="checkbox" name="flag_stable_master" value="4194304" '.( ( $flags & 4194304 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "stable_master").'
-                  </td>
-                  <td colspan="4" align="left">
-                    <input type="checkbox" name="flag_guard" value="268435456" '.( ( $flags & 268435456 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "guard").'
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("creature", "type").':</td>
-                  <td align="left">
-                    <select name="type">
-                      <option value="-1"'.( ( $type == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
+            </div>
+            <table class="hidden center">
+              <tr>
+                <td>'.lang("creature", "entry").':</td>
+                <td>
+                  <input type="text" size="14" maxlength="11" name="entry" value="'.$entry.'" />
+                </td>
+                <td>'.lang("creature", "name").':</td>
+                <td colspan="3">
+                  <input type="text" size="45" maxlength="100" name="name" value="'.$name.'" />
+                </td>
+              </tr>
+              <tr>
+                <td colspan="4">'.lang("creature", "npc_flag").':</td>
+                <td>'.lang("creature", "level").':</td>
+                <td align="left">
+                  <input type="text" size="15" maxlength="11" name="level" value="'.$level.'" />
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="flag_gossip" value="1" '.( ( $flags & 1 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "gossip").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_quest_giver" value="2" '.( ( $flags & 2 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "quest_giver").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_trainer" value="16" '.( ( $flags & 16 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "trainer").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_vendor" value="128" '.( ( $flags & 128 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "vendor").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_armorer" value="4096" '.( ( $flags & 4096 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "armorer").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_taxi" value="8192" '.( ( $flags & 8192 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "taxi").'
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="flag_spirit_healer" value="16384" '.( ( $flags & 16384 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "spirit_healer").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_inn_keeper" value="65536" '.( ( $flags & 65536 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "inn_keeper").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_banker" value="131072" '.( ( $flags & 131072 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "banker").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_retitioner" value="262144" '.( ( $flags & 262144 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "retitioner").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_tabard_vendor" value="524288" '.( ( $flags & 524288 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "tabard_vendor").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_battlemaster" value="1048576" '.( ( $flags & 1048576 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "battlemaster").'
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <input type="checkbox" name="flag_auctioneer" value="2097152" '.( ( $flags & 2097152 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "auctioneer").'
+                </td>
+                <td>
+                  <input type="checkbox" name="flag_stable_master" value="4194304" '.( ( $flags & 4194304 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "stable_master").'
+                </td>
+                <td colspan="4" align="left">
+                  <input type="checkbox" name="flag_guard" value="268435456" '.( ( $flags & 268435456 ) ? 'checked="checked"' : '' ).' />'.lang("creature", "guard").'
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("creature", "type").':</td>
+                <td align="left">
+                  <select name="type">
+                    <option value="-1"'.( ( $type == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
   foreach ( $creature_types as $row )
     $output .= '
                       <option value="'.$row[0].'"'.( ( $type == $row[0] ) ? ' selected="selected" ' : '' ).'>'.$row[0].' '.$row[1].'</option>';
   $output .= '
-                    </select>
-                  </td>
-                  <td>'.lang("creature", "family").':</td>
-                  <td align="left">
-                    <select name="family">
-                      <option value="-1"'.( ( $family == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
+                  </select>
+                </td>
+                <td>'.lang("creature", "family").':</td>
+                <td align="left">
+                  <select name="family">
+                    <option value="-1"'.( ( $family == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
   foreach ( $creature_families as $row )
     $output .= '
                       <option value="'.$row[0].'"'.( ( $family == $row[0] ) ? ' selected="selected" ' : '' ).'>'.$row[0].' '.$row[1].'</option>';
   $output .= '
-                    </select>
-                  </td>
-                  <td>'.lang("creature", "rank").':</td>
-                  <td align="left">
-                    <select name="rank">
-                      <option value="-1"'.( ( $rank == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
+                  </select>
+                </td>
+                <td>'.lang("creature", "rank").':</td>
+                <td align="left">
+                  <select name="rank">
+                    <option value="-1"'.( ( $rank == -1 ) ? ' selected="selected" ' : '' ).'>'.lang("creature", "select").'</option>';
   foreach ( $creature_ranks as $row )
     $output .= '
                       <option value="'.$row[0].'"'.( ( $rank == $row[0] ) ? ' selected="selected" ' : '' ).'>'.$row[0].' '.$row[1].'</option>';
   $output .= '
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("creature", "displayId1").':</td>
-                  <td>
-                    <input type="text" size="14" maxlength="11" name="displayid1" value="'.$displayid1.'" />
-                  </td>
-                  <td>'.lang("creature", "displayId2").':</td>
-                  <td align="left">
-                    <input type="text" size="15" maxlength="11" name="displayid2" value="'.$displayid2.'" />
-                  </td>';
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("creature", "displayId1").':</td>
+                <td>
+                  <input type="text" size="14" maxlength="11" name="displayid1" value="'.$displayid1.'" />
+                </td>
+                <td>'.lang("creature", "displayId2").':</td>
+                <td align="left">
+                  <input type="text" size="15" maxlength="11" name="displayid2" value="'.$displayid2.'" />
+                </td>';
   if ( $core == 1 )
     $output .= '
-                  <td>'.lang("creature", "faction").':</td>
-                  <td align="left">
-                    <input type="text" size="14" maxlength="11" name="factionA" value="'.$factionA.'" />
-                  </td>';
+                <td>'.lang("creature", "faction").':</td>
+                <td align="left">
+                  <input type="text" size="14" maxlength="11" name="factionA" value="'.$factionA.'" />
+                </td>';
   else
     $output .= '
-                  <td>'.lang("creature", "faction_A").':</td>
-                  <td align="left">
-                    <input type="text" size="14" maxlength="11" name="factionA" value="'.$factionA.'" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("creature", "displayId1").':</td>
-                  <td>
-                    <input type="text" size="14" maxlength="11" name="displayid3" value="'.$displayid3.'" />
-                  </td>
-                  <td>'.lang("creature", "displayId2").':</td>
-                  <td align="left">
-                    <input type="text" size="15" maxlength="11" name="displayid4" value="'.$displayid4.'" />
-                  </td>
-                  <td>'.lang("creature", "faction_H").':</td>
-                  <td align="left">
-                    <input type="text" size="14" maxlength="11" name="factionH" value="'.$factionH.'" />
-                  </td>';
+                <td>'.lang("creature", "faction_A").':</td>
+                <td align="left">
+                  <input type="text" size="14" maxlength="11" name="factionA" value="'.$factionA.'" />
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("creature", "displayId1").':</td>
+                <td>
+                  <input type="text" size="14" maxlength="11" name="displayid3" value="'.$displayid3.'" />
+                </td>
+                <td>'.lang("creature", "displayId2").':</td>
+                <td align="left">
+                  <input type="text" size="15" maxlength="11" name="displayid4" value="'.$displayid4.'" />
+                </td>
+                <td>'.lang("creature", "faction_H").':</td>
+                <td align="left">
+                  <input type="text" size="14" maxlength="11" name="factionH" value="'.$factionH.'" />
+                </td>';
   $output .= '
-                </tr>
-                <tr>
-                  <td colspan="3">';
+              </tr>
+              <tr>
+                <td colspan="3">';
   makebutton(lang("creature", "search"), "javascript:do_submit()", 150);
   $output .= '
-                  </td>
-                  <td colspan="3">'.lang("creature", "tot_creature_templ").': '.$tot_go.'</td>
-                </tr>
-              </table>
-            </form>
-          </div>
-          <br />
-          <br />';
+                </td>
+                <td colspan="3">'.lang("creature", "tot_creature_templ").': '.$tot_go.'</td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <br />
+        <br />';
 
   // now we only want $type if it has REAL content
   if ( $type == -1 )
@@ -497,37 +502,37 @@ function search()
   $total_found = $total_result["COUNT(*)"];
 
   $output .= '
-          <table class="top_hidden">
-            <tr>
-              <td>';
+        <table class="top_hidden">
+          <tr>
+            <td>';
   makebutton(lang("creature", "new_search"), "npc.php", 160);
   $output .= '
-              </td>
-              <td align="right">'.lang("creature", "tot_found").' : '.$total_found.'</td>
-            </tr>
-            <tr>
-              <td>&nbsp;</td>
-              <td align="right">';
+            </td>
+            <td align="right">'.lang("creature", "tot_found").' : '.$total_found.'</td>
+          </tr>
+          <tr>
+            <td>&nbsp;</td>
+            <td align="right">';
   $output .= generate_pagination('npc.php?order_by='.$order_by.'&amp;dir='.( ($dir) ? 0 : 1 ).( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid1 ) ? '&amp;displayid1='.$displayid1 : '' ).( ( $displayid2 ) ? '&amp;displayid2='.$displayid2 : '' ).( ( $displayid3 ) ? '&amp;displayid3='.$displayid3 : '' ).( ( $displayid4 ) ? '&amp;displayid4='.$displayid4 : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ), $total_found, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>
-          <table class="lined">
-            <tr>
-              <th width="10%">'.lang("creature", "entry").'</th>
-              <th width="40%">'.lang("creature", "name").'</th>
-              <th width="15%">'.lang("creature", "type").'</th>';
+            </td>
+          </tr>
+        </table>
+        <table class="lined">
+          <tr>
+            <th style="width: 10%;">'.lang("creature", "entry").'</th>
+            <th style="width: 40%;">'.lang("creature", "name").'</th>
+            <th style="width: 15%;">'.lang("creature", "type").'</th>';
   if ( $core == 1 )
     $output .= '
-              <th width="20%">'.lang("creature", "faction").'</th>';
+              <th style="width: 20%;">'.lang("creature", "faction").'</th>';
   else
     $output .= '
-              <th width="20%">'.lang("creature", "faction_A").'</th>
-              <th width="20%">'.lang("creature", "faction_H").'</th>';
+            <th style="width: 20%;">'.lang("creature", "faction_A").'</th>
+            <th style="width: 20%;">'.lang("creature", "faction_H").'</th>';
   $output .= '
-              <th>'.lang("creature", "spawncount").'</th>
-            </tr>';
+            <th>'.lang("creature", "spawncount").'</th>
+          </tr>';
 
   for ( $i = 1; $i <= $page_total; $i++ )
   {
@@ -550,36 +555,35 @@ function search()
     $spawn_count = $count_result["COUNT(*)"];
 
     $output .= '
-            <tr>
-              <td>
-                <a href="npc.php?action=view&amp;entry='.$creature["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid1 ) ? '&amp;displayid1='.$displayid1 : '' ).( ( $displayid2 ) ? '&amp;displayid2='.$displayid2 : '' ).( ( $displayid3 ) ? '&amp;displayid3='.$displayid3 : '' ).( ( $displayid4 ) ? '&amp;displayid4='.$displayid4 : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.$creature["entry"].'</a>
-              </td>
-              <td>
-                <a href="npc.php?action=view&amp;entry='.$creature["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid1 ) ? '&amp;displayid1='.$displayid1 : '' ).( ( $displayid2 ) ? '&amp;displayid2='.$displayid2 : '' ).( ( $displayid3 ) ? '&amp;displayid3='.$displayid3 : '' ).( ( $displayid4 ) ? '&amp;displayid4='.$displayid4 : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.htmlspecialchars($creature["name"], ENT_COMPAT, $site_encoding).'</a>
-              </td>
-              <td>'.get_creature_type($creature["type"]).'</td>';
+          <tr>
+            <td>
+              <a href="npc.php?action=view&amp;entry='.$creature["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid1 ) ? '&amp;displayid1='.$displayid1 : '' ).( ( $displayid2 ) ? '&amp;displayid2='.$displayid2 : '' ).( ( $displayid3 ) ? '&amp;displayid3='.$displayid3 : '' ).( ( $displayid4 ) ? '&amp;displayid4='.$displayid4 : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.$creature["entry"].'</a>
+            </td>
+            <td>
+              <a href="npc.php?action=view&amp;entry='.$creature["entry"].( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid1 ) ? '&amp;displayid1='.$displayid1 : '' ).( ( $displayid2 ) ? '&amp;displayid2='.$displayid2 : '' ).( ( $displayid3 ) ? '&amp;displayid3='.$displayid3 : '' ).( ( $displayid4 ) ? '&amp;displayid4='.$displayid4 : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ).'&amp;error=3">'.htmlspecialchars($creature["name"], ENT_COMPAT, $site_encoding).'</a>
+            </td>
+            <td>'.get_creature_type($creature["type"]).'</td>';
     if ( $core == 1 )
       $output .= '
               <td>'.$creature["faction"].'</td>';
     else
       $output .= '
-              <td>'.$creature["faction_A"].'</td>
-              <td>'.$creature["faction_H"].'</td>';
+            <td>'.$creature["faction_A"].'</td>
+            <td>'.$creature["faction_H"].'</td>';
     $output .= '
-              <td>'.$spawn_count.'</th>
-            </tr>';
+            <td>'.$spawn_count.'</td>
+          </tr>';
   }
   $output .= '
-          </table>
-          <table class="top_hidden">
-            <tr>
-              <td align="right">';
+        </table>
+        <table class="top_hidden">
+          <tr>
+            <td align="right">';
   $output .= generate_pagination('npc.php?order_by='.$order_by.'&amp;dir='.( ($dir) ? 0 : 1 ).( ( $name ) ? '&amp;name='.$name : '' ).( ( $level ) ? '&amp;level='.$level : '' ).( ( $type ) ? '&amp;type='.$type : '' ).( ( $family ) ? '&amp;family='.$family : '' ).( ( $rank ) ? '&amp;rank='.$rank : '' ).( ( $displayid ) ? '&amp;displayid='.$displayid : '' ).( ( $factionA ) ? '&amp;factionA='.$factionA : '' ).( ( $factionH ) ? '&amp;factionH='.$factionH : '' ).( ( $flags ) ? '&amp;flags='.$flags : '' ), $total_found, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>
-        </center>
+            </td>
+          </tr>
+        </table>
         <br />';
 }
 
@@ -614,19 +618,19 @@ function view_creature()
   if ( $show == 4395 )
   {
     if ( $floor == 505 )
-      $display_floor = ' AND worldmaparea_fine.ID=505';
+      $display_floor = " AND worldmaparea_fine.ID=505";
     else
       // we default to Dalaran
-      $display_floor = ' AND worldmaparea_fine.ID=504';
+      $display_floor = " AND worldmaparea_fine.ID=504";
   }
   else
     // we aren't showing Dalaran or The Underbelly
-    $display_floor = '';
+    $display_floor = "";
 
   // object info
   if ( $core == 1 )
-    $creature_info_query = "SELECT *, Type AS type, DisplayID AS displayId, creature_names.Name AS name1".( ( $locales_search_option != 0 ) ? ", creature_names_localized.name AS name" : "" )."
-                      FROM creaturenames "
+    $creature_info_query = "SELECT *, Type AS type, male_displayid AS displayId, creature_names.Name AS name1".( ( $locales_search_option != 0 ) ? ", creature_names_localized.name AS name" : "" )."
+                      FROM creature_names "
                         .( ( $locales_search_option != 0 ) ? "LEFT JOIN creature_names_localized ON creature_names.entry=creature_names_localized.entry AND language_code='".$locales_search_option."') " : " " ).
                       "WHERE creature_names.entry='".$entry."'";
   else
@@ -670,13 +674,12 @@ function view_creature()
   $result = $sql["world"]->query($query_areas);
 
   $output .= '
-        <div class="gob_header">
+        <div class="gob_header ">
           <span class="gob_name">'.$creature_info["name"].'</span>
           <hr />
         </div>
-        <center>
-          <div>
-            <span>'.lang("creature", "foundin").'</span>';
+        <div class="center_text">
+          <span>'.lang("creature", "foundin").'</span>';
 
   while ( $row = $sql["world"]->fetch_assoc($result) )
   {
@@ -712,14 +715,14 @@ function view_creature()
     // show zones with spawns and counts
     if ( $row["AreaTable"] != $show )
       $output .= '
-            <a href="npc.php?action=view&amp;entry='.$entry.'&amp;show='.$row["AreaTable"].( ( $row["AreaTable"] == 4395 ) ? '&amp;floor='.$row["ID"] : '' ).'&amp;error=3">'.$row["Name"]. "</a>&nbsp;(".$total_by_area.') ';
+          <a href="npc.php?action=view&amp;entry='.$entry.'&amp;show='.$row["AreaTable"].( ( $row["AreaTable"] == 4395 ) ? '&amp;floor='.$row["ID"] : '' ).'&amp;error=3">'.$row["Name"]. "</a>&nbsp;(".$total_by_area.') ';
     else
       $output .= '
-            <span class="zone_active">'.$row["Name"]. "</span>&nbsp;(".$total_by_area.') ';
+          <span class="zone_active">'.$row["Name"]. "</span>&nbsp;(".$total_by_area.') ';
   }
 
   $output .= '
-          </div>';
+        </div>';
 
   if ( $core == 1 )
     $query = "SELECT creature_spawns.id AS guid, Yw, Xw, position_y, position_x, position_z, worldmaparea.X1 AS XBase, worldmaparea.Y1 AS YBase, Z1, Z2 FROM creature_spawns
@@ -745,7 +748,6 @@ function view_creature()
 
   // show selected map
   $output .= '
-        </center>
         <div class="mini_map">
           <img src="img/map/area_small/'.$show_map["RefCon"].'.png" alt="'.$show_map["Name"].'" />';
 
@@ -885,19 +887,19 @@ switch ( $err )
   case 1:
     $output .= '
           <h1>
-            <font class="error">'.lang("global", "empty_fields").'</font>
+            <span class="error">'.lang("global", "empty_fields").'</span>
           </h1>';
     break;
   case 2:
     $output .= '
           <h1>
-            <font class="error">'.lang("creature", "search_results").'</font>
+            <span class="error">'.lang("creature", "search_results").'</span>
           </h1>';
     break;
   case 3:
     $output .= '
           <h1>
-            <font class="error">'.lang("creature", "view_creature").'</font>
+            <span class="error">'.lang("creature", "view_creature").'</span>
           </h1>';
     break;
   default: //no error
@@ -922,5 +924,5 @@ switch ( $action )
     search();
 }
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -122,11 +122,14 @@ function general()
         $show_version_version_lvl = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Show_Version_Version_Lvl'"));
         $show_version_revision = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Show_Version_SVNRev'"));
         $show_version_revision_lvl = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Show_Version_SVNRev_Lvl'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveversion" />
-          <input type="hidden" name="subsection" value="version" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveversion" />
+            <input type="hidden" name="subsection" value="version" />
+          </div>
           <table class="simple">
             <tr>
               <td class="help">
@@ -173,7 +176,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -210,11 +215,14 @@ function general()
         $pm_from_char = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='PM_From_Char'"));
         $pm_stationary = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='PM_Stationary'"));
         $url_path = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='URL_Path'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="savemail" />
-          <input type="hidden" name="subsection" value="mail" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="savemail" />
+            <input type="hidden" name="subsection" value="mail" />
+          </div>
           <table class="simple">
             <tr>
               <td colspan="2"><b>'.lang("admin", "email").'</b></td>
@@ -336,7 +344,9 @@ function general()
 
         $output .= '
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -391,11 +401,14 @@ function general()
         $irc_port = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='IRC_Port'"));
         $irc_channel = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='IRC_Channel'"));
         $irc_helppage = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='IRC_HelpPage'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveirc" />
-          <input type="hidden" name="subsection" value="irc" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveirc" />
+            <input type="hidden" name="subsection" value="irc" />
+          </div>
           <table class="simple">
             <tr>
               <td class="help">
@@ -430,7 +443,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -457,11 +472,14 @@ function general()
         $proxy_port = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Proxy_Port'"));
         $proxy_user = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Proxy_User'"));
         $proxy_pass = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Proxy_Pass'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveproxy" />
-          <input type="hidden" name="subsection" value="proxy" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveproxy" />
+            <input type="hidden" name="subsection" value="proxy" />
+          </div>
           <table class="simple">
             <tr>
               <td class="help">
@@ -496,7 +514,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -529,10 +549,12 @@ function general()
         $datasite_go = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_GO'"));
         $datasite_achieve = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Achievement'"));
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="savedatasite" />
-          <input type="hidden" name="subsection" value="datasite" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="savedatasite" />
+            <input type="hidden" name="subsection" value="datasite" />
+          </div>
           <table class="simple" id="admin_datasite">
             <tr>
               <td class="help">
@@ -607,7 +629,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -653,11 +677,14 @@ function general()
         $send_confirmation_mail_on_creation = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Send_Confirmation_Mail_On_Creation'"));
         $validate_mail_host = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Validate_Mail_Host'"));
         $limit_acc_per_ip = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Limit_Acc_Per_IP'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveacctcreation" />
-          <input type="hidden" name="subsection" value="acctcreation" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveacctcreation" />
+            <input type="hidden" name="subsection" value="acctcreation" />
+          </div>
           <table class="simple" id="admin_acct_creation">
             <tr>
               <td class="help">
@@ -777,7 +804,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -821,11 +850,14 @@ function general()
         $acp_allow_anony = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Allow_Anony'"));
         $acp_anony_name = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Anony_Name'"));
         $acp_anony_realm_id = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Anony_Realm_ID'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveguests" />
-          <input type="hidden" name="subsection" value="guests" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveguests" />
+            <input type="hidden" name="subsection" value="guests" />
+          </div>
           <table class="simple">
             <tr>
               <td class="help">
@@ -852,7 +884,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -904,10 +938,12 @@ function general()
         $dis_result = $sqlm->query($dis_query);
 
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveextratools" />
-          <input type="hidden" name="subsection" value="extratools" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveextratools" />
+            <input type="hidden" name="subsection" value="extratools" />
+          </div>
           <table class="simple">
             <tr>
               <td colspan="2">
@@ -1024,7 +1060,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>
         <br />
         <div>
@@ -1132,11 +1170,14 @@ function general()
         $map_time_to_show_uptime = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Map_Time_To_Show_Uptime'"));
         $map_time_to_show_maxonline = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Map_Time_To_Show_MaxOnline'"));
         $map_time_to_show_gmonline = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Map_Time_To_Show_GMOnline'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveinternalmap" />
-          <input type="hidden" name="subsection" value="internalmap" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveinternalmap" />
+            <input type="hidden" name="subsection" value="internalmap" />
+          </div>
           <table class="simple">
             <tr>
               <td class="help">
@@ -1162,36 +1203,10 @@ function general()
                 <input type="checkbox" name="gmaddsuffix" '.( ( $map_gm_add_suffix["Value"] == 1 ) ? 'checked="checked"' : '' ).' />
               </td>
             </tr>
-            <!-- tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "showstatus_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "showstatus").'</a>: </td>
-              <td><input type="checkbox" name="showstatus" '.( ( $map_show_status["Value"] == 1 ) ? 'checked="checked"' : '' ).' disabled="disabled" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "showtimer_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "showtimer").'</a>: </td>
-              <td><input type="checkbox" name="showtimer" '.( ( $map_show_timer["Value"] == 1 ) ? 'checked="checked"' : '' ).' disabled="disabled" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "timer_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "timer").'</a>: </td>
-              <td><input type="text" name="timer" value="'.$map_timer["Value"].'" readonly="readonly" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "showonline_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "showonline").'</a>: </td>
-              <td><input type="checkbox" name="showonline" '.( ( $map_show_online["Value"] == 1 ) ? 'checked="checked"' : '' ).' disabled="disabled" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "timetoshowuptime_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "timetoshowuptime").'</a>: </td>
-              <td><input type="text" name="timetoshowuptime" value="'.$map_time_to_show_uptime["Value"].'" readonly="readonly" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "timetoshowmaxonline_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "timetoshowmaxonline").'</a>: </td>
-              <td><input type="text" name="timetoshowmaxonline" value="'.$map_time_to_show_maxonline["Value"].'" readonly="readonly" /></td>
-            </tr>
-            <tr>
-              <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "timetoshowgmonline_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "timetoshowgmonline").'</a>: </td>
-              <td><input type="text" name="timetoshowgmonline" value="'.$map_time_to_show_gmonline["Value"].'" readonly="readonly" /></td>
-            </tr -->
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -1229,16 +1244,19 @@ function general()
       if ( !$sub_action )
       {
         $masks_query = $sqlm->query("SELECT * FROM config_valid_ip_mask");
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="editvalidip" />
-          <input type="hidden" name="subsection" value="validip" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="editvalidip" />
+            <input type="hidden" name="subsection" value="validip" />
+          </div>
           <table class="simple">
             <tr>
-              <th width="10%">&nbsp;</th>
-              <th width="20%">
-                <center>'.lang("admin", "index").'</center>
+              <th style="width: 10%;">&nbsp;</th>
+              <th style="width: 20%;">
+                <span style="text-align: center;">'.lang("admin", "index").'</span>
               </th>
               <th>'.lang("admin", "validipmask").'</th>
             </tr>';
@@ -1257,9 +1275,11 @@ function general()
         }
         $output .= '
           </table>
-          <input type="submit" name="edit" value="'.lang("admin", "editipmask").'" />
-          <input type="submit" name="add" value="'.lang("admin", "addipmask").'" />
-          <input type="submit" name="delete" value="'.lang("admin", "deleteipmask").'" />
+          <div>
+            <input type="submit" name="edit" value="'.lang("admin", "editipmask").'" />
+            <input type="submit" name="add" value="'.lang("admin", "addipmask").'" />
+            <input type="submit" name="delete" value="'.lang("admin", "deleteipmask").'" />
+          </div>
         </form>';
       }
       elseif ( $sub_action == "editvalidip" )
@@ -1287,12 +1307,15 @@ function general()
             redirect("admin.php?section=general&subsection=validip&error=1");
 
           $mask = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_valid_ip_mask WHERE `Index`='".$index."'"));
+
           $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="savevalidip" />
-          <input type="hidden" name="subsection" value="validip" />
-          <input type="hidden" name="index" value="'.$mask["Index"].'" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="savevalidip" />
+            <input type="hidden" name="subsection" value="validip" />
+            <input type="hidden" name="index" value="'.$mask["Index"].'" />
+          </div>
           <table class="simple">
             <tr>
               <th width="20%">
@@ -1311,7 +1334,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
         }
       }
@@ -1331,11 +1356,14 @@ function general()
       {
         $enable_bottom_ad = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Enable_Page_Bottom_Ad'"));
         $bottom_ad_content = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Page_Bottom_Ad_Content'"));
+
         $output .= '
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="saveads" />
-          <input type="hidden" name="subsection" value="ads" />
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="saveads" />
+            <input type="hidden" name="subsection" value="ads" />
+          </div>
           <table class="simple" id="admin_more">
             <tr>
               <td class="help">
@@ -1354,7 +1382,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -1415,10 +1445,12 @@ function general()
         }
 
         $output .= '
-        <form name="form" action="admin.php" method="get" enctype="multipart/form-data">
-          <input type="hidden" name="section" value="general" />
-          <input type="hidden" name="subaction" value="savemore" />
-          <input type="hidden" name="subsection" value="more" />
+        <form action="admin.php" method="get" enctype="multipart/form-data" id="form">
+          <div>
+            <input type="hidden" name="section" value="general" />
+            <input type="hidden" name="subaction" value="savemore" />
+            <input type="hidden" name="subsection" value="more" />
+          </div>
           <table class="simple" id="admin_more">
             <tr>
               <td class="help">
@@ -1793,7 +1825,9 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
       }
       else
@@ -1896,7 +1930,7 @@ function general()
         $upload_err = ( ( isset($_GET["up_err"]) ) ? $_GET["up_err"] : NULL );
 
         $output .= '
-        <form name="form" action="admin.php?section=general&subsection=upload_logo&subaction=upload" method="post" enctype="multipart/form-data">
+        <form action="admin.php?section=general&subsection=upload_logo&subaction=upload" method="post" enctype="multipart/form-data" id="form">
           <table class="simple" id="admin_more">';
 
         if ( isset($upload_err) )
@@ -1919,8 +1953,10 @@ function general()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
-          <input type="button" name="cancel" value="'.lang("admin", "cancel").'" onclick="window.location=\'admin.php?section=general&subsection=more\'"/>
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+            <input type="button" name="cancel" value="'.lang("admin", "cancel").'" onclick="window.location=\'admin.php?section=general&subsection=more\'"/>
+          </div>
         </form>';
       }
       else
@@ -1965,44 +2001,41 @@ function general()
         if ( !isset($_GET["edit_btn"]) )
         {
           $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
+        <form action="admin.php" method="get" id="form">
+          <div>
             <input type="hidden" name="section" value="general" />
             <input type="hidden" name="subsection" value="gmlevels" />
             <input type="hidden" name="edit_btn" value="edit" />
-            <table class="simple">
-              <tr>
-                <th>'.lang("admin", "edit").'</th>
-                <th>'.lang("admin", "remove").'</th>
-                <th>'.lang("admin", "seclvl").'</th>
-                <th>'.lang("admin", "fullname").'</th>
-                <th>'.lang("admin", "shortname").'</th>
-              </tr>';
+          </div>
+          <table class="simple">
+            <tr>
+              <th>'.lang("admin", "edit").'</th>
+              <th>'.lang("admin", "remove").'</th>
+              <th>'.lang("admin", "seclvl").'</th>
+              <th>'.lang("admin", "fullname").'</th>
+              <th>'.lang("admin", "shortname").'</th>
+            </tr>';
 
           $color = "#EEEEEE";
 
           while( $gm_lvl = $sqlm->fetch_assoc($gm_lvls) )
           {
             $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit='.$gm_lvl["Index"].'&amp;edit_btn=Edit">
-                      <img src="img/edit.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=general&amp;subsection=gmlevels&amp;delrow=deleterow&amp;edit='.$gm_lvl["Index"].'&amp;edit_btn=Edit">
-                      <img src="img/aff_cross.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">'.$gm_lvl["Security_Level"].'</td>
-                <td style="background-color:'.$color.'">'.$gm_lvl["Full_Name"].'</td>
-                <td style="background-color:'.$color.'">'.$gm_lvl["Short_Name"].'</td>
-              </tr>';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit='.$gm_lvl["Index"].'&amp;edit_btn=Edit">
+                  <img src="img/edit.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <a href="admin.php?section=general&amp;subsection=gmlevels&amp;delrow=deleterow&amp;edit='.$gm_lvl["Index"].'&amp;edit_btn=Edit">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'">'.$gm_lvl["Security_Level"].'</td>
+              <td style="background-color:'.$color.'">'.$gm_lvl["Full_Name"].'</td>
+              <td style="background-color:'.$color.'">'.$gm_lvl["Short_Name"].'</td>
+            </tr>';
 
             if ( $color == "#EEEEEE" )
               $color = "#FFFFFF";
@@ -2010,27 +2043,20 @@ function general()
               $color = "#EEEEEE";
           }
           $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit_btn=Edit&amp;addrow=addrow">
-                      <img src="img/add.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'" colspan="4">
-                  <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit_btn=Edit&amp;addrow=addrow">'.lang("admin", "addrow").'</a>
-                </td>
-              </tr>';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit_btn=Edit&amp;addrow=addrow">
+                  <img src="img/add.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.';" colspan="4">
+                <a href="admin.php?section=general&amp;subsection=gmlevels&amp;edit_btn=Edit&amp;addrow=addrow">'.lang("admin", "addrow").'</a>
+              </td>
+            </tr>';
 
           $output .= '
-            </table>
-            <!-- input type="checkbox" name="addrow">'.lang("admin", "addrow").'
-            <input type="checkbox" name="delrow">'.lang("admin", "delrow").'
-            <br />
-            <input type="submit" name="addrow" value="'.lang("admin", "addrow").'" -->
-          </form>
-        </center>';
+          </table>
+        </form>';
         }
         else
         {
@@ -2056,14 +2082,15 @@ function general()
 
           $gm_level = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_gm_level_names WHERE `Index`='".$edit_row."'"));
           $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
+        <form action="admin.php" method="get" id="form">
+          <div>
             <input type="hidden" name="section" value="general" />
             <input type="hidden" name="subsection" value="gmlevels" />
             <input type="hidden" name="subaction" value="savegms" />
             <input type="hidden" name="index" value="'.$gm_level["Index"].'" />
-            <fieldset id="admin_gm_level">
-            <table>
+          </div>
+          <fieldset id="admin_gm_level">
+            <table class="center">
               <tr>
                 <td class="help">
                   <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "seclvl_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "seclvl").'</a>:
@@ -2085,10 +2112,11 @@ function general()
                 </td>
               </tr>
             </table>
-            </fieldset>
+          </fieldset>
+          <div>
             <input type="submit" name="save" value="'.lang("admin", "save").'" />
-          </form>
-        </center>';
+          </div>
+        </form>';
         }
       }
       else

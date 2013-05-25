@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -288,16 +288,13 @@ function maketooltip($text, $link, $tip, $class, $target = 'target="_self"')
 // Original from PHPBB with some modifications to make them more simple
 function generate_pagination($base_url, $num_items, $per_page, $start_item, $start_tag = "start", $add_prevnext_text = TRUE)
 {
-  if ( $num_items )
-    ;
-  else
+  if ( !$num_items )
     return "";
 
   $total_pages = ceil($num_items/$per_page);
   if ( $total_pages == 1 )
-  {
     return "";
-  }
+
   $on_page = floor($start_item / $per_page) + 1;
   $page_string = "";
   if ( $total_pages > 10 )
@@ -321,7 +318,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $sta
         $init_page_max = ( ( $on_page < $total_pages - 4 ) ? $on_page : $total_pages - 4 );
 
         $count = $init_page_max + 2;
-        for ( $i=$init_page_min - 1; $i < $count; ++$i )
+        for ( $i = $init_page_min - 1; $i < $count; ++$i )
         {
           $page_string .= ( ( $i === $on_page ) ? '<b>'.$i.'</b>' : '<a href="'.$base_url.'&amp;'.$start_tag.'='.(($i - 1) * $per_page).'">'.$i.'</a>' );
           if ( $i <  $init_page_max + 1 )
@@ -336,7 +333,7 @@ function generate_pagination($base_url, $num_items, $per_page, $start_item, $sta
         $page_string .= " ... ";
       }
       $count = $total_pages + 1;
-      for ( $i=$total_pages - 2; $i < $count; ++$i )
+      for ( $i = $total_pages - 2; $i < $count; ++$i )
       {
         $page_string .= ( ( $i == $on_page ) ? '<b>'.$i.'</b>'  : '<a href="'.$base_url.'&amp;'.$start_tag.'='.(($i - 1 ) * $per_page).'">'.$i.'</a>' );
         if ( $i < $total_pages )

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -32,7 +32,6 @@ else
   $lang = $language;
 
 require_once "lang/".$lang.".php";
-
 require_once "libs/lang_lib.php";
 
 header("Content-Type: text/html; charset=".$site_encoding);
@@ -42,7 +41,7 @@ header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
 header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 $output .= '
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <title>'.lang("admin", "title").'</title>
@@ -53,7 +52,6 @@ $output .= '
     <script type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" src="libs/js/general.js"></script>
   </head>
-
   <body>';
 
 // get our current revision

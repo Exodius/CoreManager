@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,8 @@
 */
 
 
-require_once("header.php");
+require_once "header.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -130,10 +131,9 @@ function show_list()
   $this_page = $sql["logon"]->num_rows($result);
 
   $output .= '
-        <center>
-          <table class="top_hidden">
-            <tr>
-              <td>';
+        <table class="top_hidden">
+          <tr>
+            <td>';
   switch ( $ban_type )
   {
     case "accounts":
@@ -177,58 +177,58 @@ function show_list()
   makebutton(lang("global", "back"), "javascript:window.history.back()\" type=\"def", 130);
 
   $output .= '
-              </td>
-              <td align="right">'.generate_pagination("banned.php?action=show_list&amp;order_by=$order_by&amp;ban_type=$ban_type&amp;dir=".!$dir, $all_record, $itemperpage, $start).'</td>
-            </tr>
-          </table>
-          <script type="text/javascript">
-            answerbox.btn_ok="'.lang("global", "yes_low").'";
-            answerbox.btn_cancel="'.lang("global", "no").'";
-            var del_banned = "banned.php?action=do_delete_entry&amp;ban_type='.$ban_type.'&amp;entry=";
-          </script>
-          <table class="lined">
-            <tr class="large_bold">
-              <td colspan="5" class="hidden" align="left">
-                Banned '.lang("banned", $ban_type).':
-              </td>
-            </tr>';
+            </td>
+            <td align="right">'.generate_pagination("banned.php?action=show_list&amp;order_by=$order_by&amp;ban_type=$ban_type&amp;dir=".!$dir, $all_record, $itemperpage, $start).'</td>
+          </tr>
+        </table>
+        <script type="text/javascript">
+          answerbox.btn_ok="'.lang("global", "yes_low").'";
+          answerbox.btn_cancel="'.lang("global", "no").'";
+          var del_banned = "banned.php?action=do_delete_entry&amp;ban_type='.$ban_type.'&amp;entry=";
+        </script>
+        <table class="lined">
+          <tr class="large_bold">
+            <td colspan="5" class="hidden" align="left">
+              Banned '.lang("banned", $ban_type).':
+            </td>
+          </tr>';
   switch ( $ban_type )
   {
     case "accounts":
     {
       $output .= '
-            <tr>
-              <th width="5%">'.lang("global", "delete_short").'</th>
-              <th width="19%"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="$order_dir"' : '' ).'>'.lang("banned", "ip_acc").'</a></th>
-              <th width="18%"><a href="banned.php?order_by=banned&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banned' ) ? ' class="$order_dir"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
-              <th width="15%">'.( ( $core != 1 ) ? lang("banned", "bannedby") : '' ).'</th>
-              <th width="43%">'.( ( $core != 1 ) ? lang("banned", "banreason") : '' ).'</th>
-            </tr>';
+          <tr>
+            <th style="width: 5%;">'.lang("global", "delete_short").'</th>
+            <th style="width: 19%;"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="$order_dir"' : '' ).'>'.lang("banned", "ip_acc").'</a></th>
+            <th style="width: 18%;"><a href="banned.php?order_by=banned&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banned' ) ? ' class="$order_dir"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
+            <th style="width: 15%;">'.( ( $core != 1 ) ? lang("banned", "bannedby") : '' ).'</th>
+            <th style="width: 43%;">'.( ( $core != 1 ) ? lang("banned", "banreason") : '' ).'</th>
+          </tr>';
       break;
     }
     case "characters":
     {
       $output .= '
-            <tr>
-              <th width="5%">'.lang("global", "delete_short").'</th>
-              <th width="19%"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "ip_acc").'</a></th>
-              <th width="18%"><a href="banned.php?order_by=guid&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'guid' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "character").'</a></th>
-              <th width="18%"><a href="banned.php?order_by=banned&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banned' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
-              <th width="25%"><a href="banned.php?order_by=banreason&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banreason' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "banreason").'</a></th>
-              <th width="33%"></th>
-            </tr>';
+          <tr>
+            <th style="width: 5%;">'.lang("global", "delete_short").'</th>
+            <th style="width: 19%;"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "ip_acc").'</a></th>
+            <th style="width: 18%;"><a href="banned.php?order_by=guid&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'guid' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "character").'</a></th>
+            <th style="width: 18%;"><a href="banned.php?order_by=banned&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banned' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
+            <th style="width: 25%;"><a href="banned.php?order_by=banreason&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'banreason' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "banreason").'</a></th>
+            <th style="width: 33%;"></th>
+          </tr>';
       break;
     }
     case "ipbans":
     {
       $output .= '
-            <tr>
-              <th width="5%">'.lang("global", "delete_short").'</th>
-              <th width="19%"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "ip").'</a></th>
-              <th width="18%"><a href="banned.php?order_by=expire&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'expire' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
-              <th width="15%">'.( ( $core != 1 ) ? lang("banned", "bannedby") : '' ).'</th>
-              <th width="43%">'.( ( $core != 1 ) ? lang("banned", "banreason") : '' ).'</th>
-            </tr>';
+          <tr>
+            <th style="width: 5%;">'.lang("global", "delete_short").'</th>
+            <th style="width: 19%;"><a href="banned.php?order_by='.$key_field.'&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == $key_field ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "ip").'</a></th>
+            <th style="width: 18%;"><a href="banned.php?order_by=expire&amp;ban_type='.$ban_type.'&amp;dir='.$dir.'"'.( ( $order_by == 'expire' ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("banned", "unbandate").'</a></th>
+            <th style="width: 15%;">'.( ( $core != 1 ) ? lang("banned", "bannedby") : '' ).'</th>
+            <th style="width: 43%;">'.( ( $core != 1 ) ? lang("banned", "banreason") : '' ).'</th>
+          </tr>';
       break;
     }
   }
@@ -241,16 +241,16 @@ function show_list()
         $result1 = $sql["logon"]->query("SELECT login FROM accounts WHERE acct='".$ban["acct"]."'");
       else
         $result1 = $sql["logon"]->query("SELECT username AS login FROM account WHERE id='".$ban["acct"]."'");
-      $row_name = $sql["logon"]->result($result1, 0, 'login');
+      $row_name = $sql["logon"]->result($result1, 0, "login");
       $name_out = '<a href="user.php?action=edit_user&amp;error=11&amp;acct='.$ban["acct"].'">'.$row_name.'</a>';
     }
     elseif ( $ban_type == "characters" )
     {
       $result = $sql["char"]->query("SELECT acct,name FROM characters WHERE guid='".$ban["guid"]."'");
-      $row_name = $sql["char"]->result($result, 0, 'name');
-      $owner_acc = $sql["char"]->result($result, 0, 'acct');
+      $row_name = $sql["char"]->result($result, 0, "name");
+      $owner_acc = $sql["char"]->result($result, 0, "acct");
       $result = $sql["logon"]->query("SELECT login FROM accounts WHERE acct='".$owner_acc."'");
-      $name_out = $sql["logon"]->result($result, 0, 'login');
+      $name_out = $sql["logon"]->result($result, 0, "login");
     }
     else
     {
@@ -258,65 +258,64 @@ function show_list()
       $row_name = $ban["ip"];
     }
     $output .= '
-            <tr>
-              <td>';
+          <tr>
+            <td>';
     switch ( $ban_type )
     {
       case "accounts":
       {
         if ( $user_lvl >= $action_permission["delete"] )
           $output .= '
-                <img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["acct"].'\');" id="banned_delete_cursor" alt="" />';
+              <img src="img/aff_cross.png" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["acct"].'\');" id="banned_delete_cursor" alt="" />';
 
         $output .= '
-              </td>
-              <td>'.$name_out.'</td>
-              <td>'.date('d-m-Y G:i', $ban["banned"]).'</td>
-              <td>'.( ( $core != 1 ) ? $ban["bannedby"] : '' ).'</td>
-              <td>'.( ( $core != 1 ) ? $ban["banreason"] : '' ).'</td>
-            </tr>';
+            </td>
+            <td>'.$name_out.'</td>
+            <td>'.date('d-m-Y G:i', $ban["banned"]).'</td>
+            <td>'.( ( $core != 1 ) ? $ban["bannedby"] : '' ).'</td>
+            <td>'.( ( $core != 1 ) ? $ban["banreason"] : '' ).'</td>
+          </tr>';
         break;
       }
       case "characters":
       {
         if ( $user_lvl >= $action_permission["delete"] )
           $output .= '
-                <img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["guid"].'\');" id="banned_delete_cursor" alt="" />';
+              <img src="img/aff_cross.png" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["guid"].'\');" id="banned_delete_cursor" alt="" />';
 
         $output .= '
-              </td>
-              <td>'.$name_out.'</td>
-              <td>'.$ban["name"].'</td>
-              <td>'.date('d-m-Y G:i', $ban["banned"]).'</td>
-              <td>'.$ban["banReason"].'</td>
-              <td></td>
-            </tr>';
+            </td>
+            <td>'.$name_out.'</td>
+            <td>'.$ban["name"].'</td>
+            <td>'.date('d-m-Y G:i', $ban["banned"]).'</td>
+            <td>'.$ban["banReason"].'</td>
+            <td></td>
+          </tr>';
         break;
       }
       case "ipbans":
       {
         if ( $user_lvl >= $action_permission["delete"] )
           $output .= '
-                <img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["ip"].'\');" id="banned_delete_cursor" alt="" />';
+              <img src="img/aff_cross.png" onclick="answerBox(\''.lang("banned", "delete").': <font color=white>'.$row_name.'</font><br />'.lang("global", "are_you_sure").'\', del_banned + \''.$ban["ip"].'\');" id="banned_delete_cursor" alt="" />';
 
         $output .= '
-              </td>
-              <td>'.$name_out.'</td>
-              <td>'.date('d-m-Y G:i', $ban["expire"]).'</td>
-              <td>'.( ( $core != 1 ) ? $ban["bannedby"] : '' ).'</td>
-              <td>'.( ( $core != 1 ) ? $ban["banreason"] : '' ).'</td>
-            </tr>';
+            </td>
+            <td>'.$name_out.'</td>
+            <td>'.date('d-m-Y G:i', $ban["expire"]).'</td>
+            <td>'.( ( $core != 1 ) ? $ban["bannedby"] : '' ).'</td>
+            <td>'.( ( $core != 1 ) ? $ban["banreason"] : '' ).'</td>
+          </tr>';
         break;
       }
     }
   }
   $output .= '
-            <tr>
-              <td colspan="6" align="right" class="hidden">'.lang("banned", "tot_banned").' : '.$all_record.'</td>
-            </tr>
-          </table>
-          <br/>
-        </center>';
+          <tr>
+            <td colspan="6" align="right" class="hidden">'.lang("banned", "tot_banned").' : '.$all_record.'</td>
+          </tr>
+        </table>
+        <br/>';
 }
 
 
@@ -392,59 +391,59 @@ function add_entry()
   valid_login($action_permission["insert"]);
 
   $output .= '
-        <center>
-          <div class="half_frame fieldset_border">
-            <span class="legend">'.lang("banned", "ban_entry".( ( $core == 1 ) ? "A" : "MT" )).'</span>
-            <form method="get" action="banned.php" name="form">
+        <div id="new_banned" class="half_frame fieldset_border center">
+          <span class="legend">'.lang("banned", "ban_entry".( ( $core == 1 ) ? "A" : "MT" )).'</span>
+          <form method="get" action="banned.php" id="form">
+            <div>
               <input type="hidden" name="action" value="do_add_entry" />
-              <table class="flat">
-                <tr>
-                  <td>'.lang("banned", "ban_type").':</td>
-                  <td>
-                    <select name="ban_type">
-                      <option value="ipbans">'.lang("banned", "ip").'</option>
-                      <option value="accounts">'.lang("banned", "account").'</option>';
+            </div>
+            <table class="flat">
+              <tr>
+                <td>'.lang("banned", "ban_type").':</td>
+                <td>
+                  <select name="ban_type">
+                    <option value="ipbans">'.lang("banned", "ip").'</option>
+                    <option value="accounts">'.lang("banned", "account").'</option>';
   if ( $core == 1 )
     $output .= '
-                      <option value="characters">'.lang("banned", "character").'</option>';
+                    <option value="characters">'.lang("banned", "character").'</option>';
   $output .= '
-                    </select>
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("banned", "entry".( ( $core == 1 ) ? "A" : "MT" )).':</td>
-                  <td>
-                    <input type="text" name="entry" size="24" maxlength="20" value="" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.lang("banned", "ban_time").':</td>
-                  <td>
-                    <input type="text" name="bantime" size="24" maxlength="40" value="1" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>'.( ( $core == 1 ) ? lang("banned", "ban_reason") : lang("banned", "banreason") ).':</td>
-                  <td>
-                    <input type="text" name="banreason" size="24" maxlength="255" value="" />
-                  </td>
-                </tr>
-                <tr>
-                  <td>';
+                  </select>
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("banned", "entry".( ( $core == 1 ) ? "A" : "MT" )).':</td>
+                <td>
+                  <input type="text" name="entry" size="24" maxlength="20" value="" />
+                </td>
+              </tr>
+              <tr>
+                <td>'.lang("banned", "ban_time").':</td>
+                <td>
+                  <input type="text" name="bantime" size="24" maxlength="40" value="1" />
+                </td>
+              </tr>
+              <tr>
+                <td>'.( ( $core == 1 ) ? lang("banned", "ban_reason") : lang("banned", "banreason") ).':</td>
+                <td>
+                  <input type="text" name="banreason" size="24" maxlength="255" value="" />
+                </td>
+              </tr>
+              <tr>
+                <td>';
   makebutton(lang("banned", "ban"), "javascript:do_submit()\" type=\"wrn", 180);
   $output .= '
-                  </td>
-                  <td>';
+                </td>
+                <td>';
   makebutton(lang("global", "back"), "banned.php\" type=\"def", 130);
   $output .= '
-                  </td>
-                </tr>
-              </table>
-            </form>
-          </div>
-          <br/>
-          <br/>
-        </center>';
+                </td>
+              </tr>
+            </table>
+          </form>
+        </div>
+        <br/>
+        <br/>';
 }
 
 
@@ -613,6 +612,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

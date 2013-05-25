@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################^M
@@ -64,14 +65,14 @@ function char_mail()
       if ( $user_id <> $char["acct"] )
         error(lang("char", "no_permission"));
 
-    $owner_acc_id = $sql["char"]->result($result, 0, 'acct');
+    $owner_acc_id = $sql["char"]->result($result, 0, "acct");
     if ( $core == 1 )
       $result = $sql["logon"]->query("SELECT login FROM accounts WHERE acct='".$char["acct"]."'");
     else
       $result = $sql["logon"]->query("SELECT username AS login FROM account WHERE id='".$char["acct"]."'");
-    $owner_name = $sql["logon"]->result($result, 0, 'login');
+    $owner_name = $sql["logon"]->result($result, 0, "login");
     $result = $sql["mgr"]->query("SELECT SecurityLevel AS gm FROM config_accounts WHERE Login='".$owner_name."'");
-    $owner_gmlvl = $sql["mgr"]->result($result, 0, 'gm');
+    $owner_gmlvl = $sql["mgr"]->result($result, 0, "gm");
 
     if ( $owner_gmlvl >= 1073741824 )
       $owner_gmlvl -= 1073741824;
@@ -79,7 +80,6 @@ function char_mail()
     if ( ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
     {
       $output .= '
-          <center>
             <div class="tab">
               <ul>
                 <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>
@@ -91,7 +91,7 @@ function char_mail()
                 <li><a href="char_view.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "view").'</a></li>
                </ul>
             </div>
-            <div class="tab_content">
+            <div class="tab_content center">
               <div class="tab">
                 <ul>
                   <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -108,12 +108,12 @@ function char_mail()
         $output .= '
                 </ul>
               </div>
-              <div class="tab_content2">
-                <font class="bold">
+              <div class="tab_content2 center center_text">
+                <span class="bold">
                   '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                   <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                   <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-                </font>
+                </span>
                 <br />
                 <br />';
 
@@ -171,7 +171,7 @@ function char_mail()
               </div>
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -211,7 +211,6 @@ function char_mail()
               </tr>
             </table>
             <br />
-          </center>
           <!-- end of char_mail.php -->';
     }
     else
@@ -281,7 +280,6 @@ function read_mail()
     if ( ( $user_lvl > $owner_gmlvl ) || ( $owner_name === $user_name ) || ( $user_lvl == $action_permission["delete"] ) )
     {
       $output .= '
-          <center>
             <div class="tab">
               <ul>
                 <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>
@@ -292,7 +290,7 @@ function read_mail()
                 <li><a href="char_friends.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "friends").'</a></li>
                </ul>
             </div>
-            <div class="tab_content">
+            <div class="tab_content center">
               <div class="tab">
                 <ul>
                   <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -312,12 +310,12 @@ function read_mail()
         $output .= '
                 </ul>
               </div>
-              <div class="tab_content2">
-                <font class="bold">
+              <div class="tab_content2 center center_text">
+                <span class="bold">
                   '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                   <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                   <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - lvl '.char_get_level_color($char["level"]).'
-                </font>
+                </span>
                 <br />';
 
       if ( $core == 1 )
@@ -430,7 +428,6 @@ function read_mail()
             </div>
             <br />
             <br />
-          </center>
           <!-- end of char_mail.php -->';
     }
     else
@@ -452,7 +449,7 @@ $output .= '
 
 switch ( $action )
 {
-  case 'readmail':
+  case "readmail":
   {
     read_mail();
     break;
@@ -463,7 +460,7 @@ switch ( $action )
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

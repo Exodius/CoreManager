@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 
@@ -35,22 +36,23 @@ function sel_char()
   valid_login($action_permission["view"]);
 
   $output .= '
-          <center>
-            <div id="xname_fieldset" class="fieldset_border">
-              <span class="legend">'.lang("xname", "selectchar").'</span>
-              <span class="xname_info">'.lang("xname", "info").'</span>
-              <br />
-              <br />
-              <form method="GET" action="change_char_name.php" name="form">
+          <div id="xname_fieldset" class="fieldset_border center">
+            <span class="legend">'.lang("xname", "selectchar").'</span>
+            <span class="xname_info">'.lang("xname", "info").'</span>
+            <br />
+            <br />
+            <form method="get" action="change_char_name.php" id="form">
+              <div>
                 <input type="hidden" name="action" value="choosename" />
-                <table class="lined" id="xname_char_table">
-                  <tr>
-                    <th class="xname_radio">&nbsp;</th>
-                    <th class="xname_name">'.lang("xname", "char").'</th>
-                    <th class="xname_LRC">'.lang("xname", "lvl").'</th>
-                    <th class="xname_LRC">'.lang("xname", "race").'</th>
-                    <th class="xname_LRC">'.lang("xname", "class").'</th>
-                  </tr>';
+              </div>
+              <table class="lined" id="xname_char_table">
+                <tr>
+                  <th class="xname_radio">&nbsp;</th>
+                  <th class="xname_name">'.lang("xname", "char").'</th>
+                  <th class="xname_LRC">'.lang("xname", "lvl").'</th>
+                  <th class="xname_LRC">'.lang("xname", "race").'</th>
+                  <th class="xname_LRC">'.lang("xname", "class").'</th>
+                </tr>';
 
   if ( $core == 1 )
     $chars = $sql["char"]->query("SELECT * FROM characters WHERE acct='".$user_id."' AND guid NOT IN (SELECT guid FROM ".$corem_db["name"].".char_changes)");
@@ -60,34 +62,31 @@ function sel_char()
   while ( $char = $sql["char"]->fetch_assoc($chars) )
   {
     $output .= '
-                  <tr>
-                    <td>
-                      <input type="radio" name="char" value="'.$char["guid"].'"/>
-                    </td>
-                    <td>'.$char["name"].'</td>
-                    <td>'.char_get_level_color($char["level"]).'</td>
-                    <td>
-                      <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                    </td>
-                    <td>
-                      <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                    </td>
-                  </tr>';
+                <tr>
+                  <td>
+                    <input type="radio" name="char" value="'.$char["guid"].'"/>
+                  </td>
+                  <td>'.$char["name"].'</td>
+                  <td>'.char_get_level_color($char["level"]).'</td>
+                  <td>
+                    <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                  </td>
+                  <td>
+                    <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                  </td>
+                </tr>';
   }
 
   $output .= '
-                  <tr>
-                    <td class="hidden" colspan="5">';
+                <tr>
+                  <td class="hidden" colspan="5">';
   makebutton(lang("xname", "selectchar"), "javascript:do_submit()",180);
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-                <br />
-              </form>
-            </div>
-          </center>
-          <br />';
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>';
 }
 
 
@@ -103,10 +102,10 @@ function choosename()
   valid_login($action_permission["view"]);
 
   $guid = $sql["char"]->quote_smart($_GET["char"]);
-  $new1 = '';
+  $new1 = "";
   if ( isset($_GET["new1"]) )
     $new1 = $sql["char"]->quote_smart($_GET["new1"]);
-  $new2 = '';
+  $new2 = "";
   if ( isset($_GET["new2"]) )
     $new2 = $sql["char"]->quote_smart($_GET["new2"]);
 
@@ -124,29 +123,36 @@ function choosename()
   }
 
   $output .= '
-          <center>
-            <div id="xname_choose" class="fieldset_border">
-              <span class="legend">'.lang("xname", "choosename").'</span>
-              <form method="GET" action="change_char_name.php" name="form">
+          <div id="xname_fieldset" class="fieldset_border center">
+            <span class="legend">'.lang("xname", "choosename").'</span>
+            <form method="get" action="change_char_name.php" id="form">
+              <div>
                 <input type="hidden" name="action" value="getapproval" />
                 <input type="hidden" name="guid" value="'.$char["guid"].'" />
-                <table id="xname_char_table">
-                  <tr>
-                    <td rowspan="4"><img src="'.char_get_avatar_img($char["level"], $char["gender"],  $char["race"],  $char["class"]).'" alt="" /></td>
-                    <td><span class="xname_char_name">'.$char["name"].'</span></td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xname", "level").': '.$char["level"].'</td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xname", "race").': '.char_get_race_name($char["race"]).'</td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xname", "class").': '.char_get_class_name($char["class"]).'</td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                  </tr>';
+              </div>
+              <table id="xname_char_table" class="center">
+                <tr>
+                  <td rowspan="4" style="width: 170px;">
+                    <div style="width: 64px; margin-left: auto; margin-right: auto;">
+                      <img src="'.char_get_avatar_img($char["level"], $char["gender"],  $char["race"],  $char["class"]).'" alt="" />
+                    </div>
+                  </td>
+                  <td>
+                    <span class="xname_char_name">'.$char["name"].'</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.lang("xname", "level").': '.$char["level"].'</td>
+                </tr>
+                <tr>
+                  <td>'.lang("xname", "race").': '.char_get_race_name($char["race"]).'</td>
+                </tr>
+                <tr>
+                  <td>'.lang("xname", "class").': '.char_get_class_name($char["class"]).'</td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>';
 
   if ( $name_credits > 0 )
   {
@@ -154,9 +160,9 @@ function choosename()
     $cost_line = str_replace("%1", '<b>'.$name_credits.'</b>', $cost_line);
 
     $output .= '
-                  <tr>
-                    <td colspan="2">'.$cost_line.'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.$cost_line.'</td>
+                </tr>';
 
     if ( $credits >= 0 )
     {
@@ -164,48 +170,48 @@ function choosename()
       $credit_balance = str_replace("%1", '<b>'.(float)$credits.'</b>', $credit_balance);
 
       $output .= '
-                  <tr>
-                    <td colspan="2">'.$credit_balance.'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.$credit_balance.'</td>
+                </tr>';
 
       if ( $credits < $name_credits )
         $output .= '
-                  <tr>
-                    <td colspan="2">'.lang("xname", "insufficient_credits").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.lang("xname", "insufficient_credits").'</td>
+                </tr>';
       else
         $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">'.lang("xname", "delay_warning").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="2">'.lang("xname", "delay_warning").'</td>
+                </tr>';
     }
     else
       $output .= '
-                  <tr>
-                    <td colspan="2">'.lang("global", "credits_unlimited").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.lang("global", "credits_unlimited").'</td>
+                </tr>';
 
     $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>';
   }
 
   $output .= '
-                  <tr>
-                    <td colspan="2"><b>'.lang("xname", "entername").':</b></td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xname", "newname").':</td>
-                    <td><input type="text" name="new1" value="'.$new1.'" maxlength="12" /></td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xname", "confirmname").':</td>
-                    <td><input type="text" name="new2" value="'.$new1.'" maxlength="12" /></td>
-                  </tr>';
+                <tr>
+                  <td colspan="2"><b>'.lang("xname", "entername").':</b></td>
+                </tr>
+                <tr>
+                  <td>'.lang("xname", "newname").':</td>
+                  <td><input type="text" name="new1" value="'.$new1.'" maxlength="12" style="width: 110px;" /></td>
+                </tr>
+                <tr>
+                  <td>'.lang("xname", "confirmname").':</td>
+                  <td><input type="text" name="new2" value="'.$new1.'" maxlength="12" style="width: 110px;" /></td>
+                </tr>';
 
     // if we have unlimited credits, then we fake our credit balance here
     $credits = ( ( $credits < 0 ) ? $name_credits : $credits );
@@ -213,23 +219,22 @@ function choosename()
     if ( ( $name_credits <= 0 ) || ( $credits >= $name_credits ) )
     {
       $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="2">';
       makebutton(lang("xname", "save"), "javascript:do_submit()", 180);
       $output .= '
-                    </td>
-                    <td>&nbsp;</td>
-                  </tr>';
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>';
     }
 
     $output .= '
-                </table>
-              </form>
-            </div>
-          </center>
+              </table>
+            </form>
+          </div>
           <br />';
 }
 
@@ -390,22 +395,22 @@ $output .= '
 
 if ( $err == 1 )
   $output .= '
-            <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+            <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
 elseif ( $err == 2 )
   $output .= '
-            <h1><font class="error">'.lang("xname", "nomatch").'</font></h1>';
+            <h1><span class="error">'.lang("xname", "nomatch").'</span></h1>';
 elseif ( $err == 3 )
   $output .= '
-            <h1><font class="error">'.lang("xname", "already").'</font></h1>';
+            <h1><span class="error">'.lang("xname", "already").'</span></h1>';
 elseif ( $err == 4 )
   $output .= '
-            <h1><font class="error">'.lang("xname", "inuse").'</font></h1>';
+            <h1><span class="error">'.lang("xname", "inuse").'</span></h1>';
 elseif ( $err == 5 )
   $output .= '
             <h1>'.lang("xname", "done").'</h1>';
 elseif ( $err == 6 )
   $output .= '
-            <h1><font class="error">'.lang("xname", "insufficient_credits").'</font></h1>';
+            <h1><span class="error">'.lang("xname", "insufficient_credits").'</span></h1>';
 else
   $output .= '
             <h1>'.lang("xname", "changename").'</h1>';
@@ -417,13 +422,13 @@ $output .= '
 
 $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
 
-if ( $action == 'choosename' )
+if ( $action == "choosename" )
   choosename();
-elseif ( $action == 'getapproval' )
+elseif ( $action == "getapproval" )
   getapproval();
-elseif ( $action == 'denied' )
+elseif ( $action == "denied" )
   denied();
-elseif ( $action == 'approve' )
+elseif ( $action == "approve" )
   savename();
 else
   sel_char();
@@ -431,7 +436,7 @@ else
 unset($action);
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

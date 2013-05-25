@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,9 +19,10 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
-require_once 'libs/skill_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+require_once "libs/skill_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -293,7 +294,6 @@ function char_skill()
       }
 
       $output .= '
-          <center>
             <div class="tab">
               <ul>
                 <li class="selected"><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -325,7 +325,7 @@ function char_skill()
       $output .= '
               </ul>
             </div>
-            <div class="tab_content">
+            <div class="tab_content center">
               <div class="tab">
                 <ul>
                   <li><a href="char.php?id='.$id.'&amp;realm='.$realmid.'">'.lang("char", "char_sheet").'</a></li>';
@@ -352,12 +352,12 @@ function char_skill()
       $output .= '
                 </ul>
               </div>
-              <div class="tab_content2">
-                <font class="bold">
+              <div class="tab_content2 center center_text">
+                <span class="bold">
                   '.htmlentities($char["name"], ENT_COMPAT, $site_encoding).' -
                   <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                   <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-                </font>
+                </span>
                 <br />
                 <br />
                 <table class="lined" id="ch_ski_main">
@@ -458,7 +458,7 @@ function char_skill()
         $output .= '
                   <tr>
                     '.( ( $user_lvl ) ? '<td>'.$data[0].'</td>' : '' ).'
-                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'7.'.$char["class"].'.'.$data[0].'" target="_blank">'.$data[1].'</a></td>
+                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'7.'.$char["class"].'.'.$data[0].'" rel="external">'.$data[1].'</a></td>
                     <td class="bar skill_bar" style="background-position: 0px;">
                     </td>
                   </tr>';
@@ -474,7 +474,7 @@ function char_skill()
         $output .= '
                   <tr>
                     '.( ( $user_lvl ) ? '<td>'.$data[0].'</td>' : '').'
-                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'11.'.$data[0].'" target="_blank">'.$data[1].'</a></td>
+                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'11.'.$data[0].'" rel="external">'.$data[1].'</a></td>
                     <td class="bar skill_bar" style="background-position: '.(round(450*$data[2]/$max)-450).'px;">
                       <span>'.$data[2].'/'.$max.' ('.$skill_rank_array[$max].')</span>
                     </td>
@@ -491,7 +491,7 @@ function char_skill()
         $output .= '
                   <tr>
                     '.( ( $user_lvl ) ? '<td>'.$data[0].'</td>' : '' ).'
-                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'9.'.$data[0].'" target="_blank">'.$data[1].'</a></td>
+                    <td align="right"><a href="'.$base_datasite.$skill_datasite.'9.'.$data[0].'" rel="external">'.$data[1].'</a></td>
                     <td class="bar skill_bar" style="background-position: '.(round(450*$data[2]/$max)-450).'px;">
                       <span>'.$data[2].'/'.$max.' ('.$skill_rank_array[$max].')</span>
                     </td>
@@ -554,7 +554,7 @@ function char_skill()
               <br />
             </div>
             <br />
-            <table class="hidden">
+            <table class="hidden center">
               <tr>
                 <td>';
       // button to user account page, user account page has own security
@@ -619,7 +619,7 @@ char_skill();
 
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

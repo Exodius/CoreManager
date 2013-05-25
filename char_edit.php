@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -22,6 +22,7 @@ require_once "header.php";
 require_once "libs/char_lib.php";
 require_once "libs/item_lib.php";
 require_once "libs/map_zone_lib.php";
+
 valid_login($action_permission["delete"]);
 
 //########################################################################################################################
@@ -136,39 +137,40 @@ function edit_char()
 
       $output .= '
             <!-- start of char_edit.php -->
-            <center>
-              <form method="get" action="char_edit.php" name="form">
+            <form method="get" action="char_edit.php" id="form">
+              <div>
                 <input type="hidden" name="action" value="do_edit_char" />
                 <input type="hidden" name="id" value="'.$id.'" />
-                <table class="lined">
-                  <tr>
-                    <td colspan="8">
-                      <font class="bold">'.$char["name"].' - <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'</font>
-                      <br />
-                      <span>'.lang("char", "location").': '.get_map_name($char["mapid"]).' - '.get_zone_name($char["zoneid"]).'</span>
-                      <br />
-                      <span>'.lang("char", "honor_points").': '.$char_data[PLAYER_FIELD_HONOR_CURRENCY].' | '.lang("char", "arena_points").': '.$char_data[PLAYER_FIELD_ARENA_CURRENCY].' | '.lang("char", "honor_kills").': '.$char_data[PLAYER_FIELD_LIFETIME_HONORBALE_KILLS].'</span>
-                      <br />
-                      <span>'.lang("char", "guild").': '.$guild_name.' | '.lang("char", "rank").': '.$guild_rank.'</span>
-                      <br />
-                      <span>'.lang("char", "online").': '.( ( $char["online"] ) ? '<img src="img/up.gif" onmousemove="oldtoolTip(\''.lang("char", "online").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="online" />' : '<img src="img/down.gif" onmousemove="oldtoolTip(\''.lang("char", "offline").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="offline" />' ).'</span>
-                    </td>
-                  </tr>';
+              </div>
+              <table class="lined center center_text">
+                <tr>
+                  <td colspan="8">
+                    <span class="bold">'.$char["name"].' - <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'</span>
+                    <br />
+                    <span>'.lang("char", "location").': '.get_map_name($char["mapid"]).' - '.get_zone_name($char["zoneid"]).'</span>
+                    <br />
+                    <span>'.lang("char", "honor_points").': '.$char_data[PLAYER_FIELD_HONOR_CURRENCY].' | '.lang("char", "arena_points").': '.$char_data[PLAYER_FIELD_ARENA_CURRENCY].' | '.lang("char", "honor_kills").': '.$char_data[PLAYER_FIELD_LIFETIME_HONORBALE_KILLS].'</span>
+                    <br />
+                    <span>'.lang("char", "guild").': '.$guild_name.' | '.lang("char", "rank").': '.$guild_rank.'</span>
+                    <br />
+                    <span>'.lang("char", "online").': '.( ( $char["online"] ) ? '<img src="img/up.gif" onmousemove="oldtoolTip(\''.lang("char", "online").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="online" />' : '<img src="img/down.gif" onmousemove="oldtoolTip(\''.lang("char", "offline").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="offline" />' ).'</span>
+                  </td>
+                </tr>';
 
       if ( $char["online"] )
         $output .= '
-                  <tr>
-                    <td colspan="8">
-                      <font class="bold">'.$online.'</font>
-                    </td>
-                  </tr>';
+                <tr>
+                  <td colspan="8">
+                    <span class="bold">'.$online.'</span>
+                  </td>
+                </tr>';
       else
       {
         $output .= '
                 <tr>
                   <td colspan="2">'.lang("char", "name").': <input type="text" name="cname" size="15" maxlength="12" value="'.$char["name"].'" /></td>
                   <td colspan="2">'.lang("char", "level").': <input type="text" name="level" size="15" maxlength="12" value="'.$char["level"].'" />
-                  <img src="img/information.png" onmousemove="oldtoolTip(\''.lang("char", "mod_level_info").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" />
+                  <img src="img/information.png" onmousemove="oldtoolTip(\''.lang("char", "mod_level_info").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                   </td>
                   <td colspan="4">'.lang("char", "gold").': <input type="text" name="money" size="10" maxlength="10" value="'.$char_data[PLAYER_FIELD_COINAGE].'" /></td>
                 </tr>
@@ -177,38 +179,35 @@ function edit_char()
                   <td colspan="2">'.lang("char", "arena_points").': <input type="text" name="arena_points" size="8" maxlength="6" value="'.$char_data[PLAYER_FIELD_ARENA_CURRENCY].'" /></td>
                   <td colspan="4">'.lang("char", "honor_kills").': <input type="text" name="total_kills" size="8" maxlength="6" value="'.$char_data[PLAYER_FIELD_LIFETIME_HONORBALE_KILLS].'" /></td>
                 </tr>
-                </table>';
+              </table>';
       }
       $output .= '
-                <br />
-                <table class="hidden">
-                  <tr>';
+              <table id="button_margins" class="hidden center">
+                <tr>';
       if ( !$char["online"] )
       {
         $output .= '
-                    <td>';
+                  <td>';
         makebutton(lang("char", "update"), 'javascript:do_submit()', 190);
         $output .= '
-                    </td>';
+                  </td>';
       }
         $output .= '
-                    <td>';
+                  <td>';
         makebutton(lang("char", "to_char_view"), 'char.php?id='.$id, 160);
         $output .= '
-                    </td>
-                    <td>';
+                  </td>
+                  <td>';
         makebutton(lang("char", "del_char"), 'char_list.php?action=del_char_form&amp;check%5B%5D='.$id.'" type="wrn', 160);
         $output .= '
-                    </td>
-                    <td>';
+                  </td>
+                  <td>';
         makebutton(lang("global", "back"), 'javascript:window.history.back()', 160);
         $output .= '
-                    </td>
-                  </tr>
-                </table>
-                <br />
-              </form>
-            </center>';
+                  </td>
+                </tr>
+              </table>
+            </form>';
     }
     else
       ;
@@ -336,23 +335,23 @@ switch ( $err )
 {
   case 1:
     $output .= '
-            <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+            <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-            <h1><font class="error">'.lang("char", "err_edit_online_char").'</font></h1>';
+            <h1><span class="error">'.lang("char", "err_edit_online_char").'</span></h1>';
     break;
   case 3:
     $output .= '
-            <h1><font class="error">'.lang("char", "updated").'</font></h1>';
+            <h1><span class="error">'.lang("char", "updated").'</span></h1>';
     break;
   case 4:
     $output .= '
-            <h1><font class="error">'.lang("char", "update_err").'</font></h1>';
+            <h1><span class="error">'.lang("char", "update_err").'</span></h1>';
     break;
   case 5:
     $output .= '
-            <h1><font class="error">'.lang("char", "max_acc").'</font></h1>';
+            <h1><span class="error">'.lang("char", "max_acc").'</span></h1>';
     break;
   default: //no error
     $output .= '
@@ -377,5 +376,5 @@ switch ( $action )
 
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 ?>

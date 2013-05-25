@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -41,101 +41,100 @@ function servers()
   if ( !$server_action )
   {
     $output .= '
-        <center>
+        <div style="text-align: center;">
           <span style="color:red">'.lang("admin", "server_warn").'</span>
-          <form name="form" action="admin.php" method="get">
+        </div>
+        <form action="admin.php" method="get" id="form">
+          <div>
             <input type="hidden" name="section" value="servers" />
-            <table class="simple" id="admin_servers">
-              <tr>
-                <th width="5%">'.lang("admin", "edit").'</th>
-                <th width="5%">'.lang("admin", "remove").'</th>
-                <th width="10%">'.lang("admin", "realm").'</th>
-                <th width="10%">'.lang("admin", "name").'</th>
-                <th width="20%">'.lang("admin", "hosti").'</th>
-                <th width="20%">'.lang("admin", "hostp").'</th>
-                <th width="1%">'.lang("admin", "port").'</th>
-                <th width="10%">'.lang("admin", "icon").'</th>
-                <th width="10%">'.lang("admin", "timezone").'</th>
-                <th width="10%">'.lang("admin", "bothfactions").'</th>';
+          </div>
+          <table class="simple" id="admin_servers">
+            <tr>
+              <th style="width: 5%;">'.lang("admin", "edit").'</th>
+              <th style="width: 5%;">'.lang("admin", "remove").'</th>
+              <th style="width: 10%;">'.lang("admin", "realm").'</th>
+              <th style="width: 10%;">'.lang("admin", "name").'</th>
+              <th style="width: 20%;">'.lang("admin", "hosti").'</th>
+              <th style="width: 20%;">'.lang("admin", "hostp").'</th>
+              <th style="width: 1%;">'.lang("admin", "port").'</th>
+              <th style="width: 10%;">'.lang("admin", "icon").'</th>
+              <th style="width: 10%;">'.lang("admin", "timezone").'</th>
+              <th style="width: 10%;">'.lang("admin", "bothfactions").'</th>';
     if ( $core == 1 )
       $output .= '
-                <th width="40%">'.lang("admin", "statsxml").'</th>';
+              <th width="40%">'.lang("admin", "statsxml").'</th>';
     $output .= '
-              </tr>';
+            </tr>';
     $color = "#EEEEEE";
     while ( $server = $sqlm->fetch_assoc($result) )
     {
       $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=servers&amp;sel_server='.$server["Index"].'&amp;editserver=editserver">
-                      <img src="img/edit.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>
-                    <a href="admin.php?section=servers&amp;sel_server='.$server["Index"].'&amp;delserver=deleteserver">
-                      <img src="img/aff_cross.png" alt="" />
-                    </a>
-                  </center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["Index"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["Name"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["Address"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["External_Address"].'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["Port"].'</center>
-                </td>';
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=servers&amp;sel_server='.$server["Index"].'&amp;editserver=editserver">
+                    <img src="img/edit.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>
+                  <a href="admin.php?section=servers&amp;sel_server='.$server["Index"].'&amp;delserver=deleteserver">
+                    <img src="img/aff_cross.png" alt="" />
+                  </a>
+                </span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["Index"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["Name"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["Address"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["External_Address"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["Port"].'</span>
+              </td>';
 
       $icon = $get_icon_type[$server["Icon"]];
       $timezone = $get_timezone_type[$server["Timezone"]];
       $output .= '
-                <td style="background-color:'.$color.'">
-                  <center>'.lang("realm", $icon[1]).'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.lang("realm", $timezone[1]).'</center>
-                </td>
-                <td style="background-color:'.$color.'">
-                  <center>'.( ( $server["Both_Factions"] ) ? lang("global", "yes_low") : lang("global", "no_low") ).'</center>
-                </td>';
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.lang("realm", $icon[1]).'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.lang("realm", $timezone[1]).'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.( ( $server["Both_Factions"] ) ? lang("global", "yes_low") : lang("global", "no_low") ).'</span>
+              </td>';
       if ( $core == 1 )
         $output .= '
-                <td style="background-color:'.$color.'">
-                  <center>'.$server["Stats_XML"].'</center>
-                </td>';
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$server["Stats_XML"].'</span>
+              </td>';
       $output .= '
-              </tr>';
+            </tr>';
 
       $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
     }
     $output .= '
-              <tr>
-                <td style="background-color:'.$color.'">
-                  <a href="admin.php?section=servers&amp;addserver=addserver">
-                    <img src="img/add.png" alt="" />
-                  </a>
-                </td>
-                <td style="background-color:'.$color.'" colspan="'.( ( $core == 1 ) ? '10' : '9' ).'">
-                  <a href="admin.php?section=servers&amp;addserver=addserver">'.lang("admin", "addserver").'</a>
-                </td>
-              </tr>
-            </table>
-            <!-- input type="submit" name="editserver" value="'.lang("admin", "editserver").'">
-            <input type="submit" name="addserver" value="'.lang("admin", "addserver").'">
-            <input type="submit" name="delserver" value="'.lang("admin", "delserver").'" -->
-          </form>
-        </center>';
+            <tr>
+              <td style="background-color:'.$color.'">
+                <a href="admin.php?section=servers&amp;addserver=addserver">
+                  <img src="img/add.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'" colspan="'.( ( $core == 1 ) ? '10' : '9' ).'">
+                <a href="admin.php?section=servers&amp;addserver=addserver">'.lang("admin", "addserver").'</a>
+              </td>
+            </tr>
+          </table>
+        </form>';
   }
   else
   {
@@ -146,27 +145,29 @@ function servers()
       {
         $server = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_servers WHERE `Index`='".$server_id."'"));
         $output .= '
-        <center>
-          <form name="form" action="admin.php" method="get">
-            <fieldset id="admin_edit_server">
-              <input type="hidden" name="section" value="servers" />
-              <input type="hidden" name="action" value="saveserver" />
-              <input type="hidden" name="index" value="'.$server["Index"].'" />
-              <table>
+        <div id="admin_edit_server">
+          <form action="admin.php" method="get" id="form">
+            <fieldset>
+              <div>
+                <input type="hidden" name="section" value="servers" />
+                <input type="hidden" name="action" value="saveserver" />
+                <input type="hidden" name="index" value="'.$server["Index"].'" />
+              </div>
+              <table class="center">
                 <tr>
-                  <td width="45%">'.lang("admin", "realm").': </td>
+                  <td style="width: 45%;">'.lang("admin", "realm").': </td>
                   <td>
                     <input type="text" name="new_index" value="'.$server["Index"].'" />
                   </td>
                 </tr>
                 <tr>
-                  <td width="45%">'.lang("admin", "name").': </td>
+                  <td style="width: 45%;">'.lang("admin", "name").': </td>
                   <td>
                     <input type="text" name="server_name" value="'.$server["Name"].'" />
                   </td>
                 </tr>
                 <tr>
-                  <td width="45%" class="help">
+                  <td style="width: 45%;" class="help">
                     <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "hosti_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "hosti").'</a>:
                   </td>
                   <td>
@@ -174,7 +175,7 @@ function servers()
                   </td>
                 </tr>
                 <tr>
-                  <td width="45%" class="help">
+                  <td style="width: 45%;" class="help">
                     <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "hostp_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "hostp").'</a>:
                   </td>
                   <td>
@@ -207,6 +208,15 @@ function servers()
                     <input type="text" name="server_telnet_pass" value="'.$server["Telnet_Pass"].'" />
                   </td>
                 </tr>';
+        else
+          $output .= '
+                <tr>
+                  <td style="display: none;">
+                    <input type="hidden" name="server_telnet_port" value="'.$server["Telnet_Port"].'" />
+                    <input type="hidden" name="server_telnet_user" value="'.$server["Telnet_User"].'" />
+                    <input type="hidden" name="server_telnet_pass" value="'.$server["Telnet_Pass"].'" />
+                  </td>
+                </tr>';
         $output .= '
                 <tr>
                   <td>'.lang("admin", "icon").': </td>
@@ -215,7 +225,7 @@ function servers()
         foreach ( $get_icon_type as $type )
         {
           $output .= '
-                      <option value="'.$type[0].'" '.( ( $server["Icon"] == $type[0] ) ? 'selected="selected"' : '' ).'>'.lang("realm", $type[1]).'</option>';
+                        <option value="'.$type[0].'" '.( ( $server["Icon"] == $type[0] ) ? 'selected="selected"' : '' ).'>'.lang("realm", $type[1]).'</option>';
         }
         $output .= '
                     </select>
@@ -261,9 +271,11 @@ function servers()
         $output .= '
               </table>
             </fieldset>
-            <input type="submit" name="saveserver" value="'.lang("admin", "save").'" />
+            <div>
+              <input type="submit" name="saveserver" value="'.lang("admin", "save").'" />
+            </div>
           </form>
-        </center>';
+        </div>';
       }
       else
         redirect("admin.php?section=servers&error=1");

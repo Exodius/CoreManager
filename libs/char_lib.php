@@ -103,7 +103,7 @@ function char_get_class_name($class_id)
 //#############################################################################
 //get player honor rank name by side and honor points
 
-function char_get_pvp_rank_name($honor_points=0, $side_id=0)
+function char_get_pvp_rank_name($honor_points = 0, $side_id = 0)
 {
   $rank_names = array
     (
@@ -156,19 +156,19 @@ function char_get_pvp_rank_name($honor_points=0, $side_id=0)
 //#############################################################################
 //get pvp rank ID by honor point
 
-function char_get_pvp_rank_id($honor_points=0, $side_id=0)
+function char_get_pvp_rank_id($honor_points = 0, $side_id = 0)
 {
   $rank_id = '0'.$side_id;
 
-  if($honor_points > 0)
+  if ( $honor_points > 0 )
   {
-    if($honor_points < 2000)
+    if ( $honor_points < 2000 )
       $rank_id = 1;
     else
       $rank_id = ceil($honor_points / 5000) + 1;
   }
 
-  if ($rank_id > 14)
+  if ( $rank_id > 14 )
     $rank_id = 14;
 
   return $rank_id;
@@ -216,16 +216,16 @@ function char_get_level_color($lvl)
     if ( $lvl < 20 )
     {
       if ( $lvl < 10 )
-        $level_color = '<font color="#FFFFFF">'.$lvl.'</font>';
+        $level_color = '<span style="color: #FFFFFF;">'.$lvl.'</span>';
       else
-        $level_color = '<font color="#858585">'.$lvl.'</font>';
+        $level_color = '<span style="color: #858585;">'.$lvl.'</span>';
     }
     else
     {
       if ( $lvl < 30 )
-        $level_color = '<font color="#339900">'.$lvl.'</font>';
+        $level_color = '<span style="color: #339900;">'.$lvl.'</span>';
       else
-        $level_color = '<font color="#3300CC">'.$lvl.'</font>';
+        $level_color = '<span style="color: #3300CC;">'.$lvl.'</span>';
     }
   }
   else
@@ -233,20 +233,20 @@ function char_get_level_color($lvl)
     if ( $lvl < 60 )
     {
       if ( $lvl < 50 )
-        $level_color = '<font color="#C552FF">'.$lvl.'</font>';
+        $level_color = '<span style="color: #C552FF;">'.$lvl.'</span>';
       else
-        $level_color = '<font color="#FF8000">'.$lvl.'</font>';
+        $level_color = '<span style="color: #FF8000;">'.$lvl.'</span>';
     }
     else
     {
       if ( $lvl < 70 )
-        $level_color = '<font color="#FFF280">'.$lvl.'</font>';
+        $level_color = '<span style="color: #FFF280;">'.$lvl.'</span>';
       else
       {
         if ( $lvl < 80 )
-          $level_color = '<font color="#FF0000">'.$lvl.'</font>';
+          $level_color = '<span style="color: #FF0000;">'.$lvl.'</span>';
         else
-          $level_color = '<font color="#000000">'.$lvl.'</font>';
+          $level_color = '<span style="color: #000000;">'.$lvl.'</span>';
       }
     }
   }

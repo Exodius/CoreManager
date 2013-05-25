@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ require_once "libs/item_lib.php";
 require_once "libs/global_lib.php";
 require_once "libs/char_lib.php";
 require_once "libs/mail_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -73,36 +74,38 @@ function redeem_coupon()
     }
 
     $output .= '
-              <div class="tab_content">';
+      <div class="tab_content">';
 
     // make sure we're allowed to use this coupon
     if ( ( ( $coupon["target"] != 0 ) && ( $coupon["target"] != $user_id ) ) || ( ( $usage_count >= $coupon["usage_limit"] ) && ( $coupon["usage_limit"] != -1 ) ) )
       $output .= '
-                <span class="error">'.lang("points", "not_allowed").'</span>';
+        <span class="error">'.lang("points", "not_allowed").'</span>';
     else
     {
           $output .= '
-                <form action="point_system.php" name="form1">
-                  <input type="hidden" name="action" value="do_redeem" />
-                  <input type="hidden" name="coupon_id" value="'.$coupon_id.'" />
-                  <table class="lined" id="coupon_table">
-                    <tr>
-                      <td align="left">'.$coupon["title"].'</td>
-                    </tr>';
+        <form action="point_system.php" id="form1">
+          <div>
+            <input type="hidden" name="action" value="do_redeem" />
+            <input type="hidden" name="coupon_id" value="'.$coupon_id.'" />
+          </div>
+          <table class="lined" id="coupon_table">
+            <tr>
+              <td align="left">'.$coupon["title"].'</td>
+            </tr>';
 
           if ( $coupon["text"] != "" )
             $output .= '
-                    <tr>
-                      <td align="left">'.$coupon["text"].'</td>
-                    </tr>';
+            <tr>
+              <td align="left">'.$coupon["text"].'</td>
+            </tr>';
 
           if ( ( $coupon["credits"] != 0 ) || ( $coupon["money"] != 0 ) || ( $coupon["item_id"] != 0 ) || ( $coupon["raffle_id"] != 0 ) )
           {
             $output .= '
-                    <tr>
-                      <td>
-                        <div>
-                          <div class="coupon_parts">'.lang("points", "coupon_value_claim").':</div>';
+            <tr>
+              <td>
+                <div>
+                  <div class="coupon_parts">'.lang("points", "coupon_value_claim").':</div>';
 
             $neg_credits = false;
             if ( $coupon["credits"] < 0 )
@@ -133,19 +136,19 @@ function redeem_coupon()
               }
 
               $output .= '
-                          <div class="coupon_parts">';
+                  <div class="coupon_parts">';
 
               if ( !$neg_credits )
                 $output .= '
-                            <input type="checkbox" name="claim_credits" checked="checked" />
-                            <span>'.$coupon["credits"].'</span>';
+                    <input type="checkbox" name="claim_credits" checked="checked" />
+                    <span>'.$coupon["credits"].'</span>';
               else
                 $output .= '
-                            <input type="hidden" name="claim_credits" value="1" />';
+                    <input type="hidden" name="claim_credits" value="1" />';
 
               $output .= '
-                            <span>'.$tip.'</span>
-                          </div>';
+                    <span>'.$tip.'</span>
+                  </div>';
             }
 
             $neg_money = false;
@@ -154,7 +157,7 @@ function redeem_coupon()
               $neg_money = true;
 
               $output .= '
-                          <input type="hidden" name="neg_money" value="1" />';
+                  <input type="hidden" name="neg_money" value="1" />';
 
               $coupon["money"] = $coupon["money"] * -1;
             }
@@ -164,46 +167,46 @@ function redeem_coupon()
               // extract gold/silver/copper from single gold number
               $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
               $coupon_g = substr($coupon["money"],  0, -4);
-              if ( $coupon_g == '' )
+              if ( $coupon_g == "" )
                 $coupon_g = 0;
               $coupon_s = substr($coupon["money"], -4,  2);
-              if ( ( $coupon_s == '' ) || ( $coupon_s == '00' ) )
+              if ( ( $coupon_s == "" ) || ( $coupon_s == "00" ) )
                 $coupon_s = 0;
               $coupon_c = substr($coupon["money"], -2);
-              if ( ( $coupon_c == '' ) || ( $coupon_c == '00' ) )
+              if ( ( $coupon_c == "" ) || ( $coupon_c == "00" ) )
                 $coupon_c = 0;
 
               $output .= '
-                          <div class="coupon_parts">
-                            <hr />';
+                  <div class="coupon_parts">
+                    <hr />';
 
               if ( !$neg_money )
                 $output .= '
-                            <input type="checkbox" name="claim_money" checked="checked" />';
+                    <input type="checkbox" name="claim_money" checked="checked" />';
 
               if ( $neg_money )
                 $output .= '
-                            <span>'.lang("points", "coupon_cost").': </span>';
+                    <span>'.lang("points", "coupon_cost").': </span>';
 
               $output .= '
-                            <span>'.$coupon_g.'</span>
-                            <img src="img/gold.gif" alt="gold" />
-                            <span>'.$coupon_s.'</span>
-                            <img src="img/silver.gif" alt="gold" />
-                            <span>'.$coupon_c.'</span>
-                            <img src="img/copper.gif" alt="gold" />
-                          </div>';
+                    <span>'.$coupon_g.'</span>
+                    <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                    <span>'.$coupon_s.'</span>
+                    <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                    <span>'.$coupon_c.'</span>
+                    <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />
+                  </div>';
 
               if ( !$neg_money )
                 $output .= '
-                          <div class="coupon_part_title">
-                            <span>'.lang("points", "choose_char_money").':</span>
-                          </div>';
+                  <div class="coupon_part_title">
+                    <span>'.lang("points", "choose_char_money").':</span>
+                  </div>';
               else
                 $output .= '
-                          <div class="coupon_part_title">
-                            <span>'.lang("points", "choose_char_neg_money").':</span>
-                          </div>';
+                  <div class="coupon_part_title">
+                    <span>'.lang("points", "choose_char_neg_money").':</span>
+                  </div>';
 
               for ( $i = 0; $i < count($char_list); $i++ )
               {
@@ -220,9 +223,9 @@ function redeem_coupon()
 
                 if ( count($realm_list) > 1 )
                   $output .= '
-                          <div class="coupon_part_chars">
-                            <span>'.$cur_realm_name.'</span>
-                          </div>';
+                  <div class="coupon_part_chars">
+                    <span>'.$cur_realm_name.'</span>
+                  </div>';
 
                 $first = true; // we want the first character to be selected
 
@@ -233,11 +236,11 @@ function redeem_coupon()
                   $row_name_result = $sqlt->fetch_assoc($row_name_result);
 
                   $output .= '
-                          <div class="coupon_part_chars">
-                            <input type="radio" name="money_character" value="'.($i + 1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
-                            <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                            <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
-                          </div>';
+                  <div class="coupon_part_chars">
+                    <input type="radio" name="money_character" value="'.($i+1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
+                    <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                    <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
+                  </div>';
 
                   unset($first);
                 }
@@ -271,41 +274,41 @@ function redeem_coupon()
                 $i = $sql["world"]->fetch_assoc($i_result);
 
                 $output .= '
-                          <div class="coupon_parts">
-                            <hr />
-                            <input type="checkbox" name="claim_item" checked="checked"/>
-                            <div class="coupon_item">
-                              <div>
-                                <a id="ch_inv_padding" href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_b\');" onmouseout="HideTooltip(\'_b\');">
-                                  <img src="'.get_item_icon($coupon["item_id"]).'" alt="" />
-                                </a>';
+                  <div class="coupon_parts">
+                    <hr />
+                    <input type="checkbox" name="claim_item" checked="checked"/>
+                    <div class="coupon_item">
+                      <div>
+                        <a id="ch_inv_padding" href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_b\');" onmouseout="HideTooltip(\'_b\');">
+                          <img src="'.get_item_icon($coupon["item_id"]).'" alt="" />
+                        </a>';
 
                 if ( $coupon["item_count"] > 1 )
                   $output .= '
-                                <div id="coupon_item_quantity_shadow">'.$coupon["item_count"].'</div>
-                                <div id="coupon_item_quantity">'.$coupon["item_count"].'</div>';
+                        <div id="coupon_item_quantity_shadow">'.$coupon["item_count"].'</div>
+                        <div id="coupon_item_quantity">'.$coupon["item_count"].'</div>';
 
                 $output .= '
-                              </div>';
+                      </div>';
 
                 // build a tooltip object for this item
                 $output .= '
-                              <div class="item_tooltip" id="tooltip_b" style="left: -129px; top: 42px;">
-                                <table>
-                                  <tr>
-                                    <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
-                                  </tr>
-                                </table>
-                              </div>';
+                      <div class="item_tooltip" id="tooltip_b" style="left: -129px; top: 42px;">
+                        <table>
+                          <tr>
+                            <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
+                          </tr>
+                        </table>
+                      </div>';
 
                 $output .= '
-                            </div>
-                          </div>';
+                    </div>
+                  </div>';
 
                 $output .= '
-                          <div class="coupon_part_title">
-                            <span>'.lang("points", "choose_char_item").':</span>
-                          </div>';
+                  <div class="coupon_part_title">
+                    <span>'.lang("points", "choose_char_item").':</span>
+                  </div>';
 
                 for ( $i = 0; $i < count($char_list); $i++ )
                 {
@@ -322,9 +325,9 @@ function redeem_coupon()
 
                   if ( count($realm_list) > 1 )
                     $output .= '
-                          <div class="coupon_part_chars">
-                            <span>'.$cur_realm_name.'</span>
-                          </div>';
+                  <div class="coupon_part_chars">
+                    <span>'.$cur_realm_name.'</span>
+                  </div>';
 
                   $first = true; // we want the first character to be selected
 
@@ -335,11 +338,11 @@ function redeem_coupon()
                     $row_name_result = $sqlt->fetch_assoc($row_name_result);
 
                     $output .= '
-                          <div class="coupon_part_chars">
-                            <input type="radio" name="item_character" value="'.($i + 1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
-                            <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                            <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
-                          </div>';
+                  <div class="coupon_part_chars">
+                    <input type="radio" name="item_character" value="'.($i+1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
+                    <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                    <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
+                  </div>';
 
                     unset($first);
                   }
@@ -348,15 +351,15 @@ function redeem_coupon()
               else
               {
                 $output .= '
-                    <div class="coupon_parts">
-                      <hr />
-                      <input type="checkbox" name="claim_item" checked="checked"/>
-                      <div>
-                        <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
-                          <img src="'.get_item_icon(1725).'" alt="" />
-                        </a>
-                      </div>
-                    </div>';
+                  <div class="coupon_parts">
+                    <hr />
+                    <input type="checkbox" name="claim_item" checked="checked"/>
+                    <div>
+                      <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
+                        <img src="'.get_item_icon(1725).'" alt="" />
+                      </a>
+                    </div>
+                  </div>';
               }
             }
 
@@ -364,16 +367,16 @@ function redeem_coupon()
             {
               if ( $coupon["redemption_option"] == 0 )
                 $output .= '
-                          <div class="coupon_parts">
-                            <hr />
-                            <input type="checkbox" name="claim_raffle" checked="checked"/><span>'.lang("points", "and_raffle").'</span>
-                          </div>';
+                  <div class="coupon_parts">
+                    <hr />
+                    <input type="checkbox" name="claim_raffle" checked="checked"/><span>'.lang("points", "and_raffle").'</span>
+                  </div>';
               else
                 $output .= '
-                          <div class="coupon_parts">
-                            <hr />
-                            <input type="checkbox" name="claim_raffle" /><span>'.lang("points", "or_raffle").'</span>
-                          </div>';
+                  <div class="coupon_parts">
+                    <hr />
+                    <input type="checkbox" name="claim_raffle" /><span>'.lang("points", "or_raffle").'</span>
+                  </div>';
 
               // get our raffle(s)
               if ( $coupon["raffle_id"] == -1 )
@@ -399,48 +402,48 @@ function redeem_coupon()
                   $limit_reached = true;
 
                 $output .= '
-                          <div class="coupon_part_chars">
-                            <input type="radio" name="raffle_choice" value="'.$row["entry"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).' '.( ( $limit_reached ) ? 'disabled="disabled" ' : '' ).'/>
-                            <a href="point_system.php?action=view_raffle&amp;raffle_id='.$row["entry"].'&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.$row["title"].'</a>
-                            <span>('.$tickets.( ( $row["tickets_per_user"] > 0 ) ? "/".$row["tickets_per_user"] : '' ).' '.lang("points", "tickets_purchased").')</span>
-                          </div>';
+                  <div class="coupon_part_chars">
+                    <input type="radio" name="raffle_choice" value="'.$row["entry"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).' '.( ( $limit_reached ) ? 'disabled="disabled" ' : '' ).'/>
+                    <a href="point_system.php?action=view_raffle&amp;raffle_id='.$row["entry"].'&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.$row["title"].'</a>
+                    <span>('.$tickets.( ( $row["tickets_per_user"] > 0 ) ? "/".$row["tickets_per_user"] : '' ).' '.lang("points", "tickets_purchased").')</span>
+                  </div>';
 
                 unset($first);
               }
             }
 
             $output .= '
-                        </div>
-                      </td>
-                    </tr>';
+                </div>
+              </td>
+            </tr>';
           }
 
           $output .= '
-                    <tr>
-                      <td align="right">
-                        <a href="javascript:do_submit(\'form1\',0)">
-                          <span><img src="img/aff_tick.png" width="16" height="16" alt="" />&nbsp;'.lang("points", "redeem_coupon").'</span>
-                        </a>
-                      </td>
-                    </tr>
-                  </table>
-                </form>';
+            <tr>
+              <td align="right">
+                <a href="javascript:do_submit(\'form1\',0)">
+                  <img src="img/aff_tick.png" width="16" height="16" alt="" />
+                  <span>&nbsp;'.lang("points", "redeem_coupon").'</span>
+                </a>
+              </td>
+            </tr>
+          </table>
+        </form>';
     }
   }
   else
   {
     $output .= '
-              <div class="tab_content">';
+      <div class="tab_content">';
 
     $output .= '
-                <span>'.lang("points", "redeemed").'</span>';
+        <span>'.lang("points", "redeemed").'</span>';
   }
 
   $output .= '
-            </div>
-            <br />
-          </center>
-          <!-- end of point_system.php -->';
+      </div>
+      <br />
+      <!-- end of point_system.php REDEEM COUPON -->';
 }
 
 function do_redeem()
@@ -727,7 +730,8 @@ function coupons()
   points_tabs();
 
   $output .= '
-            <div class="tab_content">';
+        <!-- start of point_system.php COUPONS -->
+        <div class="tab_content">';
 
   $coupon_query = "SELECT * FROM point_system_coupons WHERE (target='0' OR target='".$user_id."') AND enabled='1'";
   $coupon_result = $sql["mgr"]->query($coupon_query);
@@ -735,7 +739,7 @@ function coupons()
   if ( $sql["mgr"]->num_rows($coupon_result) > 0 )
   {
     $output .= '
-            <table class="lined" id="coupon_table">';
+          <table class="lined" id="coupon_table">';
 
     while ( $coupon = $sql["mgr"]->fetch_assoc($coupon_result) )
     {
@@ -745,22 +749,22 @@ function coupons()
       if ( ( $sql["mgr"]->num_rows($usage_result) < $coupon["usage_limit"] ) || ( $coupon["usage_limit"] == -1 ) )
       {
         $output .= '
-              <tr>
-                <td align="left">'.$coupon["title"].'</td>
-              </tr>';
+            <tr>
+              <td align="left">'.$coupon["title"].'</td>
+            </tr>';
 
         if ( $coupon["text"] != "" )
           $output .= '
-              <tr>
-                <td align="left">'.$coupon["text"].'</td>
-              </tr>';
+            <tr>
+              <td align="left">'.$coupon["text"].'</td>
+            </tr>';
 
         if ( ( $coupon["credits"] != 0 ) || ( $coupon["money"] != 0 ) || ( $coupon["item_id"] != 0 ) || ( $coupon["raffle_id"] != 0 ) )
         {
           $output .= '
-              <tr>
-                <td align="left">
-                  <span>'.lang("points", "coupon_value").':</span>';
+            <tr>
+              <td align="left">
+                <span>'.lang("points", "coupon_value").':</span>';
 
           if ( $coupon["credits"] > 0 )
           {
@@ -770,10 +774,10 @@ function coupons()
               $tip = lang("index", "coupon_credit");
 
             $output .= '
-                  <br />
-                  <br />
-                  <span>'.$coupon["credits"].'</span>
-                  <span>'.$tip.'</span>';
+                <br />
+                <br />
+                <span>'.$coupon["credits"].'</span>
+                <span>'.$tip.'</span>';
           }
 
           if ( $coupon["money"] > 0 )
@@ -781,24 +785,24 @@ function coupons()
             // extract gold/silver/copper from single gold number
             $coupon["money"] = str_pad($coupon["money"], 4, "0", STR_PAD_LEFT);
             $coupon_g = substr($coupon["money"],  0, -4);
-            if ( $coupon_g == '' )
+            if ( $coupon_g == "" )
               $coupon_g = 0;
             $coupon_s = substr($coupon["money"], -4,  2);
-            if ( ( $coupon_s == '' ) || ( $coupon_s == '00' ) )
+            if ( ( $coupon_s == "" ) || ( $coupon_s == "00" ) )
               $coupon_s = 0;
             $coupon_c = substr($coupon["money"], -2);
-            if ( ( $coupon_c == '' ) || ( $coupon_c == '00' ) )
+            if ( ( $coupon_c == "" ) || ( $coupon_c == "00" ) )
               $coupon_c = 0;
 
             $output .= '
-                  <br />
-                  <br />
-                  <span>'.$coupon_g.'</span>
-                  <img src="img/gold.gif" alt="gold" />
-                  <span>'.$coupon_s.'</span>
-                  <img src="img/silver.gif" alt="gold" />
-                  <span>'.$coupon_c.'</span>
-                  <img src="img/copper.gif" alt="gold" />';
+                <br />
+                <br />
+                <span>'.$coupon_g.'</span>
+                <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                <span>'.$coupon_s.'</span>
+                <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                <span>'.$coupon_c.'</span>
+                <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
           }
 
           if ( $coupon["item_id"] != 0 )
@@ -828,47 +832,47 @@ function coupons()
               $i = $sql["world"]->fetch_assoc($i_result);
 
               $output .= '
-                    <br />
-                    <br />
-                    <div class="coupon_item">
-                      <div>
-                        <a href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.$coupon["entry"].'\');" onmouseout="HideTooltip(\'_b'.$coupon["entry"].'\');">
-                          <img src="'.get_item_icon($coupon["item_id"]).'" alt="" />
-                        </a>';
+                <br />
+                <br />
+                <div class="coupon_item">
+                  <div>
+                    <a href="'.$base_datasite.$item_datasite.$coupon["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_b'.$coupon["entry"].'\');" onmouseout="HideTooltip(\'_b'.$coupon["entry"].'\');">
+                      <img src="'.get_item_icon($coupon["item_id"]).'" alt="" />
+                    </a>';
 
               if ( $coupon["item_count"] > 1 )
                 $output .= '
-                        <div class="ch_inv_quantity_shadow">'.$coupon["item_count"].'</div>
-                        <div class="ch_inv_quantity">'.$coupon["item_count"].'</div>';
+                    <div class="ch_inv_quantity_shadow">'.$coupon["item_count"].'</div>
+                    <div class="ch_inv_quantity">'.$coupon["item_count"].'</div>';
 
               $output .= '
-                      </div>';
+                  </div>';
 
               // build a tooltip object for this item
               $output .= '
-                      <div class="item_tooltip" id="tooltip_b'.$coupon["entry"].'" style="left: -129px; top: 42px;">
-                        <table>
-                          <tr>
-                            <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
-                          </tr>
-                        </table>
-                      </div>';
+                  <div class="item_tooltip" id="tooltip_b'.$coupon["entry"].'" style="left: -129px; top: 42px;">
+                    <table>
+                      <tr>
+                        <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
+                      </tr>
+                    </table>
+                  </div>';
 
               $output .= '
-                    </div>';
+                </div>';
             }
             else
             {
               $output .= '
-                    <br />
-                    <br />
-                    <div class="coupon_item">
-                      <div>
-                        <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
-                          <img src="'.get_item_icon(1725).'" alt="" />
-                        </a>
-                      </div>
-                    </div>';
+                <br />
+                <br />
+                <div class="coupon_item">
+                  <div>
+                    <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
+                      <img src="'.get_item_icon(1725).'" alt="" />
+                    </a>
+                  </div>
+                </div>';
             }
           }
 
@@ -907,21 +911,21 @@ function coupons()
               {
                 if ( $coupon["redemption_option"] == 0 )
                   $output .= '
-                    <br />
-                    <br />
-                    <span>'.lang("points", "and_raffle").'</span>';
+                <br />
+                <br />
+                <span>'.lang("points", "and_raffle").'</span>';
                 else
                   $output .= '
-                    <br />
-                    <br />
-                    <span>'.lang("points", "or_raffle").'</span>';
+                <br />
+                <br />
+                <span>'.lang("points", "or_raffle").'</span>';
               }
             }
           }
 
           $output .= '
-                  </td>
-                </tr>';
+              </td>
+            </tr>';
         }
 
         if ( $coupon["credits"] < 0 )
@@ -930,9 +934,9 @@ function coupons()
           $message = str_replace("%1", ($coupon["credits"] * -1), $message);
 
           $output .= '
-                <tr>
-                  <td align="right">'.$message.'</td>
-                </tr>';
+            <tr>
+              <td align="right">'.$message.'</td>
+            </tr>';
         }
 
         if ( $coupon["money"] < 0 )
@@ -942,56 +946,56 @@ function coupons()
           $coupon_money = $coupon["money"];
           $coupon_money = str_pad($coupon_money, 4, "0", STR_PAD_LEFT);
           $cg = substr($coupon_money,  0, -4);
-          if ( $cg == '' )
+          if ( $cg == "" )
             $cg = 0;
           $cs = substr($coupon_money, -4,  2);
-          if ( ( $cs == '' ) || ( $cs == '00' ) )
+          if ( ( $cs == "" ) || ( $cs == "00" ) )
             $cs = 0;
           $cc = substr($coupon_money, -2);
-          if ( ( $cc == '' ) || ( $cc == '00' ) )
+          if ( ( $cc == "" ) || ( $cc == "00" ) )
             $cc = 0;
 
-          $coupon_money_display = $cg.'<img src="img/gold.gif" alt="" align="middle" />'
-                      .$cs.'<img src="img/silver.gif" alt="" align="middle" />'
-                      .$cc.'<img src="img/copper.gif" alt="" align="middle" />';
+          $coupon_money_display = $cg.'<img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />'
+                      .$cs.'<img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />'
+                      .$cc.'<img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
 
           $message = lang("points", "coupon_cost_money");
           $message = str_replace("%1", $coupon_money_display, $message);
 
           $output .= '
-                <tr>
-                  <td align="right">'.$message.'</td>
-                </tr>';
+            <tr>
+              <td align="right">'.$message.'</td>
+            </tr>';
         }
 
         $output .= '
-              <tr>
-                <td align="right">
-                  <a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon["entry"].'">
-                    <span><img src="img/star.png" width="16" height="16" alt="" />&nbsp;'.lang("points", "use_coupon").'</span>
-                  </a>
-                </td>
-              </tr>';
+            <tr>
+              <td align="right">
+                <a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon["entry"].'">
+                  <img src="img/star.png" width="16" height="16" alt="" />
+                  <span>&nbsp;'.lang("points", "use_coupon").'</span>
+                </a>
+              </td>
+            </tr>';
 
         $output .= '
-              <tr>
-                <th></th>
-              </tr>';
+            <tr>
+              <th></th>
+            </tr>';
       }
     }
 
     if ( $sql["mgr"]->num_rows($coupon_result) )
-      $output = substr($output, 0, strlen($output) - 68);
+      $output = substr($output, 0, strlen($output) - 60);
 
     $output .= '
-            </table>';
+          </table>';
   }
 
   $output .= '
-            </div>
-            <br />
-          </center>
-          <!-- end of point_system.php -->';
+        </div>
+        <br />
+        <!-- end of point_system.php COUPONS -->';
 }
 
 function raffles()
@@ -1001,7 +1005,7 @@ function raffles()
   points_tabs();
 
   $output .= '
-            <div class="tab_content">';
+          <div class="tab_content">';
 
   $raffle_query = "SELECT * FROM point_system_raffles WHERE enabled='1'";
   $raffle_result = $sql["mgr"]->query($raffle_query);
@@ -1071,24 +1075,24 @@ function raffles()
             // extract gold/silver/copper from single gold number
             $raffle["money"] = str_pad($raffle["money"], 4, "0", STR_PAD_LEFT);
             $raffle_g = substr($raffle["money"],  0, -4);
-            if ( $raffle_g == '' )
+            if ( $raffle_g == "" )
               $raffle_g = 0;
             $raffle_s = substr($raffle["money"], -4,  2);
-            if ( ( $raffle_s == '' ) || ( $raffle_s == '00' ) )
+            if ( ( $raffle_s == "" ) || ( $raffle_s == "00" ) )
               $raffle_s = 0;
             $raffle_c = substr($raffle["money"], -2);
-            if ( ( $raffle_c == '' ) || ( $raffle_c == '00' ) )
+            if ( ( $raffle_c == "" ) || ( $raffle_c == "00" ) )
               $raffle_c = 0;
 
             $output .= '
                   <br />
                   <br />
                   <span>'.$raffle_g.'</span>
-                  <img src="img/gold.gif" alt="gold" />
+                  <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
                   <span>'.$raffle_s.'</span>
-                  <img src="img/silver.gif" alt="gold" />
+                  <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
                   <span>'.$raffle_c.'</span>
-                  <img src="img/copper.gif" alt="gold" />';
+                  <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
           }
 
           if ( $raffle["item_id"] != 0 )
@@ -1122,7 +1126,7 @@ function raffles()
                     <br />
                     <div class="coupon_item">
                       <div>
-                        <a href="'.$base_datasite.$item_datasite.$raffle["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_b'.$raffle["entry"].'\');" onmouseout="HideTooltip(\'_b'.$raffle["entry"].'\');">
+                        <a href="'.$base_datasite.$item_datasite.$raffle["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_b'.$raffle["entry"].'\');" onmouseout="HideTooltip(\'_b'.$raffle["entry"].'\');">
                           <img src="'.get_item_icon($raffle["item_id"]).'" alt="" />
                         </a>';
 
@@ -1193,24 +1197,24 @@ function raffles()
             // extract gold/silver/copper from single gold number
             $raffle["cost_money"] = str_pad($raffle["cost_money"], 4, "0", STR_PAD_LEFT);
             $raffle_cost_g = substr($raffle["cost_money"],  0, -4);
-            if ( $raffle_cost_g == '' )
+            if ( $raffle_cost_g == "" )
               $raffle_cost_g = 0;
             $raffle_cost_s = substr($raffle["cost_money"], -4,  2);
-            if ( ( $raffle_cost_s == '' ) || ( $raffle_cost_s == '00' ) )
+            if ( ( $raffle_cost_s == "" ) || ( $raffle_cost_s == "00" ) )
               $raffle_cost_s = 0;
             $raffle_cost_c = substr($raffle["cost_money"], -2);
-            if ( ( $raffle_cost_c == '' ) || ( $raffle_cost_c == '00' ) )
+            if ( ( $raffle_cost_c == "" ) || ( $raffle_cost_c == "00" ) )
               $raffle_cost_c = 0;
 
             $output .= '
                     <br />
                     <br />
                     <span>'.$raffle_cost_g.'</span>
-                    <img src="img/gold.gif" alt="gold" />
+                    <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
                     <span>'.$raffle_cost_s.'</span>
-                    <img src="img/silver.gif" alt="gold" />
+                    <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
                     <span>'.$raffle_cost_c.'</span>
-                    <img src="img/copper.gif" alt="gold" />';
+                    <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />';
           }
 
           $output .= '
@@ -1222,7 +1226,8 @@ function raffles()
               <tr>
                 <td align="right">
                   <a href="point_system.php?action=view_raffle&amp;raffle_id='.$raffle["entry"].'">
-                    <span><img src="img/star.png" width="16" height="16" alt="" />&nbsp;'.lang("points", "purchase_ticket").'</span>
+                    <img src="img/star.png" width="16" height="16" alt="" />
+                    <span>&nbsp;'.lang("points", "purchase_ticket").'</span>
                   </a>
                 </td>
               </tr>';
@@ -1235,16 +1240,15 @@ function raffles()
     }
 
     if ( $sql["mgr"]->num_rows($raffle_result) )
-      $output = substr($output, 0, strlen($output) - 68);
+      $output = substr($output, 0, strlen($output)-68);
 
     $output .= '
             </table>';
   }
 
   $output .= '
-            </div>
-            <br />
-          </center>
+          </div>
+          <br />
           <!-- end of point_system.php -->';
 }
 
@@ -1255,12 +1259,11 @@ function contests()
   points_tabs();
 
   $output .= '
-            <div class="tab_content">';
+          <div class="tab_content">';
 
   $output .= '
-            </div>
-            <br />
-          </center>
+          </div>
+          <br />
           <!-- end of point_system.php -->';
 }
 
@@ -1276,30 +1279,30 @@ function view_bag()
   $bag = $sql["mgr"]->fetch_assoc($bag_result);
 
   $output .= '
-            <div class="tab_content">
-              <form method="get" action="point_system.php" name="form">
-                <input type="hidden" name="action" value="edit_bag" />
-                <input type="hidden" name="bag_id" value="'.$bag_id.'" />
-                <table>';
+          <div class="tab_content">
+            <form method="get" action="point_system.php" id="form">
+              <input type="hidden" name="action" value="edit_bag" />
+              <input type="hidden" name="bag_id" value="'.$bag_id.'" />
+              <table>';
 
   if ( $bag["owner"] == $user_id )
     $output .= '
-                  <tr>
-                    <td colspan="2" align="left">
-                      <span>'.lang("points", "choose_items").':</span>
-                    </td>
-                  </tr>';
+                <tr>
+                  <td colspan="2" align="left">
+                    <span>'.lang("points", "choose_items").':</span>
+                  </td>
+                </tr>';
 
   $output .= '
-                  <tr>
-                    <td valign="top">
-                      <div class="bag" style="width: '.(4*43).'px; height: '.(ceil($bag["slots"]/4)*41).'px;">';
+                <tr>
+                  <td valign="top">
+                    <div class="bag" style="width: '.(4*43).'px; height: '.(ceil($bag["slots"]/4)*41).'px;">';
 
   $dsp = $bag["slots"]%4;
 
   if ( $dsp )
     $output .= '
-                        <div class="no_slot"></div>';
+                    <div class="no_slot"></div>';
 
   // get bag items
   $items_query = "SELECT item_id, slot, item_count FROM point_system_prize_bag_items WHERE `bag`='".$bag_id."'";
@@ -1332,39 +1335,39 @@ function view_bag()
     $i = $sql["world"]->fetch_assoc($i_result);
 
     $output .= '
-                        <div class="bag_slot" style="left: '.((($item["slot"]+$dsp)%4*43)+4).'px; top: '.(((floor(($item["slot"]+$dsp)/4)*41))+4).'px;">
-                          <a href="'.$base_datasite.$item_datasite.$item["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'\');">
-                            <img src="'.get_item_icon($item["item_id"]).'" alt="" class="inv_icon" />
-                          </a>';
+                    <div class="bag_slot" style="left: '.((($item["slot"]+$dsp)%4*43)+4).'px; top: '.(((floor(($item["slot"]+$dsp)/4)*41))+4).'px;">
+                      <a href="'.$base_datasite.$item_datasite.$item["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'\');" onmouseout="HideTooltip(\'_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'\');">
+                        <img src="'.get_item_icon($item["item_id"]).'" alt="" class="inv_icon" />
+                      </a>';
 
     if ( $bag["owner"] == $user_id )
       $output .= '
-                          <div class="prize_bag_check">
-                            <input type="checkbox" name="chosen_slot[]" value="'.$item["slot"].'" />
-                          </div>';
+                      <div class="prize_bag_check">
+                        <input type="checkbox" name="chosen_slot[]" value="'.$item["slot"].'" />
+                      </div>';
 
     $output .= '
-                          <div class="ch_inv_quantity_shadow">'.$item["item_count"].'</div>
-                          <div class="ch_inv_quantity">'.$item["item_count"].'</div>
-                        </div>';
+                      <div class="ch_inv_quantity_shadow">'.$item["item_count"].'</div>
+                      <div class="ch_inv_quantity">'.$item["item_count"].'</div>
+                    </div>';
 
     // build a tooltip object for this item
     $output .= '
-                      <div class="item_tooltip" id="tooltip_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'" style="left: '.((($item["slot"]+$dsp)%4*42)-129).'px; top: '.((floor(($item["slot"]+$dsp)/4)*41)+42).'px;">
-                        <table>
-                          <tr>
-                            <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
-                          </tr>
-                        </table>
-                      </div>';
+                    <div class="item_tooltip" id="tooltip_bp'.$item["slot"].(($item["slot"]+$dsp)%4*42).'x'.(floor(($item["slot"]+$dsp)/4)*41).'" style="left: '.((($item["slot"]+$dsp)%4*42)-129).'px; top: '.((floor(($item["slot"]+$dsp)/4)*41)+42).'px;">
+                      <table>
+                        <tr>
+                          <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
+                        </tr>
+                      </table>
+                    </div>';
 
     $item["item_count"] = ( ( $item["item_count"] == "" ) ? 1 : $item["item_count"] );
   }
 
   $output .= '
-                      </div>
-                    </td>
-                    <td>';
+                    </div>
+                  </td>
+                  <td>';
 
   if ( $bag["owner"] == $user_id )
   {
@@ -1396,9 +1399,9 @@ function view_bag()
     }
 
     $output .= '
-                          <div class="coupon_part_title">
-                            <span>'.lang("points", "choose_char_items").':</span>
-                          </div>';
+                    <div class="coupon_part_title">
+                      <span>'.lang("points", "choose_char_items").':</span>
+                    </div>';
 
     for ( $i = 0; $i < count($char_list); $i++ )
     {
@@ -1415,9 +1418,9 @@ function view_bag()
 
       if ( count($realm_list) > 1 )
         $output .= '
-                          <div class="coupon_part_chars">
-                            <span>'.$cur_realm_name.'</span>
-                          </div>';
+                    <div class="coupon_part_chars">
+                      <span>'.$cur_realm_name.'</span>
+                    </div>';
 
       $first = true; // we want the first character to be selected
 
@@ -1428,11 +1431,11 @@ function view_bag()
         $row_name_result = $sqlt->fetch_assoc($row_name_result);
 
         $output .= '
-                          <div class="coupon_part_chars">
-                            <input type="radio" name="item_character" value="'.($i + 1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
-                            <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                            <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
-                          </div>';
+                    <div class="coupon_part_chars">
+                      <input type="radio" name="item_character" value="'.($i + 1)."-".$row.'-'.$row_name_result["name"].'" '.( ( isset($first) ) ? 'checked="checked" ' : '' ).'/>
+                      <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$row_name_result["name"].'</a> - <img src="img/c_icons/'.$row_name_result["race"].'-'.$row_name_result["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($row_name_result["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                      <img src="img/c_icons/'.$row_name_result["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($row_name_result["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($row_name_result["level"]).'
+                    </div>';
 
         unset($first);
       }
@@ -1442,13 +1445,12 @@ function view_bag()
   }
 
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-              </form>
-            </div>
-            <br />
-          </center>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>
+          <br />
           <!-- end of point_system.php -->';
 }
 
@@ -1470,7 +1472,7 @@ function edit_bag()
   // build query list
   $query_list = "(";
   for ( $i = 0; $i < count($temp); $i++ )
-    $query_list .= $temp[$i].( ( $i < count($temp) - 1 ) ? ", " : ")" );
+    $query_list .= $temp[$i].( ( $i < count($temp)-1 ) ? ", " : ")" );
 
   // get items
   $query = "SELECT * FROM point_system_prize_bag_items WHERE bag='".$bag_id."' AND slot IN ".$query_list;
@@ -1569,7 +1571,7 @@ function view_raffle()
     else
     {
       $output .= '
-            <form action="point_system.php" name="form1">
+            <form action="point_system.php" id="form1">
               <input type="hidden" name="action" value="do_purchase" />
               <input type="hidden" name="raffle_id" value="'.$raffle_id.'" />
               <table class="lined" id="coupon_table">
@@ -1603,10 +1605,10 @@ function view_raffle()
             $tip = lang("points", "raffle_credit");
 
           $output .= '
-                      <div class="coupon_parts">
-                        <span>'.$raffle["credits"].'</span>
-                        <span>'.$tip.'</span>
-                      </div>';
+                    <div class="coupon_parts">
+                      <span>'.$raffle["credits"].'</span>
+                      <span>'.$tip.'</span>
+                    </div>';
         }
 
         if ( $raffle["money"] != 0 )
@@ -1614,24 +1616,24 @@ function view_raffle()
           // extract gold/silver/copper from single gold number
           $raffle["money"] = str_pad($raffle["money"], 4, "0", STR_PAD_LEFT);
           $raffle_g = substr($raffle["money"],  0, -4);
-          if ( $raffle_g == '' )
+          if ( $raffle_g == "" )
             $raffle_g = 0;
           $raffle_s = substr($raffle["money"], -4,  2);
-          if ( ( $raffle_s == '' ) || ( $raffle_s == '00' ) )
+          if ( ( $raffle_s == "" ) || ( $raffle_s == "00" ) )
             $raffle_s = 0;
           $raffle_c = substr($raffle["money"], -2);
-          if ( ( $raffle_c == '' ) || ( $raffle_c == '00' ) )
+          if ( ( $raffle_c == "" ) || ( $raffle_c == "00" ) )
             $raffle_c = 0;
 
           $output .= '
-                      <div class="coupon_parts">
-                        <span>'.$raffle_g.'</span>
-                        <img src="img/gold.gif" alt="gold" />
-                        <span>'.$raffle_s.'</span>
-                        <img src="img/silver.gif" alt="gold" />
-                        <span>'.$raffle_c.'</span>
-                        <img src="img/copper.gif" alt="gold" />
-                      </div>';
+                    <div class="coupon_parts">
+                      <span>'.$raffle_g.'</span>
+                      <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                      <span>'.$raffle_s.'</span>
+                      <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                      <span>'.$raffle_c.'</span>
+                      <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />
+                    </div>';
         }
 
         if ( $raffle["item_id"] != 0 )
@@ -1661,54 +1663,54 @@ function view_raffle()
             $i = $sql["world"]->fetch_assoc($i_result);
 
             $output .= '
-                      <div class="coupon_parts">
-                        <div class="coupon_item">
-                          <div>
-                            <a id="ch_inv_padding" href="'.$base_datasite.$item_datasite.$raffle["item_id"].'" target="_blank" onmouseover="ShowTooltip(this,\'_b\');" onmouseout="HideTooltip(\'_b\');">
-                              <img src="'.get_item_icon($raffle["item_id"]).'" alt="" />
-                            </a>';
+                    <div class="coupon_parts">
+                      <div class="coupon_item">
+                        <div>
+                          <a id="ch_inv_padding" href="'.$base_datasite.$item_datasite.$raffle["item_id"].'" rel="external" onmouseover="ShowTooltip(this,\'_b\');" onmouseout="HideTooltip(\'_b\');">
+                            <img src="'.get_item_icon($raffle["item_id"]).'" alt="" />
+                          </a>';
 
             if ( $raffle["item_count"] > 1 )
               $output .= '
-                            <div id="coupon_item_quantity_shadow">'.$raffle["item_count"].'</div>
-                            <div id="coupon_item_quantity">'.$raffle["item_count"].'</div>';
+                          <div id="coupon_item_quantity_shadow">'.$raffle["item_count"].'</div>
+                          <div id="coupon_item_quantity">'.$raffle["item_count"].'</div>';
 
             $output .= '
-                          </div>';
+                        </div>';
 
             // build a tooltip object for this item
             $output .= '
-                          <div class="item_tooltip" id="tooltip_b" style="left: -129px; top: 42px;">
-                            <table>
-                              <tr>
-                                <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
-                              </tr>
-                            </table>
-                          </div>';
+                        <div class="item_tooltip" id="tooltip_b" style="left: -129px; top: 42px;">
+                          <table>
+                            <tr>
+                              <td>'.get_item_tooltip($i, $item[4], $item[5], $item[6], $item[7], $item[8]).'</td>
+                            </tr>
+                          </table>
+                        </div>';
 
             $output .= '
-                        </div>
-                      </div>';
+                      </div>
+                    </div>';
           }
           else
           {
             $output .= '
-                      <div class="coupon_parts">
-                        <div>
-                          <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'&amp;raffle_id='.$raffle_id.'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
-                            <img src="'.get_item_icon(1725).'" alt="" />
-                          </a>
-                        </div>
-                      </div>';
+                    <div class="coupon_parts">
+                      <div>
+                        <a href="point_system.php?action=view_bag&amp;bag_id='.($coupon["item_id"]*-1).'&amp;raffle_id='.$raffle_id.'" onmousemove="oldtoolTip(\''.lang("points", "prize_bag").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">
+                          <img src="'.get_item_icon(1725).'" alt="" />
+                        </a>
+                      </div>
+                    </div>';
           }
         }
 
         $output .= '
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <div class="coupon_parts">'.lang("points", "ticket_cost").':</div>';
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="coupon_parts">'.lang("points", "ticket_cost").':</div>';
 
         if ( $raffle["cost_credits"] != 0 )
         {
@@ -1729,13 +1731,13 @@ function view_raffle()
             $tip = lang("points", "raffle_credit");
 
           $output .= '
-                      <div class="coupon_parts">
-                        <span>'.$raffle["cost_credits"].'</span>
-                        <span>'.$tip.'</span>
-                        <span class="points_credit_highlight">'.( ( $credits > -1 ) ? '&nbsp;'.lang("points", "balance").':&nbsp;'.rtrim($credits, "0.") : '' ).'</span>
-                        <span class="points_credit_highlight">'.( ( $insufficient ) ? '&nbsp;<b>('.lang("points", "insufficient_funds").')</b>' : '' ).'</span>
-                        <span class="points_credit_highlight">'.( ( $credits <= -1 ) ? '&nbsp;<b>('.lang("points", "unlimited").')</b>' : '' ).'</span>
-                      </div>';
+                    <div class="coupon_parts">
+                      <span>'.$raffle["cost_credits"].'</span>
+                      <span>'.$tip.'</span>
+                      <span class="points_credit_highlight">'.( ( $credits > -1 ) ? '&nbsp;'.lang("points", "balance").':&nbsp;'.rtrim($credits, "0.") : '' ).'</span>
+                      <span class="points_credit_highlight">'.( ( $insufficient ) ? '&nbsp;<b>('.lang("points", "insufficient_funds").')</b>' : '' ).'</span>
+                      <span class="points_credit_highlight">'.( ( $credits <= -1 ) ? '&nbsp;<b>('.lang("points", "unlimited").')</b>' : '' ).'</span>
+                    </div>';
         }
 
         if ( $raffle["cost_money"] != 0 )
@@ -1743,29 +1745,29 @@ function view_raffle()
           // extract gold/silver/copper from single gold number
           $raffle["cost_money"] = str_pad($raffle["cost_money"], 4, "0", STR_PAD_LEFT);
           $raffle_cost_g = substr($raffle["cost_money"],  0, -4);
-          if ( $raffle_cost_g == '' )
+          if ( $raffle_cost_g == "" )
             $raffle_cost_g = 0;
           $raffle_cost_s = substr($raffle["cost_money"], -4,  2);
-          if ( ( $raffle_cost_s == '' ) || ( $raffle_cost_s == '00' ) )
+          if ( ( $raffle_cost_s == "" ) || ( $raffle_cost_s == "00" ) )
             $raffle_cost_s = 0;
           $raffle_cost_c = substr($raffle["cost_money"], -2);
-          if ( ( $raffle_cost_c == '' ) || ( $raffle_cost_c == '00' ) )
+          if ( ( $raffle_cost_c == "" ) || ( $raffle_cost_c == "00" ) )
             $raffle_cost_c = 0;
 
           $output .= '
-                      <div class="coupon_parts">
-                        <span>'.$raffle_cost_g.'</span>
-                        <img src="img/gold.gif" alt="gold" />
-                        <span>'.$raffle_cost_s.'</span>
-                        <img src="img/silver.gif" alt="gold" />
-                        <span>'.$raffle_cost_c.'</span>
-                        <img src="img/copper.gif" alt="gold" />
-                      </div>';
+                    <div class="coupon_parts">
+                      <span>'.$raffle_cost_g.'</span>
+                      <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                      <span>'.$raffle_cost_s.'</span>
+                      <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                      <span>'.$raffle_cost_c.'</span>
+                      <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />
+                    </div>';
 
           $output .= '
-                      <div class="coupon_part_title">
-                        <span>'.lang("points", "choose_char_use_money").':</span>
-                      </div>';
+                    <div class="coupon_part_title">
+                      <span>'.lang("points", "choose_char_use_money").':</span>
+                    </div>';
 
           // get characters
           $char_list = array();
@@ -1809,13 +1811,13 @@ function view_raffle()
 
             if ( count($realm_list) > 1 )
               $output .= '
-                      <div class="coupon_part_chars">
-                        <span>'.$cur_realm_name.'</span>
-                      </div>';
+                    <div class="coupon_part_chars">
+                      <span>'.$cur_realm_name.'</span>
+                    </div>';
 
             $output .= '
-                      <div class="coupon_part_chars">
-                        <div class="fake_table">';
+                    <div class="coupon_part_chars">
+                      <div class="fake_table">';
 
             $first = true; // we want the first character to be selected
 
@@ -1832,29 +1834,29 @@ function view_raffle()
               // extract gold/silver/copper from single gold number
               $char["money"] = str_pad($char["money"], 4, "0", STR_PAD_LEFT);
               $char_g = substr($char["money"],  0, -4);
-              if ( $char_g == '' )
+              if ( $char_g == "" )
                 $char_g = 0;
               $char_s = substr($char["money"], -4,  2);
-              if ( ( $char_s == '' ) || ( $char_s == '00' ) )
+              if ( ( $char_s == "" ) || ( $char_s == "00" ) )
                 $char_s = 0;
               $char_c = substr($char["money"], -2);
-              if ( ( $char_c == '' ) || ( $char_c == '00' ) )
+              if ( ( $char_c == "" ) || ( $char_c == "00" ) )
                 $char_c = 0;
 
               $output .= '
-                          <div class="fake_table_cell">
-                            <input type="radio" name="money_character" value="'.($i + 1)."-".$row.'-'.$char["name"].'"'.( ( isset($first) ) ? ' checked="checked"' : '' ).( ( ( $char["online"] ) || ( $char["money"] < $raffle["cost_money"] ) ) ? ' disabled="disabled"' : '' ).' />
-                            <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$char["name"].'</a> - <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                            <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
-                          </div>
-                          <div class="fake_table_cell">
-                            <span>'.$char_g.'</span>
-                            <img src="img/gold.gif" alt="gold" />
-                            <span>'.$char_s.'</span>
-                            <img src="img/silver.gif" alt="gold" />
-                            <span>'.$char_c.'</span>
-                            <img src="img/copper.gif" alt="gold" />
-                          </div>';
+                        <div class="fake_table_cell">
+                          <input type="radio" name="money_character" value="'.($i+1)."-".$row.'-'.$char["name"].'"'.( ( isset($first) ) ? ' checked="checked"' : '' ).( ( ( $char["online"] ) || ( $char["money"] < $raffle["cost_money"] ) ) ? ' disabled="disabled"' : '' ).' />
+                          <a href="char.php?id='.$row.'&amp;realm='.$cur_realm.'">'.$char["name"].'</a> - <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                          <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt=""/> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
+                        </div>
+                        <div class="fake_table_cell">
+                          <span>'.$char_g.'</span>
+                          <img src="img/gold.gif" alt="gold" style="position: relative; bottom: -6px;" />
+                          <span>'.$char_s.'</span>
+                          <img src="img/silver.gif" alt="silver" style="position: relative; bottom: -6px;" />
+                          <span>'.$char_c.'</span>
+                          <img src="img/copper.gif" alt="copper" style="position: relative; bottom: -6px;" />
+                        </div>';
 
               unset($first);
             }
@@ -1862,45 +1864,45 @@ function view_raffle()
         }
 
         $output .= '
-                        </div>
                       </div>
-                    </td>
-                  </tr>';
+                    </div>
+                  </td>
+                </tr>';
       }
 
       if ( $raffle["tickets_per_user"] > 1 )
         $output .= '
-                  <tr>
-                    <td>
-                      <div class="coupon_parts">'.lang("points", "tickets_purchased").':&nbsp;<b>'.$my_usage_count.'</b></div>
-                    </td>
-                  </tr>';
+                <tr>
+                  <td>
+                    <div class="coupon_parts">'.lang("points", "tickets_purchased").':&nbsp;<b>'.$my_usage_count.'</b></div>
+                  </td>
+                </tr>';
 
       $output .= '
-                  <tr>
-                    <td align="right">
-                      <a href="javascript:do_submit(\'form1\',0)">
-                        <span><img src="img/aff_tick.png" width="16" height="16" alt="" />&nbsp;'.lang("points", "confirm_purchase").'</span>
-                      </a>
-                    </td>
-                  </tr>
-                </table>
-              </form>';
+                <tr>
+                  <td align="right">
+                    <a href="javascript:do_submit(\'form1\',0)">
+                      <img src="img/aff_tick.png" width="16" height="16" alt="" />
+                      <span>&nbsp;'.lang("points", "confirm_purchase").'</span>
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </form>';
     }
   }
   else
   {
     $output .= '
-            <div class="tab_content">';
+          <div class="tab_content">';
 
     $output .= '
-              <span>'.lang("points", "purchased").'</span>';
+            <span>'.lang("points", "purchased").'</span>';
   }
 
   $output .= '
-            </div>
-            <br />
-          </center>
+          </div>
+          <br />
           <!-- end of point_system.php -->';
 }
 
@@ -2008,29 +2010,29 @@ function points_tabs()
   global  $output, $coupon_id, $raffle_id, $bag_id, $action, $sql, $core;
 
   $output .= '
-        <!-- start of point_system.php -->
-        <center>
-          <div class="tab">
-            <ul>
-              <li'.( ( $action == "coupons" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=coupons'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "coupons").'</a></li>
-              <li'.( ( $action == "raffles" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=raffles'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "raffles").'</a></li>
-              <!-- li'.( ( $action == "contests" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=contests">'.lang("points", "contests").'</a></li -->';
+        <!-- start of point_system.php TABS -->
+        <div class="tab">
+          <ul>
+            <li'.( ( $action == "coupons" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=coupons'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "coupons").'</a></li>
+            <li'.( ( $action == "raffles" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=raffles'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "raffles").'</a></li>
+            <!-- li'.( ( $action == "contests" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=contests">'.lang("points", "contests").'</a></li -->';
 
   if ( ( $action == "redeem_coupon" ) || ( $coupon_id != 0 ) )
     $output .= '
-              <li'.( ( $action == "redeem_coupon" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "redeem_coupon").'</a></li>';
+            <li'.( ( $action == "redeem_coupon" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "redeem_coupon").'</a></li>';
 
   if ( $action == "view_bag" )
     $output .= '
-              <li'.( ( $action == "view_bag" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_bag&amp;bag_id='.$bag_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "view_bag").'</a></li>';
+            <li'.( ( $action == "view_bag" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_bag&amp;bag_id='.$bag_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "view_bag").'</a></li>';
 
   if ( ( $action == "view_raffle" ) || ( $raffle_id != 0 ) )
     $output .= '
-              <li'.( ( $action == "view_raffle" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_raffle&amp;raffle_id='.$raffle_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.lang("points", "view_raffle").'</a></li>';
+            <li'.( ( $action == "view_raffle" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_raffle&amp;raffle_id='.$raffle_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.lang("points", "view_raffle").'</a></li>';
 
   $output .= '
-            </ul>
-          </div>';
+          </ul>
+        </div>
+        <!-- end of point_system.php TABS -->';
 }
 
 
@@ -2048,43 +2050,43 @@ switch ( $err )
   case 1:
     $output .= '
           <h1>
-            <font class="error">'.lang("global", "empty_fields").'</font>
+            <span class="error">'.lang("global", "empty_fields").'</span>
           </h1>';
     break;
   case 2:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "not_allowed").'</font>
+            <span class="error">'.lang("points", "not_allowed").'</span>
           </h1>';
     break;
   case 3:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "cannot_purchase_ticket").'</font>
+            <span class="error">'.lang("points", "cannot_purchase_ticket").'</span>
           </h1>';
     break;
   case 4:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "insufficient_funds").'</font>
+            <span class="error">'.lang("points", "insufficient_funds").'</span>
           </h1>';
     break;
   case 5:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "insufficient_funds_gold").'</font>
+            <span class="error">'.lang("points", "insufficient_funds_gold").'</span>
           </h1>';
     break;
   case 6:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "character_online").'</font>
+            <span class="error">'.lang("points", "character_online").'</span>
           </h1>';
     break;
   case 7:
     $output .= '
           <h1>
-            <font class="error">'.lang("points", "insufficient_credits").'</font>
+            <span class="error">'.lang("points", "insufficient_credits").'</span>
           </h1>';
     break;
   default: //no error

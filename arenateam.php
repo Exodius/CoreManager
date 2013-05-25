@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once("header.php");
-require_once("libs/char_lib.php");
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################
@@ -313,58 +314,61 @@ function browse_teams()
 
 //==========================top page navigation starts here====================
   $output .= '
-        <center>
-          <table class="top_hidden">
-            <tr>
-              <td>';
+        <table class="top_hidden">
+          <tr>
+            <td>';
   makebutton(lang("global", "back"), "javascript:window.history.back()", 130);
   ( ( $search_by &&  $search_value ) ? makebutton(lang("arenateam", "arenateams"), "arenateam.php", 130) : $output .= "" );
   $output .= '
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <table class="hidden">
-                  <tr>
-                    <td>
-                      <form action="arenateam.php" method="get" name="form">
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <table class="hidden">
+                <tr>
+                  <td>
+                    <form action="arenateam.php" method="get" id="form">
+                      <div class="no_display">
                         <input type="hidden" name="error" value="4" />
+                      </div>
+                      <div>
                         <input type="text" size="24" name="search_value" value="'.$search_value.'" />
                         <select name="search_by">
                           <option value="atname"'.( ( $search_by == "atname" ) ? ' selected="selected"' : '' ).'>'.lang("arenateam", "by_name").'</option>
                           <option value="leadername"'.( ( $search_by == "leadername" ) ? ' selected="selected"' : '' ).'>'.lang("arenateam", "by_team_leader").'</option>
                           <option value="atid"'.( ( $search_by == "atid" ) ? ' selected="selected"' : '' ).">".lang("arenateam", "by_id").'</option>
                         </select>
-                      </form>
-                    </td>
-                    <td>';
+                      </div>
+                    </form>
+                  </td>
+                  <td>';
   makebutton(lang("global", "search"), "javascript:do_submit()", 80);
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-              </td>
-              <td align="right">';
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td align="right">';
   $output .= generate_pagination("arenateam.php?order_by=".$order_by.( ( $search_value && $search_by ) ? "&amp;search_by=".$search_by."&amp;search_value=".$search_value : "" )."&amp;dir=".( ($dir) ? 0 : 1 ), $all_record, $itemperpage, $start);
   $output .= '
-              </td>
-            </tr>
-          </table>';
+            </td>
+          </tr>
+        </table>';
 //==========================top page navigation ENDS here =====================
 
   $output .= '
-          <table class="lined">
-            <tr>
-              <th width="1%"><a href="arenateam.php?order_by=atid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "id").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=atname&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "arenateam_name").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=lname&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "lname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "captain").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=attype&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "attype" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "type").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=tot_chars&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "tot_chars" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "members").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=arenateam_online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "arenateam_online" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "arenateam_online").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=rating&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "rating" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "rating").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=atgames&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atgames" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "games").'</a></th>
-              <th width="1%"><a href="arenateam.php?order_by=atwins&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atwins" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "wins").'</a></th>
-            </tr>';
+        <table class="lined">
+          <tr>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=atid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "id").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=atname&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "arenateam_name").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=lname&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "lname" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "captain").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=attype&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "attype" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "type").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=tot_chars&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "tot_chars" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "members").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=arenateam_online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "arenateam_online" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "arenateam_online").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=rating&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "rating" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "rating").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=atgames&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atgames" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "games").'</a></th>
+            <th style="width: 1%;"><a href="arenateam.php?order_by=atwins&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "atwins" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("arenateam", "wins").'</a></th>
+          </tr>';
   while ( $data = $sql["char"]->fetch_assoc($query) )
   {
     if ( $core == 1 )
@@ -388,24 +392,23 @@ function browse_teams()
     }
 
     $output .= '
-            <tr>
-              <td>'.$data["atid"].'</td>
-              <td><a href="arenateam.php?action=view_team&amp;error=3&amp;id='.$data["atid"].'">'.htmlentities($data["atname"], ENT_COMPAT, $site_encoding).'</a></td>
-              <td><a href="char.php?id='.$data["lguid"].'">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>
-              <td>'.lang("arenateam", $data["attype"].( ( $core == 1 ) ? "A" : "MT" )).'</td>
-              <td>'.$member_count.'</td>
-              <td>'.$members_online.'</td>
-              <td>'.$data["atrating"].'</td>
-              <td>'.$data["atgames"].'</td>
-              <td>'.$data["atwins"].'</td>
-            </tr>';
-  }
-  $output .= '
-            <tr>
-              <td colspan="9" class="hidden" align="right">'.lang("arenateam", "tot_teams").' : '.$all_record.'</td>
-            </tr>
-          </table>
-        </center>';
+          <tr>
+            <td>'.$data["atid"].'</td>
+            <td><a href="arenateam.php?action=view_team&amp;error=3&amp;id='.$data["atid"].'">'.htmlentities($data["atname"], ENT_COMPAT, $site_encoding).'</a></td>
+            <td><a href="char.php?id='.$data["lguid"].'">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>
+            <td>'.lang("arenateam", $data["attype"].( ( $core == 1 ) ? "A" : "MT" )).'</td>
+            <td>'.$member_count.'</td>
+            <td>'.$members_online.'</td>
+            <td>'.$data["atrating"].'</td>
+            <td>'.$data["atgames"].'</td>
+            <td>'.$data["atwins"].'</td>
+          </tr>';
+}
+$output .= '
+          <tr>
+            <td colspan="9" class="hidden" align="right">'.lang("arenateam", "tot_teams").' : '.$all_record.'</td>
+          </tr>
+        </table>';
 
 }
 
@@ -603,63 +606,62 @@ function view_team()
           answerbox.btn_ok="'.lang("global", "yes_low").'";
           answerbox.btn_cancel="'.lang("global", "no").'";
         </script>
-        <center>
-          <div class="fieldset_border arena_fieldset">
-            <span class="legend">'.lang("arenateam", "arenateam").' ('.lang("arenateam", $arenateam_data["type"].( ( $core == 1 ) ? "A" : "MT" )).')</span>
-            <table class="lined" id="arena_table_with_banner">
-              <tr class="bold">
-                <td rowspan="'.$banner_span.'">
-                  <div class="arena_banner">
-                    <img src="libs/banner_lib.php?action=banner&amp;f='.$banner_style.'&amp;r='.$background_color[1].'&amp;g='.$background_color[2].'&amp;b='.$background_color[3].'" class="banner_img" alt="" />
-                    <img src="libs/banner_lib.php?action=border&amp;f='.$arenateam_data["BorderStyle"].'&amp;f2='.$banner_style.'&amp;r='.$border_color[1].'&amp;g='.$border_color[2].'&amp;b='.$border_color[3].'" class="border_img" alt="" />
-                    <img src="libs/banner_lib.php?action=emblem&amp;f='.$arenateam_data["EmblemStyle"].'&amp;r='.$emblem_color[1].'&amp;g='.$emblem_color[2].'&amp;b='.$emblem_color[3].'&amp;s=0.55" class="emblem_img" alt="" />
-                  </div>
-                </td>
-                <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.htmlentities($arenateam_data["name"], ENT_COMPAT, $site_encoding).'</td>
-              </tr>
-              <tr>
-                <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.lang("arenateam", "tot_members").': '.$total_members.'</td>
-              </tr>
-              <tr>
-                <td colspan="4">'.lang("arenateam", "this_week").':</td>
-                <td colspan="2">'.lang("arenateam", "games_played").': '.$arenateamstats_data[2].'</td>
-                <td colspan="2">'.lang("arenateam", "games_won").': '.$arenateamstats_data[3].'</td>
-                <td colspan="2">'.lang("arenateam", "games_lost").': '.$losses_week.'</td>
-                <td colspan="'.( ( $showcountryflag ) ? 4 : 3 ).'">'.lang("arenateam", "ratio").': '.$winperc_week.' %</td>
-              </tr>
-              <tr>
-                <td colspan="4">'.lang("arenateam", "this_season").':</td>
-                <td colspan="2">'.lang("arenateam", "games_played").': '.$arenateamstats_data[4].'</td>
-                <td colspan="2">'.lang("arenateam", "games_won").': '.$arenateamstats_data[5].'</td>
-                <td colspan="2">'.lang("arenateam", "games_lost").': '.$losses_season.'</td>
-                <td colspan="'.( ( $showcountryflag ) ? 4 : 3 ).'">'.lang("arenateam", "ratio").': '.$winperc_season.' %</td>
-              </tr>
-              <tr>
-                <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.lang("arenateam", "standings").': '.$arenateamstats_data[6].' ('.$arenateamstats_data[1].')</td>
-              </tr>
-              <tr>
-                <th width="1%">'.lang("arenateam", "remove").'</th>
-                <th width="1%">'.lang("arenateam", "name").'</th>
-                <th width="1%">'.lang("char", "race").'</th>
-                <th width="1%">'.lang("char", "class").'</th>
-                <th width="1%">'.lang("arenateam", "personalrating").'</th>
-                <th width="1%">'.lang("arenateam", "lastlogin").'</th>
-                <th width="1%">'.lang("char", "online").'</th>
-                <th width="1%">'.lang("arenateam", "played_week").'</th>
-                <th width="1%">'.lang("arenateam", "wons_week").'</th>
-                <th width="5%">'.lang("arenateam", "win").' %</th>
-                <th width="1%">'.lang("arenateam", "played_season").'</th>
-                <th width="1%">'.lang("arenateam", "wons_season").'</th>
-                <th width="5%">'.lang("arenateam", "win").' %</th>';
+        <div class="fieldset_border arena_fieldset center">
+          <span class="legend">'.lang("arenateam", "arenateam").' ('.lang("arenateam", $arenateam_data["type"].( ( $core == 1 ) ? "A" : "MT" )).')</span>
+          <table class="lined" id="arena_table_with_banner">
+            <tr class="bold">
+              <td rowspan="'.$banner_span.'">
+                <div class="arena_banner">
+                  <img src="libs/banner_lib.php?action=banner&amp;f='.$banner_style.'&amp;r='.$background_color[1].'&amp;g='.$background_color[2].'&amp;b='.$background_color[3].'" class="banner_img" alt="" />
+                  <img src="libs/banner_lib.php?action=border&amp;f='.$arenateam_data["BorderStyle"].'&amp;f2='.$banner_style.'&amp;r='.$border_color[1].'&amp;g='.$border_color[2].'&amp;b='.$border_color[3].'" class="border_img" alt="" />
+                  <img src="libs/banner_lib.php?action=emblem&amp;f='.$arenateam_data["EmblemStyle"].'&amp;r='.$emblem_color[1].'&amp;g='.$emblem_color[2].'&amp;b='.$emblem_color[3].'&amp;s=0.55" class="emblem_img" alt="" />
+                </div>
+              </td>
+              <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.htmlentities($arenateam_data["name"], ENT_COMPAT, $site_encoding).'</td>
+            </tr>
+            <tr>
+              <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.lang("arenateam", "tot_members").': '.$total_members.'</td>
+            </tr>
+            <tr>
+              <td colspan="4">'.lang("arenateam", "this_week").':</td>
+              <td colspan="2">'.lang("arenateam", "games_played").': '.$arenateamstats_data[2].'</td>
+              <td colspan="2">'.lang("arenateam", "games_won").': '.$arenateamstats_data[3].'</td>
+              <td colspan="2">'.lang("arenateam", "games_lost").': '.$losses_week.'</td>
+              <td colspan="'.( ( $showcountryflag ) ? 4 : 3 ).'">'.lang("arenateam", "ratio").': '.$winperc_week.' %</td>
+            </tr>
+            <tr>
+              <td colspan="4">'.lang("arenateam", "this_season").':</td>
+              <td colspan="2">'.lang("arenateam", "games_played").': '.$arenateamstats_data[4].'</td>
+              <td colspan="2">'.lang("arenateam", "games_won").': '.$arenateamstats_data[5].'</td>
+              <td colspan="2">'.lang("arenateam", "games_lost").': '.$losses_season.'</td>
+              <td colspan="'.( ( $showcountryflag ) ? 4 : 3 ).'">'.lang("arenateam", "ratio").': '.$winperc_season.' %</td>
+            </tr>
+            <tr>
+              <td colspan="'.( ( $showcountryflag ) ? 14 : 13 ).'">'.lang("arenateam", "standings").': '.$arenateamstats_data[6].' ('.$arenateamstats_data[1].')</td>
+            </tr>
+            <tr>
+              <th style="width: 1%;">'.lang("arenateam", "remove").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "name").'</th>
+              <th style="width: 1%;">'.lang("char", "race").'</th>
+              <th style="width: 1%;">'.lang("char", "class").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "personalrating").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "lastlogin").'</th>
+              <th style="width: 1%;">'.lang("char", "online").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "played_week").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "wons_week").'</th>
+              <th style="width: 5%;">'.lang("arenateam", "win").' %</th>
+              <th style="width: 1%;">'.lang("arenateam", "played_season").'</th>
+              <th style="width: 1%;">'.lang("arenateam", "wons_season").'</th>
+              <th style="width: 5%;">'.lang("arenateam", "win").' %</th>';
 
     if ( $showcountryflag )
     {
       $output .= '
-                <th width="1%">'.lang("global", "country").'</th>';
+              <th style="width: 1%;">'.lang("global", "country").'</th>';
     }
 
     $output .= '
-              </tr>';
+            </tr>';
 
     if ( $core == 1 )
     {
@@ -673,14 +675,16 @@ function view_team()
 
         $accid = $member_char[0];
         $output .= '
-                <tr>';
+              <tr>';
         if ( $user_lvl >= $action_permission["delete"] || $accid == $user_id )
           $output .= '
-                  <td><img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").'\': <font color=white>'.$member[1].'</font><br />'.lang("global", "are_you_sure").'\', \'arenateam.php?action=rem_char_from_team&amp;id='.$member[0].'&amp;arenateam_id='.$arenateam_id.'\');" id="arenateam_delete_cursor" /></td>';
+                <td>
+                  <img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").'\': <spen class=\'color_white\'>'.$member[1].'</span><br />'.lang("global", "are_you_sure").'\', \'arenateam.php?action=rem_char_from_team&amp;id='.$member[0].'&amp;arenateam_id='.$arenateam_id.'\');" id="arenateam_delete_cursor" />
+                </td>';
         else
           $output .= '
-                  <td>&nbsp;
-                  </td>';
+                <td>&nbsp;
+                </td>';
 
         if ( $member[1] )
           $ww_pct = round((10000 * $member[2]) / $member[1]) / 100;
@@ -693,18 +697,18 @@ function view_team()
           $ws_pct = $member[3];
 
         $output .= '
-                  <td><a href="char.php?id='.$member[0].'">'.htmlentities($member_char[1], ENT_COMPAT, $site_encoding).'</a></td>
-                  <td><img src="img/c_icons/'.$member_char[3].'-'.$member_char[7].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member_char[3]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                  <td><img src="img/c_icons/'.$member_char[4].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member_char[4]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                  <td>'.$member[5].'</td>
-                  <td>'.get_days_with_color($member_char[6]).'</td>
-                  <td>'.( ( $member_char[5] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>
-                  <td>'.$member[1].'</td>
-                  <td>'.$member[2].'</td>
-                  <td>'.$ww_pct.'</td>
-                  <td>'.$member[3].'</td>
-                  <td>'.$member[4].'</td>
-                  <td>'.$ws_pct.'</td>';
+                <td><a href="char.php?id='.$member[0].'">'.htmlentities($member_char[1], ENT_COMPAT, $site_encoding).'</a></td>
+                <td><img src="img/c_icons/'.$member_char[3].'-'.$member_char[7].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member_char[3]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+                <td><img src="img/c_icons/'.$member_char[4].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member_char[4]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+                <td>'.$member[5].'</td>
+                <td>'.get_days_with_color($member_char[6]).'</td>
+                <td><img src="img/'.( ( $member_char[5] ) ? 'up' : 'down' ).'.gif" alt="" /></td>
+                <td>'.$member[1].'</td>
+                <td>'.$member[2].'</td>
+                <td>'.$ww_pct.'</td>
+                <td>'.$member[3].'</td>
+                <td>'.$member[4].'</td>
+                <td>'.$ws_pct.'</td>';
 
         if ( $showcountryflag )
         {
@@ -712,11 +716,11 @@ function view_team()
 
           $country = misc_get_country_by_account($member_char[0]);
           $output .= '
-                  <td>'.( (  $country["code"]) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-').'</td>';
+                <td>'.( (  $country["code"]) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-').'</td>';
         }
 
         $output .= '
-                </tr>';
+              </tr>';
       }
     }
     else
@@ -730,14 +734,14 @@ function view_team()
 
         $accid = $member_char["acct"];
         $output .= '
-                <tr>';
+              <tr>';
         if ( $user_lvl >= $action_permission["delete"] || $accid == $user_id )
           $output .= '
-                  <td><img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").'\': <font color=white>'.$member["name"].'</font><br />'.lang("global", "are_you_sure").'\', \'arenateam.php?action=rem_char_from_team&amp;id='.$member["guid"].'&amp;arenateam_id='.$arenateam_id.'\');" class="arenateam_delete_cursor" /></td>';
+                <td><img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").'\': <span class=\'color_white\'>'.$member["name"].'</span><br />'.lang("global", "are_you_sure").'\', \'arenateam.php?action=rem_char_from_team&amp;id='.$member["guid"].'&amp;arenateam_id='.$arenateam_id.'\');" class="arenateam_delete_cursor" /></td>';
         else
           $output .= '
-                  <td>&nbsp;
-                  </td>';
+                <td>&nbsp;
+                </td>';
 
         if ( $member["played_week"] )
           $ww_pct = round((10000 * $member["wons_week"]) / $member["played_week"]) / 100;
@@ -750,18 +754,18 @@ function view_team()
           $ws_pct = $member["played_season"];
 // arena team player structure [player_id] [week_played] [week_win] [season_played] [season_win] [rating]
         $output .= '
-                  <td><a href="char.php?id='.$member["guid"].'">'.htmlentities($member_char["name"], ENT_COMPAT, $site_encoding).'</a></td>
-                  <td><img src="img/c_icons/'.$member_char["race"].'-'.$member_char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member_char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                  <td><img src="img/c_icons/'.$member_char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member_char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
-                  <td>'.$member["personal_rating"].'</td>
-                  <td>'.get_days_with_color($member_char["timestamp"]).'</td>
-                  <td>'.( ( $member_char["online"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>
-                  <td>'.$member["played_week"].'</td>
-                  <td>'.$member["wons_week"].'</td>
-                  <td>'.$ww_pct.'</td>
-                  <td>'.$member["played_season"].'</td>
-                  <td>'.$member["wons_season"].'</td>
-                  <td>'.$ws_pct.'</td>';
+                <td><a href="char.php?id='.$member["guid"].'">'.htmlentities($member_char["name"], ENT_COMPAT, $site_encoding).'</a></td>
+                <td><img src="img/c_icons/'.$member_char["race"].'-'.$member_char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member_char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+                <td><img src="img/c_icons/'.$member_char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member_char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
+                <td>'.$member["personal_rating"].'</td>
+                <td>'.get_days_with_color($member_char["timestamp"]).'</td>
+                <td>'.( ( $member_char["online"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />' ).'</td>
+                <td>'.$member["played_week"].'</td>
+                <td>'.$member["wons_week"].'</td>
+                <td>'.$ww_pct.'</td>
+                <td>'.$member["played_season"].'</td>
+                <td>'.$member["wons_season"].'</td>
+                <td>'.$ws_pct.'</td>';
 
         if ( $showcountryflag )
         {
@@ -769,47 +773,46 @@ function view_team()
 
           $country = misc_get_country_by_account($accid);
           $output .= '
-                  <td>'.( (  $country["code"]) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-').'</td>';
+                <td>'.( (  $country["code"]) ? '<img src="img/flags/'.$country["code"].'.png" onmousemove="oldtoolTip(\''.($country["country"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />' : '-').'</td>';
         }
 
         $output .= '
-                </tr>';
+              </tr>';
       }
     }
 
     $output .= '
-            </table>
-            <br />
-            <table class="hidden">
-              <tr>
-                <td>';
+          </table>
+          <br />
+          <table class="hidden">
+            <tr>
+              <td>';
 
     if ( $user_lvl >= $action_permission["delete"] )
     {
       makebutton(lang("arenateam", "del_team"), "arenateam.php?action=del_team&amp;id=".$arenateam_id."&amp;name=".$arenateam_data["name"]."\" type=\"wrn", 180);
 
       $output .= '
-                </td>
-                <td>';
+              </td>
+              <td>';
 
       makebutton(lang("arenateam", "arenateams"), "arenateam.php\" type=\"def", 130);
 
       $output .= '
-                </td>
-              </tr>';
+              </td>
+            </tr>';
     }
     else
     {
       makebutton(lang("arenateam", "arenateams"), "arenateam.php", 130);
 
       $output .= '
-                </td>
-              </tr>';
+              </td>
+            </tr>';
     }
     $output .= '
-            </table>
-          </div>
-        </center>';
+          </table>
+        </div>';
 
 }
 
@@ -828,13 +831,15 @@ function del_team()
 
   $output .= '
         <center>
-          <h1><font class="error">'.lang("global", "are_you_sure").'</font></h1>
+          <h1><span class="error">'.lang("global", "are_you_sure").'</span></h1>
           <br />
-          <font class="bold">'.lang("arenateam", "arenateam_id").': '.$id.' "'.$_GET["name"].'"<br />'.lang("global", "will_be_erased").'</font>
+          <span class="bold">'.lang("arenateam", "arenateam_id").': '.$id.' "'.$_GET["name"].'"<br />'.lang("global", "will_be_erased").'</span>
           <br />
           <br />
-          <form action="arenateam.php?action=do_del_team" method="post" name="form">
-            <input type="hidden" name="check" value="'.(-$id).'" />
+          <form action="arenateam.php?action=do_del_team" method="post" id="form">
+            <div class="no_display">
+              <input type="hidden" name="check" value="'.(-$id).'" />
+            </div>
             <table class="hidden">
               <tr>
                 <td>';
@@ -917,15 +922,15 @@ switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class="error">'.lang("global", "err_no_search_passed").'</font></h1>';
+          <h1><span class="error">'.lang("global", "err_no_search_passed").'</span></h1>';
      break;
  case 3:
     $output .= '
-          <h1><font class="error">'.lang("arenateam", "arenateam").'</font></h1>';
+          <h1><span class="error">'.lang("arenateam", "arenateam").'</span></h1>';
     break;
   case 4:
     $output .= '

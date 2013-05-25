@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,8 +19,9 @@
 */
 
 
-require_once("header.php");
-require_once("libs/mail_lib.php");
+require_once "header.php";
+require_once "libs/mail_lib.php";
+
 valid_login($action_permission["view"]);
 
 //###########################################################################
@@ -35,175 +36,175 @@ function print_mail_form()
   $type = ( ( isset($_GET["type"]) ) ? $_GET["type"] : "ingame_mail" );
 
   $output .= '
-        <center>
-          <form action="mail.php" method="get" name="form">
+        <form action="mail.php" method="get" id="form">
+          <div>
             <input type="hidden" name="action" value="send_mail" />
             <input type="hidden" name="type" value="'.$type.'" />
-            <div class="tab">
-              <ul>
-                <li '.( ( $type == "ingame_mail" ) ? 'class="selected"' : '' ).'><a href="mail.php?to='.$to.'&amp;type=ingame_mail">'.lang("mail", "ingame_mail").'</a></li>
-                <li '.( ( $type == "email" ) ? 'class="selected"' : '' ).'><a href="mail.php?to='.$to.'&amp;type=email">'.lang("mail", "email").'</a></li>
-              </ul>
-            </div>
-            <div class="tab_content">
-              <div id="mail_type_field" class="fieldset_border">
-                <span class="legend">'.lang("mail", "mail_type").'</span>
-                <table class="top_hidden" id="mail_type">
-                  <tr>
-                    <td align="left">'.lang("mail", "recipient").': 
-                      <input type="text" name="to" size="32" value="'.$to.'" maxlength="225" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">
-                      <hr />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">'.lang("mail", "dont_use_both_groupsend_and_to").'</td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">'.lang("mail", "group_send").':
-                      <select name="group_send">
-                          <option value="gm_level">'.lang("mail", "gm_level").'</option>';
+          </div>
+          <div class="tab">
+            <ul>
+              <li '.( ( $type == "ingame_mail" ) ? 'class="selected"' : '' ).'><a href="mail.php?to='.$to.'&amp;type=ingame_mail">'.lang("mail", "ingame_mail").'</a></li>
+              <li '.( ( $type == "email" ) ? 'class="selected"' : '' ).'><a href="mail.php?to='.$to.'&amp;type=email">'.lang("mail", "email").'</a></li>
+            </ul>
+          </div>
+          <div class="tab_content center">
+            <div id="mail_type_field" class="fieldset_border">
+              <span class="legend">'.lang("mail", "mail_type").'</span>
+              <table class="top_hidden" id="mail_type">
+                <tr>
+                  <td align="left">'.lang("mail", "recipient").': 
+                    <input type="text" name="to" size="32" value="'.$to.'" maxlength="225" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <hr />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">'.lang("mail", "dont_use_both_groupsend_and_to").'</td>
+                </tr>
+                <tr>
+                  <td colspan="3">'.lang("mail", "group_send").':
+                    <select name="group_send">
+                        <option value="gm_level">'.lang("mail", "gm_level").'</option>';
 
   if ( $type == "email" )
     $output .= '
-                          <option value="locked">'.lang("mail", "locked_accouns").'</option>
-                          <option value="banned">'.lang("mail", "banned_accounts").'</option>';
+                        <option value="locked">'.lang("mail", "locked_accouns").'</option>
+                        <option value="banned">'.lang("mail", "banned_accounts").'</option>';
 
   if ( $type == "ingame_mail" )
     $output .= '
-                          <option value="char_level">'.lang("mail", "char_level").'</option>
-                          <option value="online">'.lang("mail", "online").'</option>';
+                        <option value="char_level">'.lang("mail", "char_level").'</option>
+                        <option value="online">'.lang("mail", "online").'</option>';
 
   $output .= '
-                      </select>
-                      <select name="group_sign">
-                        <option value="=">=</option>
-                        <option value="&lt;">&lt;</option>
-                        <option value=">">&gt;</option>
-                        <option value="!=">!=</option>
-                      </select>
-                      <input type="text" name="group_value" size="20" maxlength="40" />
-                    </td>
-                  </tr>';
+                    </select>
+                    <select name="group_sign">
+                      <option value="=">=</option>
+                      <option value="&lt;">&lt;</option>
+                      <option value=">">&gt;</option>
+                      <option value="!=">!=</option>
+                    </select>
+                    <input type="text" name="group_value" size="20" maxlength="40" />
+                  </td>
+                </tr>';
 
   if ( $type == "ingame_mail" )
   {
     $output .= '
-                  <tr>
-                    <td colspan="3">
-                      <hr />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3" align="left">'.lang("mail", "attachments").':</td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">'
-                      .lang("mail", "money").': <input type="text" name="money" value="0" size="10" maxlength="10" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="3">
-                      <table class="top_hidden" id="mail_items">
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item1" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack1" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item2" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack2" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item3" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack3" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item4" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack4" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item5" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack5" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item6" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack6" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item7" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack7" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item8" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack8" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item9" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack9" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item10" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack10" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item11" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack11" value="0" size="10" maxlength="10" />
-                          </td>
-                          <td>'
-                            .lang("mail", "item").': <input type="text" name="att_item12" value="0" size="10" maxlength="10" />'
-                            .lang("mail", "stack").': <input type="text" name="att_stack12" value="0" size="10" maxlength="10" />
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>';
+                <tr>
+                  <td colspan="3">
+                    <hr />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3" align="left">'.lang("mail", "attachments").':</td>
+                </tr>
+                <tr>
+                  <td colspan="3">'
+                    .lang("mail", "money").': <input type="text" name="money" value="0" size="10" maxlength="10" />
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="3">
+                    <table class="top_hidden" id="mail_items">
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item1" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack1" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item2" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack2" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item3" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack3" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item4" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack4" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item5" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack5" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item6" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack6" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item7" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack7" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item8" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack8" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item9" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack9" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item10" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack10" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item11" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack11" value="0" size="10" maxlength="10" />
+                        </td>
+                        <td>'
+                          .lang("mail", "item").': <input type="text" name="att_item12" value="0" size="10" maxlength="10" />'
+                          .lang("mail", "stack").': <input type="text" name="att_stack12" value="0" size="10" maxlength="10" />
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>';
   }
 
   $output .= '
-                </table>
-                <br />
-              </div>
-              <div id="mail_body_field" class="fieldset_border">
-                <span class="legend">'.lang("mail", "mail_body").'</span>
-                <table class="top_hidden" id="mail_body_table">
-                  <tr>
-                    <td align="left">'.lang("mail", "subject").': 
-                      <input type="text" name="subject" size="32" maxlength="50" />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <textarea name="body" rows="14" cols="92" id="mail_body"></textarea>
-                    </td>
-                  </tr>
-                </table>
-                <table>
-                  <tr>
-                    <td>';
+              </table>
+              <br />
+            </div>
+            <div id="mail_body_field" class="fieldset_border">
+              <span class="legend">'.lang("mail", "mail_body").'</span>
+              <table class="top_hidden" id="mail_body_table">
+                <tr>
+                  <td align="left">'.lang("mail", "subject").': 
+                    <input type="text" name="subject" size="32" maxlength="50" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <textarea name="body" rows="14" cols="92" id="mail_body"></textarea>
+                  </td>
+                </tr>
+              </table>
+              <table>
+                <tr>
+                  <td>';
   makebutton(lang("mail", "send"), "javascript:do_submit()",130);
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-              </div>
+                  </td>
+                </tr>
+              </table>
             </div>
             <br />
-          </form>
-        </center>';
+          </div>
+        </form>';
 }
 
 
@@ -269,8 +270,9 @@ function send_mail()
   {
     case "email":
     {
-      require_once("libs/mailer/class.phpmailer.php");
-      require_once("libs/mailer/authgMail_lib.php");
+      require_once "libs/mailer/class.phpmailer.php";
+      require_once "libs/mailer/authgMail_lib.php";
+
       $mail = new PHPMailer();
       $mail->Mailer = $mailer_type;
       if ( $mailer_type == "smtp" )
@@ -545,7 +547,7 @@ function result()
     }
   }
   $output .= '
-        <center>
+        <div class="center">
           <br />
           <table width="400" class="flat">
             <tr>
@@ -566,7 +568,7 @@ function result()
             </tr>
           </table>
           <br />
-        </center>';
+        </div>';
 }
 
 
@@ -583,30 +585,30 @@ switch ( $err )
 {
   case 1:
     $output .= '
-          <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+          <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
     break;
   case 2:
     $output .= '
-          <h1><font class="error">'.lang("mail", "mail_sent").'</font></h1>';
+          <h1><span class="error">'.lang("mail", "mail_sent").'</span></h1>';
     break;
   case 3:
     $mail_err = ( ( isset($_GET["mail_err"]) ) ? $_GET["mail_err"] : NULL );
     $output .= '
-          <h1><font class="error">'.lang("mail", "mail_err").': '.$mail_err.'</font></h1>';
+          <h1><span class="error">'.lang("mail", "mail_err").': '.$mail_err.'</span></h1>';
     break;
   case 4:
     $output .= '
-          <h1><font class=\"error">'.lang("mail", "no_recipient_found").'</font></h1>'
+          <h1><span class=\"error">'.lang("mail", "no_recipient_found").'</span></h1>'
           .lang("mail", "use_name_or_email");
     break;
   case 5:
     $output .= '
-          <h1><font class="error">'.lang("mail", "option_unavailable").'</font></h1>'
+          <h1><span class="error">'.lang("mail", "option_unavailable").'</span></h1>'
           .lang("mail", "use_currect_option");
     break;
   case 6:
     $output .= '
-          <h1><font class="error">'.lang("mail", "result").'</font></h1>';
+          <h1><span class="error">'.lang("mail", "result").'</span></h1>';
     break;
   default: //no error
     $output .= '
@@ -634,6 +636,6 @@ switch ( $action )
 unset($action);
 unset($action_permission);
 
-require_once("footer.php");
+require_once "footer.php";
 
 ?>

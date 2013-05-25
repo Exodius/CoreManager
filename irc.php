@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -21,18 +21,19 @@
 
 // page header, and any additional required libraries
 require_once 'header.php';
+
 // minimum permission to view page
 valid_login($action_permission["view"]);
 
-if (file_exists('lang/irc/'.$lang.'.lang') && file_exists('lang/irc/pixx-'.$lang.'.lang'))
+if ( file_exists('lang/irc/'.$lang.'.lang') && file_exists('lang/irc/pixx-'.$lang.'.lang') )
   $irclang = $lang;
 else
   $irclang = 'english';
 
-if (substr($irc_cfg["channel"],0,1) == '#')
+if ( substr($irc_cfg["channel"],0,1) == '#' )
   $irc_cfg["channel"] = substr($irc_cfg["channel"], 1, strlen($irc_cfg["channel"]));
 
-if (!$_SESSION["screenname"])
+if ( !$_SESSION["screenname"] )
   $u_name = $user_name;
 else
   $u_name = $_SESSION["screenname"];
@@ -73,7 +74,8 @@ $output .= '
               <param name="pixx:color12" value="d4d4d4" />
               <param name="command1" value="/join #'.$irc_cfg["channel"].'" />
             </applet>
-            <br /><br />
+            <br />
+            <br />
           </center>
           <!-- end of irc.php -->';
 

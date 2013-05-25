@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@
 */
 
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+require_once "header.php";
+require_once "libs/char_lib.php";
+
 valid_login($action_permission["view"]);
 
 
@@ -34,22 +35,23 @@ function sel_char()
   valid_login($action_permission["view"]);
 
   $output .= '
-          <center>
-            <div id="xname_fieldset" class="fieldset_border">
-              <span class="legend">'.lang("xacct", "selectchar").'</span>
-              <span class="xname_info">'.lang("xacct", "info").'</span>
-              <br />
-              <br />
-              <form method="GET" action="change_char_account.php" name="form">
+          <div id="xname_fieldset" class="fieldset_border center center_text">
+            <span class="legend">'.lang("xacct", "selectchar").'</span>
+            <span class="xname_info">'.lang("xacct", "info").'</span>
+            <br />
+            <br />
+            <form method="get" action="change_char_account.php" id="form">
+              <div>
                 <input type="hidden" name="action" value="chooseacct" />
-                <table class="lined" id="xname_char_table">
-                  <tr>
-                    <th class="xname_radio">&nbsp;</th>
-                    <th class="xname_name">'.lang("xacct", "char").'</th>
-                    <th class="xname_LRC">'.lang("xacct", "lvl").'</th>
-                    <th class="xname_LRC">'.lang("xacct", "race").'</th>
-                    <th class="xname_LRC">'.lang("xacct", "class").'</th>
-                  </tr>';
+              </div>
+              <table class="lined" id="xname_char_table">
+                <tr>
+                  <th class="xname_radio">&nbsp;</th>
+                  <th class="xname_name">'.lang("xacct", "char").'</th>
+                  <th class="xname_LRC">'.lang("xacct", "lvl").'</th>
+                  <th class="xname_LRC">'.lang("xacct", "race").'</th>
+                  <th class="xname_LRC">'.lang("xacct", "class").'</th>
+                </tr>';
 
   if ( $core == 1 )
     $chars = $sql["char"]->query("SELECT * FROM characters WHERE acct='".$user_id."' AND guid NOT IN (SELECT guid FROM ".$corem_db["name"].".char_changes)");
@@ -59,34 +61,31 @@ function sel_char()
   while ( $char = $sql["char"]->fetch_assoc($chars) )
   {
     $output .= '
-                  <tr>
-                    <td>
-                      <input type="radio" name="char" value="'.$char["guid"].'"/>
-                    </td>
-                    <td>'.$char["name"].'</td>
-                    <td>'.char_get_level_color($char["level"]).'</td>
-                    <td>
-                      <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                    </td>
-                    <td>
-                      <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
-                    </td>
-                  </tr>';
+                <tr>
+                  <td>
+                    <input type="radio" name="char" value="'.$char["guid"].'"/>
+                  </td>
+                  <td>'.$char["name"].'</td>
+                  <td>'.char_get_level_color($char["level"]).'</td>
+                  <td>
+                    <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                  </td>
+                  <td>
+                    <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                  </td>
+                </tr>';
   }
 
   $output .= '
-                  <tr>
-                    <td class="hidden" colspan="5">';
+                <tr>
+                  <td class="hidden" colspan="5">';
   makebutton(lang("xacct", "selectchar"), "javascript:do_submit()",180);
   $output .= '
-                    </td>
-                  </tr>
-                </table>
-                <br />
-              </form>
-            </div>
-          </center>
-          <br />';
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </div>';
 }
 
 
@@ -137,29 +136,36 @@ function chooseacct()
   }
 
   $output .= '
-          <center>
-            <div id="xname_choose" class="fieldset_border">
-              <span class="legend">'.lang("xacct", "chooseacct").'</span>
-              <form method="get" action="change_char_account.php" name="form">
+          <div id="xname_fieldset" class="fieldset_border center">
+            <span class="legend">'.lang("xacct", "chooseacct").'</span>
+            <form method="get" action="change_char_account.php" id="form">
+              <div>
                 <input type="hidden" name="action" value="'.( ( $priority != 1 ) ? 'getapproval' : 'direct' ).'" />
                 <input type="hidden" name="guid" value="'.$char["guid"].'" />
-                <table id="xname_char_table">
-                  <tr>
-                    <td rowspan="4"><img src="'.char_get_avatar_img($char["level"], $char["gender"],  $char["race"],  $char["class"]).'" alt="" /></td>
-                    <td><span class="xname_char_name">'.$char["name"].'</span></td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xacct", "level").': '.$char["level"].'</td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xacct", "race").': '.char_get_race_name($char["race"]).'</td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xacct", "class").': '.char_get_class_name($char["class"]).'</td>
-                  </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                  </tr>';
+              </div>
+              <table id="xname_char_table" class="center">
+                <tr>
+                  <td rowspan="4" style="width: 170px;">
+                    <div style="width: 64px; margin-left: auto; margin-right: auto;">
+                      <img src="'.char_get_avatar_img($char["level"], $char["gender"],  $char["race"],  $char["class"]).'" alt="" />
+                    </div>
+                  </td>
+                  <td>
+                    <span class="xname_char_name">'.$char["name"].'</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.lang("xacct", "level").': '.$char["level"].'</td>
+                </tr>
+                <tr>
+                  <td>'.lang("xacct", "race").': '.char_get_race_name($char["race"]).'</td>
+                </tr>
+                <tr>
+                  <td>'.lang("xacct", "class").': '.char_get_class_name($char["class"]).'</td>
+                </tr>
+                <tr>
+                  <td>&nbsp;</td>
+                </tr>';
 
   if ( $transfer_credits > 0 )
   {
@@ -167,9 +173,9 @@ function chooseacct()
     $cost_line = str_replace("%1", '<b>'.$transfer_credits.'</b>', $cost_line);
 
     $output .= '
-                  <tr>
-                    <td colspan="2">'.$cost_line.'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.$cost_line.'</td>
+                </tr>';
 
     if ( $credits >= 0 )
     {
@@ -177,49 +183,49 @@ function chooseacct()
       $credit_balance = str_replace("%1", '<b>'.(float)$credits.'</b>', $credit_balance);
 
       $output .= '
-                  <tr>
-                    <td colspan="2">'.$credit_balance.'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.$credit_balance.'</td>
+                </tr>';
 
       if ( $credits < $transfer_credits )
         $output .= '
-                  <tr>
-                    <td colspan="2">'.lang("xacct", "insufficient_credits").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.lang("xacct", "insufficient_credits").'</td>
+                </tr>';
       else
         $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td colspan="2">'.lang("xacct", "delay_warning").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="2">'.lang("xacct", "delay_warning").'</td>
+                </tr>';
     }
     else
       $output .= '
-                  <tr>
-                    <td colspan="2">'.lang("global", "credits_unlimited").'</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">'.lang("global", "credits_unlimited").'</td>
+                </tr>';
 
     $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>';
   }
 
   $output .= '
-                  <tr>
-                    <td colspan="2"><b>'.lang("xacct", "enteracct").':</b></td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xacct", "newacct").':</td>
-                    <td>
-                      <select name="new">';
+                <tr>
+                  <td colspan="2"><b>'.lang("xacct", "enteracct").':</b></td>
+                </tr>
+                <tr>
+                  <td>'.lang("xacct", "newacct").':</td>
+                  <td>
+                    <select name="new">';
 
   while ( $row = $sql["logon"]->fetch_assoc($accts) )
   {
     $output .= '
-                        <option value="'.$row["acct"].'">';
+                      <option value="'.$row["acct"].'">';
     // GM's see account name
     // Players see Screen Name if available
     if ( $user_lvl < 4 )
@@ -233,17 +239,19 @@ function chooseacct()
       $output .= $row["login"];
 
     $output .= '
-                        </option>';
+                      </option>';
   }
 
   $output .= '
-                      </select>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>'.lang("xacct", "newacct1").':</td>
-                    <td><input type="text" name="new1" value="" /></td>
-                  </tr>';
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>'.lang("xacct", "newacct1").':</td>
+                  <td>
+                    <input type="text" name="new1" value="" style="width: 110px;" />
+                  </td>
+                </tr>';
 
     // if we have unlimited credits, then we fake our credit balance here
     $credits = ( ( $credits < 0 ) ? $transfer_credits : $credits );
@@ -251,23 +259,22 @@ function chooseacct()
     if ( ( $transfer_credits <= 0 ) || ( $credits >= $transfer_credits ) )
     {
       $output .= '
-                  <tr>
-                    <td colspan="2">&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td>';
+                <tr>
+                  <td colspan="2">&nbsp;</td>
+                </tr>
+                <tr>
+                  <td colspan="2">';
       makebutton(lang("xacct", "save"), "javascript:do_submit()", 180);
       $output .= '
-                    </td>
-                    <td>&nbsp;</td>
-                  </tr>';
+                  </td>
+                  <td>&nbsp;</td>
+                </tr>';
     }
 
     $output .= '
-                </table>
-              </form>
-            </div>
-          </center>
+              </table>
+            </form>
+          </div>
           <br />';
 }
 
@@ -494,19 +501,19 @@ $output .= '
 
 if ( $err == 1 )
   $output .= '
-            <h1><font class="error">'.lang("global", "empty_fields").'</font></h1>';
+            <h1><span class="error">'.lang("global", "empty_fields").'</span></h1>';
 elseif ( $err == 2 )
   $output .= '
-            <h1><font class="error">'.lang("xacct", "nomatch").'</font></h1>';
+            <h1><span class="error">'.lang("xacct", "nomatch").'</span></h1>';
 elseif ( $err == 3 )
   $output .= '
-            <h1><font class="error">'.lang("xacct", "already").'</font></h1>';
+            <h1><span class="error">'.lang("xacct", "already").'</span></h1>';
 elseif ( $err == 4 )
   $output .= '
             <h1>'.lang("xacct", "done").'</h1>';
 elseif ( $err == 6 )
   $output .= '
-            <h1><font class="error">'.lang("xacct", "insufficient_credits").'</font></h1>';
+            <h1><span class="error">'.lang("xacct", "insufficient_credits").'</span></h1>';
 else
   $output .= '
             <h1>'.lang("xacct", "changename").'</h1>';
@@ -518,15 +525,15 @@ $output .= '
 
 $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
 
-if ( $action == 'chooseacct' )
+if ( $action == "chooseacct" )
   chooseacct();
-elseif ( $action == 'getapproval' )
+elseif ( $action == "getapproval" )
   getapproval();
-elseif ( $action == 'denied' )
+elseif ( $action == "denied" )
   denied();
-elseif ( $action == 'approve' )
+elseif ( $action == "approve" )
   saveacct();
-elseif ( $action == 'direct' )
+elseif ( $action == "direct" )
   saveacct_direct();
 else
   sel_char();
@@ -534,7 +541,7 @@ else
 unset($action);
 unset($action_permission);
 
-require_once 'footer.php';
+require_once "footer.php";
 
 
 ?>

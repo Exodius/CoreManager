@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 */
 
 
-require_once("header.php");
+require_once "header.php" ;
 
 //#####################################################################################################
 // DO REGISTER
@@ -529,17 +529,18 @@ function register()
 
   $output .= '
     <center>
-      <script type="text/javascript" src="libs/js/sha1.js">
-      </script>
+      <script type="text/javascript" src="libs/js/sha1.js"></script>
       <script type="text/javascript">
         function do_submit_data ()
         {
-          if (document.form.pass1.value != document.form.pass2.value)
+          var myForm = document.getElementById("form");
+
+          if ( myForm.pass1.value != myForm.pass2.value )
           {
             alert("'.lang("register", "diff_pass_entered").'");
             return;
           }
-          else if (document.form.pass1.value.length > 225)
+          else if ( myForm.pass1.value.length > 225 )
           {
             alert("'.lang("register", "pass_too_long").'");
             return;
@@ -550,16 +551,16 @@ function register()
   {
     if ( $arc_encrypted )
       $output .= '
-            document.form.pass.value = hex_sha1(document.form.username.value.toUpperCase()+":"+document.form.pass1.value.toUpperCase());';
+            myForm.pass.value = hex_sha1(myForm.username.value.toUpperCase() + ":" + myForm.pass1.value.toUpperCase());';
     else
       $output .= '
-            document.form.pass.value = document.form.pass1.value;';
+            myForm.pass.value = myForm.pass1.value;';
   }
   else
     $output .= '
-            document.form.pass.value = hex_sha1(document.form.username.value.toUpperCase()+":"+document.form.pass1.value.toUpperCase());';
+            myForm.pass.value = hex_sha1(myForm.username.value.toUpperCase() + ":" + myForm.pass1.value.toUpperCase());';
   $output .= '
-            document.form.pass2.value = "******";
+            myForm.pass2.value = "******";
             do_submit();
           }
         }
@@ -569,7 +570,7 @@ function register()
       </script>
       <div class="half_frame fieldset_border">
         <span class="legend">'.lang("register", "create_acc").'</span>
-        <form method="post" action="register.php?action=doregister" name="form">
+        <form method="post" action="register.php?action=doregister" id="form">
           <input type="hidden" name="pass" value="" maxlength="256" />';
 
   if ( $disable_reg_invite )
@@ -610,6 +611,9 @@ function register()
             <tr>
               <td valign="top">'.lang("register", "password").':</td>
               <td>
+                <!-- Firefox will try to autocomplete password fields, since this isn’t the login page we don’t want this functionality. -->
+                <!-- This non-displaying field will be filled in but the user won’t see it -->
+                <input style="display:none" type="password" name="foilautofill" />
                 <input type="password" name="pass1" id="reg_pass1" maxlength="25" />
               </td>
             </tr>
@@ -795,7 +799,7 @@ function pass_recovery()
     <center>
       <div class="half_frame fieldset_border">
       <span class="legend">'.lang("register", "recover_acc_password".( ( $core == 1 ) ? "A" : "MT" )).'</span>
-      <form method="post" action="register.php?action=do_pass_recovery" name="form">
+      <form method="post" action="register.php?action=do_pass_recovery" id="form">
         <table class="flat">
           <tr>
             <td valign="top">'.lang("register", "username").' :</td>

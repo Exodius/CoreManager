@@ -538,6 +538,7 @@ $GLOBALS['lang_char'] = array
   'games' => 'Games',
   'winloss' => 'Win - Loss',
   'played' => 'Played',
+  'ratio' => 'Ratio',
   'thisweek' => 'This Week',
   'thisseason' => 'This Season',
   // ---- char_tools.php ----
@@ -1649,6 +1650,7 @@ $GLOBALS['lang_xrace'] = array
   'chooserace' => 'Neue Charakterrasse auswählen',
   'enterrace' => 'W&auml;hle nachfolgend deine gew&uuml;nschte Rasse aus',
   'newrace' => 'Neue Charakterrasse',
+  'no_races' => 'There are no other races available to this character',
   'confirmname' => 'Confirm New Name',
   'save' => '&Auml;nderungen Speichern',
   // The following is the message that asks GMs permission to change the character's race

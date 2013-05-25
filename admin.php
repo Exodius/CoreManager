@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -24,10 +24,10 @@ $time_start = microtime(true);
 if ( !ini_get("session.auto_start") )
   session_start();
 
-require_once("configs/config.php");
-require_once("libs/config_lib.php");
-require_once("admin/admin_lib.php");
-require_once("libs/lang_lib.php");
+require_once "configs/config.php";
+require_once "libs/config_lib.php";
+require_once "admin/admin_lib.php";
+require_once "libs/lang_lib.php";
 
 valid_login_webadmin(0);
 
@@ -96,7 +96,7 @@ $err = ( ( isset($_GET["error"]) ) ? $_GET["error"] : NULL );
 
 $output .= '
         <div class="top">
-          <center>
+          <div id="header_title">
             <h1>'.lang("admin", "title").'</h1>';
 
 switch ( $err )
@@ -118,19 +118,19 @@ switch ( $err )
     if ( $current != "ERROR" )
       $output .= '
             <h1>
-              <font class="error">'.lang("admin", "newer_revision").' '.lang("admin", "current_rev").': '.$current.'; '.lang("admin", "latest_rev").': '.$latest.'</font>
+              <span class="error">'.lang("admin", "newer_revision").' '.lang("admin", "current_rev").': '.$current.'; '.lang("admin", "latest_rev").': '.$latest.'</span>
             </h1>';
     else
       $output .= '
             <h1>
-              <font class="error">'.lang("admin", "missing_svn").'</font>
+              <span class="error">'.lang("admin", "missing_svn").'</span>
             </h1>';
     break;
   }
   case 4:
     $output .= '
             <h1>
-              <font class="error">'.lang("admin", "dbc_warn").'</font>
+              <span class="error">'.lang("admin", "dbc_warn").'</span>
             </h1>';
     break;
   default:
@@ -139,10 +139,8 @@ switch ( $err )
 }
 
 $output .= '
-          </center>
-        </div>
-        <br />
-        <br />';
+          </div>
+        </div>';
 
 unset($err);
 
@@ -151,23 +149,23 @@ $action = ( ( isset($_GET["action"]) ) ? $_GET["action"] : NULL );
 switch ( $action )
 {
   case "savedbs":
-    require_once("admin/admin_databases_lib.php");
+    require_once "admin/admin_databases_lib.php";
     savedbs();
     break;
   case "saveserver":
-    require_once("admin/admin_servers_lib.php");
+    require_once "admin/admin_servers_lib.php";
     saveserver();
     break;
   case "saveacct":
-    require_once("admin/admin_accounts_lib.php");
+    require_once "admin/admin_accounts_lib.php";
     saveacct();
     break;
   case "savemenu":
-    require_once("admin/admin_menus_lib.php");
+    require_once "admin/admin_menus_lib.php";
     savemenu();
     break;
   case "saveforum":
-    require_once("admin/admin_forum_lib.php");
+    require_once "admin/admin_forum_lib.php";
     saveforum();
     break;
 }
@@ -177,34 +175,34 @@ $section = ( ( isset($_GET["section"]) ) ? $_GET["section"] : NULL );
 switch ( $section )
 {
   case "databases":
-    require_once("admin/admin_databases_lib.php");
+    require_once "admin/admin_databases_lib.php";
     database();
     break;
   case "servers":
-    require_once("admin/admin_servers_lib.php");
+    require_once "admin/admin_servers_lib.php";
     servers();
     break;
   case "menus":
-    require_once("admin/admin_menus_lib.php");
+    require_once "admin/admin_menus_lib.php";
     menus();
     break;
   case "forum":
-    require_once("admin/admin_forum_lib.php");
+    require_once "admin/admin_forum_lib.php";
     forum();
     break;
   case "accounts":
-    require_once("admin/admin_accounts_lib.php");
+    require_once "admin/admin_accounts_lib.php";
     accounts();
     break;
   case "pointsystem":
-    require_once("admin/admin_pointsystem_lib.php");
+    require_once "admin/admin_pointsystem_lib.php";
     pointsystem();
     break;
   default:
-    require_once("admin/admin_general_lib.php");
+    require_once "admin/admin_general_lib.php";
     general();
     break;
 }
 
-require_once("admin/footer.php");
+require_once "admin/footer.php";
 ?>

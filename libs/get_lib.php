@@ -84,19 +84,19 @@ function get_days_with_color($how_long)
   $days = count_days($how_long, time());
 
   if ( $days < 1 )
-    $lastlogin = '<font color="#009900">'.$days.'</font>';
+    $lastlogin = '<span style="color: #009900;">'.$days.'</span>';
   elseif ( $days < 8 )
-    $lastlogin = '<font color="#0000CC">'.$days.'</font>';
+    $lastlogin = '<span style="color: #0000CC;">'.$days.'</span>';
   elseif ( $days < 15 )
-    $lastlogin = '<font color="#FFFF00">'.$days.'</font>';
+    $lastlogin = '<span style="color: #FFFF00;">'.$days.'</span>';
   elseif ( $days < 22 )
-    $lastlogin = '<font color="#FF8000">'.$days.'</font>';
+    $lastlogin = '<span style="color: #FF8000;">'.$days.'</span>';
   elseif ( $days < 29 )
-    $lastlogin = '<font color="#FF0000">'.$days.'</font>';
+    $lastlogin = '<span style="color: #FF0000;">'.$days.'</span>';
   elseif ( $days < 61 )
-    $lastlogin = '<font color="#FF00FF">'.$days.'</font>';
+    $lastlogin = '<span style="color: #FF00FF;">'.$days.'</span>';
   else
-    $lastlogin = '<font color="#FF0000">'.$days.'</font>';
+    $lastlogin = '<span style="color: #FF0000;">'.$days.'</span>';
 
   return $lastlogin;
 }

@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -31,10 +31,14 @@ function database()
   $world_dbs = $sqlm->query("SELECT * FROM config_world_databases");
 
   $output .= '
-        <span style="color:red">'.lang("admin", "db_warn").'</span>
-        <form name="form" action="admin.php" method="get">
-          <input type="hidden" name="section" value="databases" />
-          <input type="hidden" name="action" value="savedbs" />
+        <div>
+          <span style="color:red">'.lang("admin", "db_warn").'</span>
+        </div>
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="databases" />
+            <input type="hidden" name="action" value="savedbs" />
+          </div>
           <table>
             <tr>
               <td>
@@ -47,21 +51,21 @@ function database()
                       </td>
                     </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "host").': </td>
+                      <td style="width: 75px;">'.lang("admin", "host").': </td>
                       <td>
                         <input type="text" name="host" value="'.$dbc_db["Address"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "port").': </td>
+                      <td style="width: 75px;">'.lang("admin", "port").': </td>
                       <td>
                         <input type="text" name="port" value="'.$dbc_db["Port"].'" size="10%" />
                       </td>
                     </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "user").': </td>
+                      <td style="width: 75px;">'.lang("admin", "user").': </td>
                       <td>
                         <input type="text" name="user" value="'.$dbc_db["User"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "pass").': </td>
+                      <td style="width: 75px;">'.lang("admin", "pass").': </td>
                       <td>
                         <input type="text" name="pass" value="'.$dbc_db["Password"].'" size="10%" />
                       </td>
@@ -80,32 +84,12 @@ function database()
                 <fieldset class="admin_editdb_field">
                   <legend>'.lang("admin", "arcm").'</legend>
                   <table>
-                    <!-- tr>
-                      <td width="75px">'.lang("admin", "host").': </td>
-                      <td>
-                        <input type="text" name="dbc_host" value="'.$dbc_db["Address"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "port").': </td>
-                      <td>
-                        <input type="text" name="dbc_port" value="'.$dbc_db["Port"].'" size="10%" />
-                      </td>
-                    </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "user").': </td>
-                      <td>
-                        <input type="text" name="dbc_user" value="'.$dbc_db["User"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "pass").': </td>
-                      <td>
-                        <input type="text" name="dbc_pass" value="'.$dbc_db["Password"].'" size="10%" />
-                      </td>
-                    </tr -->
-                    <tr>
-                      <td width="75px">'.lang("admin", "name").': </td>
+                      <td style="width: 75px;">'.lang("admin", "name").': </td>
                       <td>
                         <input type="text" name="dbc_name" value="'.$dbc_db["Name"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "db_enc").': </td>
+                      <td style="width: 75px;">'.lang("admin", "db_enc").': </td>
                       <td>
                         <input type="text" name="dbc_encoding" value="'.$dbc_db["Encoding"].'" size="10%" />
                       </td>
@@ -117,32 +101,12 @@ function database()
                 <fieldset class="admin_editdb_field">
                   <legend>'.lang("admin", "logon").'</legend>
                   <table>
-                    <!-- tr>
-                      <td width="75px">'.lang("admin", "host").': </td>
-                      <td>
-                        <input type="text" name="logon_host" value="'.$logon_db["Address"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "port").': </td>
-                      <td>
-                        <input type="text" name="logon_port" value="'.$logon_db["Port"].'" size="10%" />
-                      </td>
-                    </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "user").': </td>
-                      <td>
-                        <input type="text" name="logon_user" value="'.$logon_db["User"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "pass").': </td>
-                      <td>
-                        <input type="text" name="logon_pass" value="'.$logon_db["Password"].'" size="10%" />
-                      </td>
-                    </tr -->
-                    <tr>
-                      <td width="75px">'.lang("admin", "name").': </td>
+                      <td style="width: 75px;">'.lang("admin", "name").': </td>
                       <td>
                         <input type="text" name="logon_name" value="'.$logon_db["Name"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "db_enc").': </td>
+                      <td style="width: 75px;">'.lang("admin", "db_enc").': </td>
                       <td>
                         <input type="text" name="logon_encoding" value="'.$logon_db["Encoding"].'" size="10%" />
                       </td>
@@ -170,38 +134,18 @@ function database()
                 <fieldset class="admin_editdb_field">
                   <legend>'.lang("admin", "char").' ('.lang("admin", "realm").' '.$char["Index"].')</legend>
                   <table>
-                    <!-- tr>
-                      <td width="75px">'.lang("admin", "host").': </td>
-                      <td>
-                        <input type="text" name="char_host[]" value="'.$char["Address"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "port").': </td>
-                      <td>
-                        <input type="text" name="char_port[]" value="'.$char["Port"].'" size="10%" />
-                      </td>
-                    </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "user").': </td>
-                      <td>
-                        <input type="text" name="char_user[]" value="'.$char["User"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "pass").': </td>
-                      <td>
-                        <input type="text" name="char_pass[]" value="'.$char["Password"].'" size="10%" />
-                      </td>
-                    </tr -->
-                    <tr>
-                      <td width="75px">'.lang("admin", "name").': </td>
+                      <td style="width: 75px;">'.lang("admin", "name").': </td>
                       <td>
                         <input type="text" name="char_name[]" value="'.$char["Name"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "db_enc").': </td>
+                      <td style="width: 75px;">'.lang("admin", "db_enc").': </td>
                       <td>
                         <input type="text" name="char_encoding[]" value="'.$char["Encoding"].'" size="10%" />
                       </td>
                     </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "realm").': </td>
+                      <td style="width: 75px;">'.lang("admin", "realm").': </td>
                       <td>
                         <input type="text" name="char_new_realm[]" value="'.$char["Index"].'" size="10%" />
                       </td>
@@ -233,38 +177,18 @@ function database()
                 <fieldset class="admin_editdb_field">
                   <legend>'.lang("admin", "world").' ('.lang("admin", "realm").' '.$world["Index"].')</legend>
                   <table>
-                    <!-- tr>
-                      <td width="75px">'.lang("admin", "host").': </td>
-                      <td>
-                        <input type="text" name="world_host[]" value="'.$world["Address"].'" size="10%" />
-                      </td>
-                      <td width="75px">'.lang("admin", "port").': </td>
-                      <td>
-                        <input type="text" name="world_port[]" value="'.$world["Port"].'" size="10%" />
-                      </td>
-                    </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "user").': </td>
-                      <td>
-                        <input type="text" name="world_user[]" value="'.$world["User"].'" size="10%" />
-                      </td>
-                      <td>'.lang("admin", "pass").': </td>
-                      <td>
-                        <input type="text" name="world_pass[]" value="'.$world["Password"].'" size="10%" />
-                      </td>
-                    </tr -->
-                    <tr>
-                      <td width="75px">'.lang("admin", "name").': </td>
+                      <td style="width: 75px;">'.lang("admin", "name").': </td>
                       <td>
                         <input type="text" name="world_name[]" value="'.$world["Name"].'" size="10%" />
                       </td>
-                      <td width="75px">'.lang("admin", "db_enc").': </td>
+                      <td style="width: 75px;">'.lang("admin", "db_enc").': </td>
                       <td>
                         <input type="text" name="world_encoding[]" value="'.$world["Encoding"].'" size="10%" />
                       </td>
                     </tr>
                     <tr>
-                      <td width="75px">'.lang("admin", "realm").': </td>
+                      <td style="width: 75px;">'.lang("admin", "realm").': </td>
                       <td>
                         <input type="text" name="world_new_realm[]" value="'.$world["Index"].'" size="10%" />
                       </td>
@@ -288,7 +212,9 @@ function database()
               </td>
             </tr>
           </table>
-          <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          <div>
+            <input type="submit" name="save" value="'.lang("admin", "save").'" />
+          </div>
         </form>';
 }
 
@@ -373,7 +299,7 @@ function savedbs()
     $char_names = ( ( isset($_GET["char_name"]) ) ? $sqlm->quote_smart($_GET["char_name"]) : NULL );
     $char_encodings = ( ( isset($_GET["char_encoding"]) ) ? $sqlm->quote_smart($_GET["char_encoding"]) : NULL );
 
-    for ( $i = 0; $i <= count($char_hosts); $i++ )
+    for ( $i = 0; $i < count($char_names); $i++ )
     {
       $result_char = $sqlm->query("UPDATE config_character_databases SET `Index`='".$char_new_realms[$i]."', Address='".$char_hosts."', Port='".$char_ports."', User='".$char_users."', Password='".$char_passes."', Name='".$char_names[$i]."', Encoding='".$char_encodings[$i]."' WHERE `Index`='".$char_realms[$i]."'");
     }
@@ -400,7 +326,7 @@ function savedbs()
     $world_names = ( ( isset($_GET["world_name"]) ) ? $sqlm->quote_smart($_GET["world_name"]) : NULL );
     $world_encodings = ( ( isset($_GET["world_encoding"]) ) ? $sqlm->quote_smart($_GET["world_encoding"]) : NULL );
 
-    for ( $i = 0; $i <= count($world_hosts); $i++ )
+    for ( $i = 0; $i < count($world_names); $i++ )
     {
       $result_world = $sqlm->query("UPDATE config_world_databases SET `Index`='".$world_new_realms[$i]."', Address='".$world_hosts."', Port='".$world_ports."', User='".$world_users."', Password='".$world_passes."', Name='".$world_names[$i]."', Encoding='".$world_encodings[$i]."' WHERE `Index`='".$world_realms[$i]."'");
     }

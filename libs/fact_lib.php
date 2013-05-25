@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -204,9 +204,7 @@ function fact_get_base_reputation($id, $race)
   $faction_base_reputation = $sql["dbc"]->fetch_array($sql["dbc"]->query("SELECT UniqueGainID, AtWar, Allied, Unknown1, 
     Unknown2, BaseReputation, Modifier1, Modifier2, Modifier3 FROM faction WHERE id='".$id."' LIMIT 1"));
 
-  if ( isset($faction_base_reputation) )
-    ;
-  else
+  if ( !isset($faction_base_reputation) )
     return 0;
 
   for ( $i = 0; $i < 4; ++$i )

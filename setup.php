@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -19,7 +19,7 @@
 */
 
 
-require_once("configs/config.php");
+require_once "configs/config.php";
 
 //#############################################################################
 // HEADER SECTION
@@ -67,9 +67,9 @@ $output .= '
 // Fix reditection error under MS-IIS fuckedup-servers.
 function redirect($url)
 {
-  if ( strpos($_SERVER["SERVER_SOFTWARE"], 'Microsoft-IIS') === false )
+  if ( strpos($_SERVER["SERVER_SOFTWARE"], "Microsoft-IIS") === false )
   {
-    header('Location: '.$url);
+    header("Location: ".$url);
     exit();
   }
   else
@@ -134,7 +134,7 @@ function show()
   $port = $host_port[1];
 
   $output .= '
-      <form name="form" action="setup.php" method="GET">
+      <form action="setup.php" method="GET" id="form">
         <input type="hidden" name="action" value="save" />
         <div id="setup_logon_field" class="fieldset_border">
           <span class="legend">'.lang("setup", "databases").'</span>
