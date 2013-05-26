@@ -77,6 +77,19 @@ function id_get_gm_level($id)
 
 
 //#############################################################################
+// get difference between dates in days
+
+function count_days($a, $b)
+{
+  $gd_a = getdate($a);
+  $gd_b = getdate($b);
+  $a_new = mktime(12, 0, 0, $gd_a["mon"], $gd_a["mday"], $gd_a["year"]);
+  $b_new = mktime(12, 0, 0, $gd_b["mon"], $gd_b["mday"], $gd_b["year"]);
+  return round( abs($a_new - $b_new) / 86400);
+}
+
+
+//#############################################################################
 //set color per Level range
 
 function get_days_with_color($how_long)
@@ -96,7 +109,7 @@ function get_days_with_color($how_long)
   elseif ( $days < 61 )
     $lastlogin = '<span style="color: #FF00FF;">'.$days.'</span>';
   else
-    $lastlogin = '<span style="color: #FF0000;">'.$days.'</span>';
+    $lastlogin = '<span style="color: #800000;">'.$days.'</span>';
 
   return $lastlogin;
 }

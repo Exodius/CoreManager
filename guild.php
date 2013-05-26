@@ -53,7 +53,7 @@ function browse_guilds()
   if ( $core == 1 )
     $query_myGuild = $sql["char"]->query("SELECT g.guildid AS gid, g.guildname AS gname, g.leaderguid AS lguid,
       (SELECT name FROM characters WHERE guid=lguid) AS lname, (SELECT race IN (2, 5, 6, 8, 10) FROM characters WHERE guid=lguid) AS faction,
-      (SELECT COUNT(*) FROM characters WHERE guid IN (SELECT guid FROM guild_data WHERE guildid = lguid) AND online=1) AS gonline,
+      (SELECT COUNT(*) FROM characters WHERE guid IN (SELECT guid FROM guild_data WHERE guildid=gid) AND online=1) AS gonline,
       (SELECT COUNT(*) FROM guild_data WHERE guildid=gid) AS mcount, g.guildInfo AS info, g.motd AS motd, g.createdate AS createdate,
       (SELECT acct FROM characters WHERE guid=lguid) AS macct,
       (SELECT race FROM characters WHERE guid=lguid) AS lrace, (SELECT class FROM characters WHERE guid=lguid) AS lclass,
@@ -64,7 +64,7 @@ function browse_guilds()
   else
     $query_myGuild = $sql["char"]->query("SELECT g.guildid AS gid, g.name AS gname, g.leaderguid AS lguid,
       (SELECT name FROM characters WHERE guid=lguid) AS lname, (SELECT race IN (2, 5, 6, 8, 10) FROM characters WHERE guid=lguid) AS faction,
-      (SELECT COUNT(*) FROM characters WHERE guid IN (SELECT guid FROM guild_member WHERE guildid=lguid) AND online = 1) AS gonline,
+      (SELECT COUNT(*) FROM characters WHERE guid IN (SELECT guid FROM guild_member WHERE guildid=gid) AND online = 1) AS gonline,
       (SELECT COUNT(*) FROM guild_member WHERE guildid=gid) AS mcount, g.info AS info, g.motd AS motd, g.createdate AS createdate,
       (SELECT account FROM characters WHERE guid=lguid) AS macct,
       (SELECT race FROM characters WHERE guid=lguid) AS lrace, (SELECT class FROM characters WHERE guid=lguid) AS lclass,
@@ -110,9 +110,8 @@ function browse_guilds()
       $output .= '
             <tr>
               <td>'.$data["gid"].'</td>
-              <td><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$data["gid"].'">'.$data["gname"].'</a></td>';
-      $output .= ( ( $user_lvl >= $owner_gmlvl ) ? '<td><a href="char.php?id='.$data["lguid"].'" onmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td><spanonmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding) );
-      $output .= '
+              <td><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$data["gid"].'">'.$data["gname"].'</a></td>
+              <td><a href="char.php?id='.$data["lguid"].'" onmousemove="oldtoolTip(\''.lang("char", "level_short").$data["llevel"].' '.char_get_race_name($data["lrace"]).' '.char_get_class_name($data["lclass"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()">'.htmlentities($data["lname"], ENT_COMPAT, $site_encoding).'</a></td>
               <td><img src="img/'.( ( $data["faction"]==0 ) ? "alliance" : "horde" ).'_small.gif" alt="" /></td>
               <td>'.$data["gonline"].'/'.$data["mcount"].'</td>
               <td>'.htmlentities($data["info"], ENT_COMPAT, $site_encoding).'</td>
@@ -357,16 +356,7 @@ $output .= '
           <br />';
 
 }
-  //==========================Browse/Search Guilds end=========================
-
-function count_days($a, $b)
-{
-  $gd_a = getdate($a);
-  $gd_b = getdate($b);
-  $a_new = mktime(12, 0, 0, $gd_a["mon"], $gd_a["mday"], $gd_a["year"]);
-  $b_new = mktime(12, 0, 0, $gd_b["mon"], $gd_b["mday"], $gd_b["year"]);
-  return round( abs($a_new - $b_new) / 86400);
-}
+//==========================Browse/Search Guilds end=========================
 
 
 //#############################################################################
@@ -381,9 +371,7 @@ function view_guild()
   if ( !isset($_GET["id"]) )
     redirect("guild.php?error=1");
   $guild_id = $sql["char"]->quote_smart($_GET["id"]);
-  if ( is_numeric($guild_id) )
-    ;
-  else
+  if ( !is_numeric($guild_id) )
     redirect("guild.php?error=6");
 
   //==========================SQL INGUILD and GUILDLEADER======================
@@ -391,7 +379,7 @@ function view_guild()
     $q_inguild = $sql["char"]->query("SELECT 1 FROM guild_data WHERE guildid='".$guild_id."' AND playerid IN (SELECT guid FROM characters WHERE acct='".$user_id."')");
   else
     $q_inguild = $sql["char"]->query("SELECT 1 FROM guild_member WHERE guildid='".$guild_id."' AND guid IN (SELECT guid FROM characters WHERE account='".$user_id."')");
-  $inguild = $sql["char"]->result($q_inguild, 0, '1');
+  $inguild = $sql["char"]->result($q_inguild, 0, "1");
   if ( $user_lvl < $action_permission["update"] && !$inguild )
     redirect("guild.php?error=6");
 
@@ -399,7 +387,7 @@ function view_guild()
     $q_amIguildleader = $sql["char"]->query("SELECT 1 FROM guilds WHERE guildid='".$guild_id."' AND leaderguid IN (SELECT guid FROM characters WHERE acct='".$user_id."')");
   else
     $q_amIguildleader = $sql["char"]->query("SELECT 1 FROM guild WHERE guildid='".$guild_id."' AND leaderguid IN (SELECT guid FROM characters WHERE account='".$user_id."')");
-  $amIguildleader = $sql["char"]->result($q_amIguildleader, 0, '1');
+  $amIguildleader = $sql["char"]->result($q_amIguildleader, 0, "1");
 
   if ( $core == 1 )
     $q_guildmemberCount = $sql["char"]->query("SELECT 1 FROM guild_data WHERE guildid='".$guild_id."'");
@@ -456,7 +444,7 @@ function view_guild()
           <span class="legend">'.lang("guild", "guild").'</span>
           <table class="lined">
             <tr>
-              <td style="width: 25%;" class="hidden"><b>'.lang("guild", "create_date").':</b><br />'.date('o-m-d', $guild_data["createdate"]).'</td>
+              <td style="width: 25%;" class="hidden"><b>'.lang("guild", "create_date").':</b><br />'.date("o-m-d", $guild_data["createdate"]).'</td>
               <td style="width: 50%;" class="bold hidden" colspan="2">'.$guild_data["name"].'</td>
               <td style="width: 25%;" class="hidden"><b>'.lang("guild", "tot_m_online").':</b><br />'.$guild_data["monline"].' / '.$guild_data["mtotal"].'</td>
             </tr>
@@ -479,25 +467,25 @@ function view_guild()
               </td>
             </tr>
             <tr>
-              <td id="guild_pages_background" style="text-align: right;" colspan="4">'.generate_pagination("guild.php?action=view_guild&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".( ( $dir ) ? 0 : 1 )."", $guildmemberCount, $itemperpage, $start).'</td>
+              <td id="guild_pages_background" style="text-align: right;" colspan="4">'.generate_pagination("guild.php?action=view_guild&amp;id=".$guild_id."&amp;order_by=".$order_by."&amp;dir=".( ( $dir ) ? 0 : 1 ), $guildmemberCount, $itemperpage, $start).'</td>
             </tr>
           </table>
           <table class="lined">
             <tr>
               <th style="width: 1%;">'.lang("guild", "remove").'</th>
-              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=cname&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'cname' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "name").'</a></th>
-              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=crace&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'crace' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif\" alt="" /> ' : '' ).lang("guild", "race").'</a></th>
-              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=class&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'cclass' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "class").'</a></th>
-              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clevel&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'clevel' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "level").'</a></th>
-              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=mrank&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == 'mrank' ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "rank").'</a></th>
+              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=cname&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == "cname" ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "name").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=crace&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == "crace" ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "race").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=class&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == "cclass" ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "class").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clevel&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == "clevel" ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "level").'</a></th>
+              <th style="width: 25%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=mrank&amp;start='.$start.'&amp;dir='.$dir.'">'.( $order_by == "mrank" ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "rank").'</a></th>
               <th style="width: 15%;">'.lang("guild", "pnote").'</th>
               <th style="width: 15%;">'.lang("guild", "offnote").'</th>
-              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clogout&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'clogout' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "llogin").'</a></th>
-              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=conline&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == 'conline' ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "online").'</a></th>';
+              <th style="width: 15%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=clogout&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == "clogout" ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "llogin").'</a></th>
+              <th style="width: 1%;"><a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'&amp;order_by=conline&amp;start='.$start.'&amp;dir='.$dir.'">'.( ( $order_by == "conline" ) ? '<img src="img/arr_'.( ( $dir ) ? "up" : "dw" ).'.gif" alt="" /> ' : '' ).lang("guild", "online").'</a></th>';
 
   if ($showcountryflag)
   {
-    require_once 'libs/misc_lib.php';
+    require_once "libs/misc_lib.php";
 
     $output .= '
               <th style="width: 1%;">'.lang("global", "country").'</th>';
@@ -541,7 +529,7 @@ function view_guild()
     }
     
     $result = $sql["mgr"]->query("SELECT SecurityLevel AS gm FROM config_accounts WHERE Login='".$user."'");
-    $owner_gmlvl = $sql["logon"]->result($result, 0, 'gm');
+    $owner_gmlvl = $sql["logon"]->result($result, 0, "gm");
 
     if ( $owner_gmlvl >= 1073741824 )
       $owner_gmlvl -= 1073741824;
@@ -550,16 +538,16 @@ function view_guild()
             <tr>';
     // gm, guildleader or own account! are allowed to remove from guild
     $output .= ( ( $user_lvl >= $action_permission["delete"] || $amIguildleader || $member["acct"] == $user_id ) ? '<td><img src="img/aff_cross.png" alt="" onclick="answerBox(\''.lang("global", "delete").': &lt;font color=white&gt;'.$member["cname"].'&lt;/font&gt;&lt;br /&gt;'.lang("global", "are_you_sure").'\', \'guild.php?action=rem_char_from_guild&amp;realm='.$realmid.'&amp;id='.$member["cguid"].'&amp;guld_id='.$guild_id.'\');" class="guild_edit_delete_cursor" /></td>' : '<td></td>' );
-    $output .= ( ( $user_lvl >= $owner_gmlvl ) ? '<td><a href="char.php?id='.$member["cguid"].'">'.htmlentities($member["cname"], ENT_COMPAT, $site_encoding).'</a></td>' : '<td>'.htmlentities($member["cname"], ENT_COMPAT, $site_encoding).'</td>' );
     $output .= '
+              <td><a href="char.php?id='.$member["cguid"].'">'.htmlentities($member["cname"], ENT_COMPAT, $site_encoding).'</a></td>
               <td><img src="img/c_icons/'.$member["crace"].'-'.$member["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($member["crace"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
               <td><img src="img/c_icons/'.$member["cclass"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($member["cclass"]).'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /></td>
               <td>'.char_get_level_color($member["clevel"]).'</td>
               <td>'.htmlentities($member["rname"], ENT_COMPAT, $site_encoding).' ('.$member["mrank"].')</td>
               <td>'.htmlentities($member["pnote"], ENT_COMPAT, $site_encoding).'</td>
               <td>'.htmlentities($member["offnote"], ENT_COMPAT, $site_encoding).'</td>
-              <td>'.get_days_with_color($member["clogout"]).'</td>
-              <td>'.( ( $member["conline"] ) ? '<img src="img/up.gif" alt="" />' : '<img src="img/down.gif" alt="" />').'</td>';
+              <td><span style="font-weight: bold;">'.get_days_with_color($member["clogout"]).'</span></td>
+              <td><img src="img/'.( ( $member["conline"] ) ? 'up' : 'down' ).'.gif" alt="" /></td>';
 
     if ( $showcountryflag )
     {
@@ -639,7 +627,7 @@ function show_del_guild()
     $q_amIguildleader = "SELECT 1 FROM guild WHERE guildid='".$id."' AND leaderguid IN (SELECT guid FROM characters WHERE account='".$user_id."')";
 
   $r_amIguildleader = $sql["char"]->query($q_amIguildleader);
-  $amIguildleader = $sql["char"]->result($r_amIguildleader, 0, '1');
+  $amIguildleader = $sql["char"]->result($r_amIguildleader, 0, "1");
 
   if ( $user_lvl < $action_permission["delete"] && !$amIguildleader )
     redirect("guild.php?error=6");
@@ -659,12 +647,12 @@ function show_del_guild()
               <tr>
                 <td>';
 
-  makebutton(lang("global", "yes"), "javascript:do_submit()\" type=\"wrn",130);
+  makebutton(lang("global", "yes"), "javascript:do_submit()\" type=\"wrn", 130);
   $output .= '
                 </td>
                 <td>';
 
-  makebutton(lang("global", "no"), "guild.php?action=view_guild&amp;id=".$id."\" type=\"def",130);
+  makebutton(lang("global", "no"), "guild.php?action=view_guild&amp;id=".$id."\" type=\"def", 130);
   $output .= '
                 </td>
               </tr>
