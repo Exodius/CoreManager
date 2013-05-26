@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2012  CoreManager Project
+    Copyright (C) 2010-2013  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -1467,7 +1467,9 @@ $GLOBALS['lang_top'] = array
   'kills' => 'Get&ouml;tet',
   'arena_points' => 'Arena',
   'time_played' => 'Zeit gespielt',
-  'online' => 'Online'
+  'online' => 'Online',
+  'view_all' => 'View All Realms',
+  'view_this' => 'View This Realm',
 );
 
 
@@ -2395,6 +2397,10 @@ $GLOBALS['lang_creature'] = array
   'critter' => 'Critter',
   'mechanical' => 'Mechanical',
   'not_specified' => 'Not Specified',
+  'totem' => 'Totem',
+  'pet' => 'Pet',
+  'cloud' => 'Cloud',
+  'unknown' => 'Unknown',
   'wolf' => 'Wolf',
   'cat' => 'Cat',
   'spider' => 'Spider',

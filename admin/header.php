@@ -89,19 +89,19 @@ if ( strlen($current) == 0 )
 // detect latest revision
 // first, we ask assembla's trac for the latest changeset
 // and parse it into an array
-$handle = fopen("http://trac6.assembla.com/coremanager/changeset", "r");
+$handle = fopen("https://subversion.assembla.com/svn/coremanager/", "r");
 $data = fread($handle, 256);
 $data = explode("\n", $data);
 
 // search the array for the blessed line
 for ( $i = 0; $i < count($data); $i++ )
 {
-  if ( strpos($data[$i], "Changeset") <> false )
+  if ( strpos($data[$i], "Revision") <> false )
     break;
 }
 
 // if we got the line containing the revision then we need just the number
-if ( strpos($data[$i], "Changeset") <> false )
+if ( strpos($data[$i], "Revision") <> false )
 {
   // convert the line into an array
   $revision = explode(" ", $data[$i]);
@@ -109,6 +109,9 @@ if ( strpos($data[$i], "Changeset") <> false )
   // find the number
   for ( $j = 0; $j < count($revision); $j++ )
   {
+    // the revision number line will probably have a :
+    $revision[$j] = substr($revision[$j], 0, strlen($revision[$j])-1);
+
     if ( is_numeric($revision[$j]) )
       break;
   }

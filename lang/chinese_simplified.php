@@ -1467,7 +1467,9 @@ $GLOBALS['lang_top'] = array
   'kills' => '击杀',
   'arena_points' => '竞技点',
   'time_played' => '游戏时间',
-  'online' => '在线'
+  'online' => '在线',
+  'view_all' => 'View All Realms',
+  'view_this' => 'View This Realm',
 );
 
 

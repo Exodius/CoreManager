@@ -24,12 +24,10 @@ require_once "libs/char_lib.php";
 
 valid_login($action_permission["view"]);
 
-function top100($realmid)
+function top100($realm_id)
 {
   global $output, $logon_db, $characters_db, $dbc_db, $server, $itemperpage, $developer_test_mode,
-    $multi_realm_mode, $sql, $core, $site_encoding;
-
-  $realm_id = $realmid;
+    $multi_realm_mode, $sql, $core, $site_encoding, $n_realms;
 
   $sql["char"]->connect($characters_db[$realm_id]["addr"], $characters_db[$realm_id]["user"], $characters_db[$realm_id]["pass"], $characters_db[$realm_id]["name"], $characters_db[$realm_id]["encoding"]);
 
@@ -203,37 +201,37 @@ function top100($realmid)
           <div class="tab">
             <ul>
               <li'.( ( $type == "level" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'">
                   '.lang("top", "general").'
                 </a>
               </li>
               <li'.( ( $type == "stat" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=stat&amp;order_by=health">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=stat&amp;order_by=health">
                   '.lang("top", "stats").'
                 </a>
               </li>
               <li'.( ( $type == "defense" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=defense&amp;order_by=armor">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=defense&amp;order_by=armor">
                   '.lang("top", "defense").'
                 </a>
               </li>
               <li'.( ( $type == "resist" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=resist&amp;order_by=holy">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=resist&amp;order_by=holy">
                   '.lang("top", "resist").'
                 </a>
               </li>
               <li'.( ( $type == "attack" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=attack&amp;order_by=ap">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=attack&amp;order_by=ap">
                   '.lang("top", "melee").'
                 </a>
               </li>
               <li'.( ( $type == "crit_hit" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=crit_hit&amp;order_by=ranged_ap">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=crit_hit&amp;order_by=ranged_ap">
                   '.lang("top", "ranged").'
                 </a>
               </li>
               <li'.( ( $type == "pvp" ) ? ' class="selected"' : '' ).'>
-                <a href="top100.php?start='.$start.'&amp;type=pvp&amp;order_by=honor">
+                <a href="top100.php?n_realms='.$n_realms.'&amp;start='.$start.'&amp;type=pvp&amp;order_by=honor">
                   '.lang("top", "pvp").'
                 </a>
               </li>
@@ -241,31 +239,6 @@ function top100($realmid)
           </div>
           <div class="tab_content center">
             <table class="top_hidden" id="top100_realms">';
-  if ( $developer_test_mode && $multi_realm_mode )
-  {
-    $realms = $sql["mgr"]->query("SELECT COUNT(*) FROM config_servers");
-    $tot_realms = $sql["mgr"]->result($realms, 0);
-    if ( ( $tot_realms > 1 ) && ( count($server) > 1 ) )
-    {
-      $output .= '
-              <tr>
-                <td colspan="2" align="left">';
-      makebutton('View', 'javascript:do_submit(\'form'.$realm_id.'\',0)', 130);
-      $output .= '
-                  <form action="top100.php?type='.$type.'" method="post" id="form'.$realm_id.'">
-                    Number of Realms :
-                    <input type="hidden" name="action" value="realms" />
-                    <select name="n_realms">';
-      for ( $i = 1; $i <= $tot_realms; ++$i )
-        $output .= '
-                      <option value="'.$i.'">'.htmlentities($i, ENT_COMPAT, $site_encoding).'</option>';
-      $output .= '
-                    </select>
-                  </form>
-                </td>
-              </tr>';
-    }
-  }
   $output .= '
               <tr>
                 <td align="right">Total: '.$all_record.'</td>
@@ -283,71 +256,71 @@ function top100($realmid)
                 <th style="width: 14%;">'.lang("top", "name").'</th>
                 <th style="width: 5%;">'.lang("top", "race").'</th>
                 <th style="width: 5%;">'.lang("top", "class").'</th>
-                <th style="width: 8%;"><a href="top100.php?type='.$type.'&amp;order_by=level&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "level" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "level").'</a></th>';
+                <th style="width: 8%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=level&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "level" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "level").'</a></th>';
   if ( $type == "level" )
   {
     $output .= '
-                <th style="width: 5%;"><a href="top100.php?type='.$type.'&amp;order_by=ach_points&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ach_points" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ach_points").'</a></th>
+                <th style="width: 5%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=ach_points&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ach_points" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ach_points").'</a></th>
                 <th style="width: 22%;">'.lang("top", "guild").'</th>
-                <th style="width: 20%;"><a href="top100.php?type='.$type.'&amp;order_by=gold&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "gold" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "money").'</a></th>
-                <th style="width: 20%;"><a href="top100.php?type='.$type.'&amp;order_by=totaltime&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "totaltime" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "time_played").'</a></th>';
+                <th style="width: 20%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=gold&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "gold" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "money").'</a></th>
+                <th style="width: 20%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=totaltime&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "totaltime" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "time_played").'</a></th>';
   }
   elseif ( $type == "stat" )
   {
     $output .= '
-                <th style="width: 11%;"><a href="top100.php?type='.$type.'&amp;order_by=health&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "health" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "health").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=mana&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "mana" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "mana").'</a></th>
-                <th style="width: 9%;"><a href="top100.php?type='.$type.'&amp;order_by=str&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "str" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "str").'</a></th>
-                <th style="width: 8%;"><a href="top100.php?type='.$type.'&amp;order_by=agi&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "agi" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "agi").'</a></th>
-                <th style="width: 8%;"><a href="top100.php?type='.$type.'&amp;order_by=sta&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "sta" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "sta").'</a></th>
-                <th style="width: 8%;"><a href="top100.php?type='.$type.'&amp;order_by=intel&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "intel" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "intel").'</a></th>
-                <th style="width: 8%;"><a href="top100.php?type='.$type.'&amp;order_by=spi&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "spi" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "spi").'</a></th>';
+                <th style="width: 11%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=health&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "health" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "health").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=mana&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "mana" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "mana").'</a></th>
+                <th style="width: 9%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=str&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "str" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "str").'</a></th>
+                <th style="width: 8%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=agi&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "agi" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "agi").'</a></th>
+                <th style="width: 8%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=sta&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "sta" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "sta").'</a></th>
+                <th style="width: 8%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=intel&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "intel" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "intel").'</a></th>
+                <th style="width: 8%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=spi&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "spi" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "spi").'</a></th>';
   }
   elseif ( $type == "defense" )
   {
     $output .= '
-                <th style="width: 16%;"><a href="top100.php?type='.$type.'&amp;order_by=armor&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "armor" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "armor").'</a></th>
-                <th style="width: 16%;"><a href="top100.php?type='.$type.'&amp;order_by=block&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "block" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "block").'</a></th>
-                <th style="width: 15%;"><a href="top100.php?type='.$type.'&amp;order_by=dodge&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "dodge" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "dodge").'</a></th>
-                <th style="width: 15%;"><a href="top100.php?type='.$type.'&amp;order_by=parry&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "parry" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "parry").'</a></th>';
+                <th style="width: 16%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=armor&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "armor" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "armor").'</a></th>
+                <th style="width: 16%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=block&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "block" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "block").'</a></th>
+                <th style="width: 15%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=dodge&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "dodge" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "dodge").'</a></th>
+                <th style="width: 15%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=parry&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "parry" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "parry").'</a></th>';
   }
   elseif ( $type == "resist" )
   {
     $output .= '
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=holy&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "holy" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "holy").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=fire&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "fire" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "fire").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=nature&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "nature" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "nature").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=frost&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "frost" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "frost").'</a></th>
-                <th style="width: 11%;"><a href="top100.php?type='.$type.'&amp;order_by=shadow&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "shadow" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "shadow").'</a></th>
-                <th style="width: 11%;"><a href="top100.php?type='.$type.'&amp;order_by=arcane&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "arcane" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "arcane").'</a></th>';
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=holy&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "holy" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "holy").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=fire&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "fire" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "fire").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=nature&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "nature" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "nature").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=frost&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "frost" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "frost").'</a></th>
+                <th style="width: 11%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=shadow&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "shadow" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "shadow").'</a></th>
+                <th style="width: 11%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=arcane&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "arcane" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "arcane").'</a></th>';
   }
   elseif ( $type == "attack" )
   {
     $output .= '
-                <th style="width: 20%;"><a href="top100.php?type='.$type.'&amp;order_by=ap&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ap" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ap").'</a></th>
-                <th style="width: 6%;"><a href="top100.php?type='.$type.'&amp;order_by=min_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "min_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "min_dmg").'</a></th>
-                <th style="width: 6%;"><a href="top100.php?type='.$type.'&amp;order_by=max_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "max_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "max_dmg").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=melee_crit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "melee_crit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "crit").'</a></th>
-                <th style="width: 5%;"><a href="top100.php?type='.$type.'&amp;order_by=melee_hit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "melee_hit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "hit").'</a></th>
-                <th style="width: 5%;"><a href="top100.php?type='.$type.'&amp;order_by=expertise&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "expertise" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "expertise").'</a></th>
-                <th style="width: 9%;"><a href="top100.php?type='.$type.'&amp;order_by=off_expertise&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "off_expertise" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "off_expertise").'</a></th>';
+                <th style="width: 20%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=ap&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ap" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ap").'</a></th>
+                <th style="width: 6%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=min_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "min_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "min_dmg").'</a></th>
+                <th style="width: 6%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=max_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "max_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "max_dmg").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=melee_crit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "melee_crit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "crit").'</a></th>
+                <th style="width: 5%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=melee_hit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "melee_hit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "hit").'</a></th>
+                <th style="width: 5%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=expertise&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "expertise" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "expertise").'</a></th>
+                <th style="width: 9%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=off_expertise&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "off_expertise" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "off_expertise").'</a></th>';
   }
   elseif ( $type == "crit_hit" )
   {
     $output .= '
-                <th style="width: 18%"><a href="top100.php?type='.$type.'&amp;order_by=ranged_ap&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ranged_ap" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ap").'</a></th>
-                <th style="width: 12%;"><a href="top100.php?type='.$type.'&amp;order_by=min_ranged_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "min_ranged_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "min_dmg").'</a></th>
-                <th style="width: 12%;"><a href="top100.php?type='.$type.'&amp;order_by=max_ranged_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "max_ranged_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "max_dmg").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=range_crit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "range_crit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "crit").'</a></th>
-                <th style="width: 10%;"><a href="top100.php?type='.$type.'&amp;order_by=range_hit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "range_hit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "hit").'</a></th>';
+                <th style="width: 18%"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=ranged_ap&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "ranged_ap" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "ap").'</a></th>
+                <th style="width: 12%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=min_ranged_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "min_ranged_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "min_dmg").'</a></th>
+                <th style="width: 12%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=max_ranged_dmg&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "max_ranged_dmg" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "max_dmg").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=range_crit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "range_crit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "crit").'</a></th>
+                <th style="width: 10%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=range_hit&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "range_hit" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "hit").'</a></th>';
   }
   elseif ( $type == "pvp" )
   {
     $output .= '
-                <th style="width: 20%;"><a href="top100.php?type='.$type.'&amp;order_by=honor&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "honor" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "rank").'</a></th>
+                <th style="width: 20%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=honor&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "honor" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "rank").'</a></th>
                 <th style="width: 14%;">'.lang("top", "honor_points").'</th>
-                <th style="width: 14%;"><a href="top100.php?type='.$type.'&amp;order_by=kills&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "kills" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "kills").'</a></th>
-                <th style="width: 14%;"><a href="top100.php?type='.$type.'&amp;order_by=arena&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "arena" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "arena_points").'</a></th>';
+                <th style="width: 14%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=kills&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "kills" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "kills").'</a></th>
+                <th style="width: 14%;"><a href="top100.php?n_realms='.$n_realms.'&amp;type='.$type.'&amp;order_by=arena&amp;start='.$start.'&amp;dir='.$dir.'"'.( ( $order_by == "arena" ) ? ' class="'.$order_dir.'"' : '' ).'>'.lang("top", "arena_points").'</a></th>';
   }
   $output .= '
               </tr>';
@@ -603,52 +576,22 @@ function top100($realmid)
 // MAIN
 //#############################################################################
 
-//$err = (isset($_GET["error"])) ? $_GET["error"] : NULL;
-
-//$output .= '
-//          <div class="top">';
-
-//if(1 == $err);
-//else
-//  $output .= "
-//            <h1>'.$lang_top["top100"].'</h1>;
-
-//unset($err);
-
-//$output .= '
-//          </div>';
-
 $output .= '
       <div class="bubble">';
 
-$action = ( ( isset($_POST["action"]) ) ? $_POST["action"] : NULL );
+$n_realms = ( ( isset($_GET["n_realms"]) ) ? $_GET["n_realms"] : 1 );
 
-if ( $action == "realms" )
+if ( $n_realms > 1 )
 {
-  if ( isset($_POST["n_realms"]) )
+  $realms = $sql["mgr"]->query("SELECT * FROM config_servers LIMIT 10");
+
+  if ( ( $sql["mgr"]->num_rows($realms) > 1 ) && ( count($server) > 1 ) )
   {
-    $n_realms = $_POST["n_realms"];
-
-    $realms = $sql["mgr"]->query('SELECT `Index` AS id, Name AS name FROM config_servers LIMIT 10');
-
-    if ( ( $sql["mgr"]->num_rows($realms) > 1 ) && ( count($server) > 1 ) )
-    {
-      for ( $i = 1; $i <= $n_realms; ++$i )
-      {
-        $realm = $sql["mgr"]->fetch_assoc($realms);
-        if ( isset($server[$realm["id"]]) )
-        {
-          $output .= '
-          <div class="top"><h1>Top 100 of '.$realm["name"].'</h1></div>';
-          top100($realm["id"]);
-        }
-      }
-    }
-    else
+    while ( $realm = $sql["mgr"]->fetch_assoc($realms) )
     {
       $output .= '
-          <div class="top"><h1>'.lang("top", "top100").'</h1></div>';
-      top100($realm_id);
+          <div class="top"><h1>Top 100 of '.$realm["Name"].'</h1></div>';
+          top100($realm["Index"]);
     }
   }
   else
@@ -663,6 +606,25 @@ else
   $output .= '
           <div class="top"><h1>'.lang("top", "top100").'</h1></div>';
   top100($realm_id);
+}
+
+// add buttons to switch viewing between 1 and all realms
+if ( $multi_realm_mode )
+{
+  $realms = $sql["mgr"]->query("SELECT COUNT(*) FROM config_servers");
+  $tot_realms = $sql["mgr"]->result($realms, 0);
+
+  if ( ( $tot_realms > 1 ) && ( count($server) > 1 ) )
+  {
+    $output .= '
+          <div style="height: 30px; width: 284px; margin-left: auto; margin-right: auto;">';
+
+      makebutton(lang("top", "view_all"), "top100.php?n_realms=".$tot_realms, 130);
+      makebutton(lang("top", "view_this"), "top100.php?n_realms=1", 130);
+
+      $output .= '
+          </div>';
+  }
 }
 
 unset($action);

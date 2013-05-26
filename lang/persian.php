@@ -1467,7 +1467,9 @@ $GLOBALS['lang_top'] = array
   'kills' => 'Kills',
   'arena_points' => 'Arena',
   'time_played' => 'Time Played',
-  'online' => 'Online'
+  'online' => 'Online',
+  'view_all' => 'View All Realms',
+  'view_this' => 'View This Realm',
 );
 
 
@@ -2395,6 +2397,10 @@ $GLOBALS['lang_creature'] = array
   'critter' => 'Critter',
   'mechanical' => 'Mechanical',
   'not_specified' => 'Not Specified',
+  'totem' => 'Totem',
+  'pet' => 'Pet',
+  'cloud' => 'Cloud',
+  'unknown' => 'Unknown',
   'wolf' => 'Wolf',
   'cat' => 'Cat',
   'spider' => 'Spider',
