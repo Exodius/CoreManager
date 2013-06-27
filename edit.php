@@ -32,9 +32,10 @@ valid_login($action_permission["view"]);
 //##############################################################################################################
 function edit_user()
 {
-  global $output, $corem_db, $logon_db, $characters_db, $corem_db, $realm_id, $invite_only, $timezone_offset,
+  global $output, $dbc_db, $corem_db, $logon_db, $characters_db, $corem_db, $realm_id, $invite_only, $timezone_offset,
     $user_name, $user_id, $expansion_select, $server, $developer_test_mode, $multi_realm_mode,
-    $remember_me_checked, $sql, $core;
+    $remember_me_checked, $achievement_point_points, $achievement_point_credits, $credits_fractional,
+    $sql, $core;
 
   $refguid = $sql["mgr"]->result($sql["mgr"]->query("SELECT InvitedBy FROM point_system_invites WHERE PlayersAccount='".$user_id."'"), 0, 'InvitedBy');
   $referred_by = $sql["char"]->result($sql["char"]->query("SELECT name FROM characters WHERE guid='".$refguid."'"), 0, 'name');
@@ -227,18 +228,22 @@ function edit_user()
                     <td>'.lang("edit", "tot_chars").':</td>
                     <td colspan="2">'.$c_count.'</td>
                   </tr>';
-                  
-    $realms = $sql["mgr"]->query("SELECT `Index` AS id, Name AS name FROM config_servers");
+
+    $total_achieve_points = 0;
+
+    $realms = $sql["mgr"]->query("SELECT * FROM config_servers");
     if ( ( 1 < $sql["mgr"]->num_rows($realms) ) && ( 1 < count($server) ) && ( 1 < count($characters_db) ) )
     {
       while ( $realm = $sql["mgr"]->fetch_assoc($realms) )
       {
-        $sql["char"]->connect($characters_db[$realm["id"]]['addr'], $characters_db[$realm["id"]]['user'], $characters_db[$realm["id"]]['pass'], $characters_db[$realm["id"]]['name'], $characters_db[$realm["id"]]['encoding']);
+        $sql["char"]->connect($characters_db[$realm["Index"]]["addr"], $characters_db[$realm["Index"]]["user"], $characters_db[$realm["Index"]]["pass"], $characters_db[$realm["Index"]]["name"], $characters_db[$realm["Index"]]["encoding"]);
         if ( $core == 1 )
-          $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, timestamp
+          $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, timestamp,
+            IFNULL((SELECT SUM(points) FROM character_achievement LEFT JOIN `".$dbc_db["name"]."`.achievement ON `".$dbc_db["name"]."`.achievement.id=character_achievement.achievement WHERE character_achievement.guid=characters.guid), 0) AS ach_points
             FROM characters WHERE acct='".$user_id."'");
         else
-          $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, logout_time AS timestamp
+          $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, logout_time AS timestamp,
+            IFNULL((SELECT SUM(points) FROM character_achievement LEFT JOIN `".$dbc_db["name"]."`.achievement ON `".$dbc_db["name"]."`.achievement.id=character_achievement.achievement WHERE character_achievement.guid=characters.guid), 0) AS ach_points
             FROM characters WHERE account='".$user_id."'");
       
         // calculate timezone offset
@@ -249,7 +254,7 @@ function edit_user()
                       <td colspan="3">&nbsp;</td>
                     </tr>
                     <tr>
-                      <td colspan="3">'.lang("index", "realm").': '.$realm["name"].'</td>
+                      <td colspan="3">'.lang("index", "realm").': '.$realm["Name"].'</td>
                     </tr>
                     <tr>
                       <td>'.lang("edit", "characters").':</td>
@@ -263,11 +268,14 @@ function edit_user()
           else
             $lastseen = '-';
 
+          // add this character's achievement points to our total
+          $total_achieve_points += $char["ach_points"];
+
           $output .= '
                     <tr>
                       <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'---></td>
                       <td>
-                        <a href="char.php?id='.$char["guid"].'&amp;realm='.$realm["id"].'">'.$char["name"].'</a> -
+                        <a href="char.php?id='.$char["guid"].'&amp;realm='.$realm["Index"].'">'.$char["name"].'</a> -
                         <img src="img/c_icons/'.$char["race"].'-'.$char["gender"].'.gif" onmousemove="oldtoolTip(\''.char_get_race_name($char["race"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                         <img src="img/c_icons/'.$char["class"].'.gif" onmousemove="oldtoolTip(\''.char_get_class_name($char["class"]).'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" /> - '.lang("char", "level_short").char_get_level_color($char["level"]).'
                       </td>
@@ -280,10 +288,12 @@ function edit_user()
     else
     {
       if ( $core == 1 )
-        $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, timestamp
+        $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, timestamp,
+          IFNULL((SELECT SUM(points) FROM character_achievement LEFT JOIN `".$dbc_db["name"]."`.achievement ON `".$dbc_db["name"]."`.achievement.id=character_achievement.achievement WHERE character_achievement.guid=characters.guid), 0) AS ach_points
           FROM characters WHERE acct='".$user_id."'");
       else
-        $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, logout_time AS timestamp
+        $result = $sql["char"]->query("SELECT guid, name, race, class, level, gender, logout_time AS timestamp,
+          IFNULL((SELECT SUM(points) FROM character_achievement LEFT JOIN `".$dbc_db["name"]."`.achievement ON `".$dbc_db["name"]."`.achievement.id=character_achievement.achievement WHERE character_achievement.guid=characters.guid), 0) AS ach_points
           FROM characters WHERE account='".$user_id."'");
       
       // calculate timezone offset
@@ -301,6 +311,9 @@ function edit_user()
         else
           $lastseen = '-';
 
+        // add this character's achievement points to our total
+        $total_achieve_points += $char["ach_points"];
+
         $output .= '
                   <tr>
                     <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\'---></td>
@@ -315,6 +328,79 @@ function edit_user()
     }
     unset($result);
     unset($realms);
+
+    // Achievement Point to Credit conversion
+    if ( $achievement_point_credits && $screen_name["Credits"] >= 0 )
+    {
+      $output .= '
+                  <tr>
+                    <td colspan="3">
+                      <hr />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td colspan="3">
+                      <table>
+                        <tr>
+                          <td>'.lang("edit", "total_achieve_points").':</td>
+                          <td colspan="2">
+                            <span>'.$total_achieve_points.'</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>'.lang("edit", "total_achieve_spent").':</td>
+                          <td colspan="2">
+                            <span>'.$screen_name["AchievePointsSpent"].'</span>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>'.lang("edit", "achieve_points_available").':</td>
+                          <td colspan="2">
+                            <span>'.($total_achieve_points-$screen_name["AchievePointsSpent"]).'</span>
+                            <img src="img/information.png" style="position: relative; top: 4px;" onmousemove="oldtoolTip(\''.lang("edit", "achieve_warning").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                          </td>
+                        </tr>';
+
+      if ( $credits_fractional )
+        $output .= '
+                        <tr>
+                          <td>'.lang("edit", "points_to_credits").':</td>
+                          <td colspan="2">
+                            <span>'.($achievement_point_credits/$achievement_point_points).'&nbsp;'.lang("edit", "credits").'</span>
+                          </td>
+                        </tr>';
+      else
+        $output .= '
+                        <tr>
+                          <td>'.lang("edit", "points_to_credits").':</td>
+                          <td colspan="2">
+                            <span>'.round($achievement_point_credits/$achievement_point_points).'&nbsp;'.lang("edit", "credits").'</span>
+                            <img src="img/information.png" style="position: relative; top: 4px;" onmousemove="oldtoolTip(\''.lang("edit", "points_to_credits_round").'\', \'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
+                          </td>
+                        </tr>';
+
+      $output .= '
+                        <tr>
+                          <td>'.lang("edit", "points_to_spend").':</td>
+                          <td colspan="2">';
+
+      if ( ($total_achieve_points-$screen_name["AchievePointsSpent"]) > 0 )
+        $output .= '
+                            <input type="text" name="points_to_spend" value="0" />';
+      else
+        $output .= '
+                            <div style="display: none;">
+                              <input type="hidden" name="points_to_spend" value="0" />
+                            </div>
+                            <span>'.lang("edit", "insufficient_funds").'</span>';
+
+      $output .= '
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>';
+    }
 
     $override_remember_me = $_COOKIE["corem_override_remember_me"];
     if ( !isset($override_remember_me) )
@@ -842,14 +928,15 @@ function edit_user()
 //#############################################################################################################
 function doedit_user()
 {
-  global $output, $user_name, $logon_db, $corem_db, $send_mail_on_email_change, $lang, $defaultoption,
-    $url_path, $format_mail_html, $GMailSender, $smtp_cfg, $title, $sql, $core;
+  global $output, $user_name, $dbc_db, $logon_db, $corem_db, $send_mail_on_email_change, $lang, $defaultoption,
+    $achievement_point_points, $achievement_point_credits, $credits_fractional, $url_path, $format_mail_html,
+    $GMailSender, $smtp_cfg, $title, $sql, $core;
 
-  if ( ( empty($_POST["pass"]) || ( $_POST["pass"] == '' ) )
-    && ( empty($_POST["mail"]) || ( $_POST["mail"] == '' ) )
-    && ( empty($_POST["expansion"]) || ( $_POST["expansion"] == '' ) )
-    && ( empty($_POST["referredby"]) || ( $_POST["referredby"] == '' ) ) )
-    redirect('edit.php?error=1');
+  if ( ( empty($_POST["pass"]) || ( $_POST["pass"] == "" ) )
+    && ( empty($_POST["mail"]) || ( $_POST["mail"] == "" ) )
+    && ( empty($_POST["expansion"]) || ( $_POST["expansion"] == "" ) )
+    && ( empty($_POST["referredby"]) || ( $_POST["referredby"] == "" ) ) )
+    redirect("edit.php?error=1");
 
   // ArcEmu: find out if we're using an encrypted password for this account
   if ( $core == 1 )
@@ -876,6 +963,7 @@ function doedit_user()
   $new_mail = $sql["logon"]->quote_smart(trim($_POST["mail"]));
   $new_expansion = ( ( isset($_POST["expansion"]) ) ? $sql["logon"]->quote_smart(trim($_POST["expansion"])) : $defaultoption );
   $referredby = $sql["logon"]->quote_smart(trim($_POST["referredby"]));
+  $points_to_spend = ( ( is_numeric($_POST["points_to_spend"]) && ( $_POST["points_to_spend"] >= 0 ) ) ? $_POST["points_to_spend"] : 0 );
 
   // if we received a Screen Name, make sure it does not conflict with other Screen Names or with
   // the game server's login names.
@@ -887,7 +975,7 @@ function doedit_user()
     if ( $sn["Login"] <> $user_name )
     {
       if ( $sql["mgr"]->num_rows($sn_result) <> 0 )
-        redirect('edit.php?error=6');
+        redirect("edit.php?error=6");
 
       if ( $core == 1 )
         $query = "SELECT * FROM accounts WHERE login='".$screenname."'";
@@ -896,7 +984,7 @@ function doedit_user()
 
       $sn_result = $sql["logon"]->query($query);
       if ( $sql["logon"]->num_rows($sn_result) <> 0 )
-        redirect('edit.php?error=6');
+        redirect("edit.php?error=6");
     }
   }
 
@@ -914,9 +1002,10 @@ function doedit_user()
   }
 
   //make sure the mail is valid mail format
-  require_once 'libs/valid_lib.php';
+  require_once "libs/valid_lib.php";
+
   if ( !( ( valid_email($new_mail) ) && ( strlen($new_mail) < 225 ) ) )
-    redirect('edit.php?error=2');
+    redirect("edit.php?error=2");
 
   // find out if our email changed
   if ( $core == 1 )
@@ -928,7 +1017,7 @@ function doedit_user()
 
   // if it did change, then save it
   // if we didn't have an email address already, we just accept the new one
-  if ( ( $email["email"] != '' ) && ( $email["email"] != $new_mail ) )
+  if ( ( $email["email"] != "" ) && ( $email["email"] != $new_mail ) )
   {
     // if we have to send a confirm message, do so
     // if not, we're clear to just save it as usual
@@ -1010,6 +1099,19 @@ function doedit_user()
       $new_mail = $email["email"];
     }
   }
+
+  // Achievement Points to Credits
+  // just to be sure we have no cheating
+  if ( $achievement_point_credits )
+  {
+    if ( $credits_fractional )
+      $new_credits = ($achievement_point_credits/$achievement_point_points)*$points_to_spend;
+    else
+      $new_credits = float(($achievement_point_credits/$achievement_point_points)*$points_to_spend);
+
+    $points_query = "UPDATE config_accounts SET Credits=Credits+'".$new_credits."', AchievePointsSpent=AchievePointsSpent+'".$points_to_spend."' WHERE Login='".$user_name."'";
+    $points_result = $sql["mgr"]->query($points_query);
+  }
     
   // Overriding Remember Me is done via a cookie
   // usage is backward from the name
@@ -1039,9 +1141,9 @@ function doedit_user()
   $acct_result = $sql["logon"]->query($query);
 
   if ( doupdate_referral($referredby) || $acct_result || $sn_result || $other_changes )
-    redirect('edit.php?error=3');
+    redirect("edit.php?error=3");
   else
-    redirect('edit.php?error=4');
+    redirect("edit.php?error=4");
 
 }
 
@@ -1052,17 +1154,17 @@ function doedit_user()
 function lang_set()
 {
   if ( empty($_GET["lang"]) )
-    redirect('edit.php?error=1');
+    redirect("edit.php?error=1");
   else
     $lang = addslashes($_GET["lang"]);
 
   if ( $lang )
   {
-    setcookie('corem_lang', $lang, time()+60*60*24*30*6); //six month
-    redirect('edit.php');
+    setcookie("corem_lang", $lang, time()+60*60*24*30*6); //six month
+    redirect("edit.php");
   }
   else
-    redirect('edit.php?error=1');
+    redirect("edit.php?error=1");
 }
 
 
@@ -1072,17 +1174,17 @@ function lang_set()
 function theme_set()
 {
   if ( empty($_GET["theme"]) )
-    redirect('edit.php?error=1');
+    redirect("edit.php?error=1");
   else
     $tmpl = addslashes($_GET["theme"]);
 
   if ( $tmpl )
   {
-    setcookie('corem_theme', $tmpl, time()+3600*24*30*6); //six month
-    redirect('edit.php');
+    setcookie("corem_theme", $tmpl, time()+3600*24*30*6); //six month
+    redirect("edit.php");
   }
   else
-    redirect('edit.php?error=1');
+    redirect("edit.php?error=1");
 }
 
 

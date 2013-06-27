@@ -539,6 +539,7 @@ function general()
     {
       if ( !$sub_action )
       {
+        $datasite_tooltip_script_src = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Tooltip_Script_Src'"));
         $datasite_base = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Base'"));
         $datasite_name = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Name'"));
         $datasite_item = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Item'"));
@@ -548,6 +549,7 @@ function general()
         $datasite_skill = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Skill'"));
         $datasite_go = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_GO'"));
         $datasite_achieve = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Datasite_Achievement'"));
+
         $output .= '
         <form action="admin.php" method="get" id="form">
           <div>
@@ -556,6 +558,14 @@ function general()
             <input type="hidden" name="subsection" value="datasite" />
           </div>
           <table class="simple" id="admin_datasite">
+            <tr>
+              <td class="help">
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "datasitetooltipscriptsrc_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "datasitetooltipscriptsrc").'</a>:
+              </td>
+              <td>
+                <input type="text" name="datasitetooltipscriptsrc" value="'.$datasite_tooltip_script_src["Value"].'" size="50" />
+              </td>
+            </tr>
             <tr>
               <td class="help">
                 <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "datasitebase_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "datasitebase").'</a>:
@@ -636,6 +646,7 @@ function general()
       }
       else
       {
+        $datasite_tooltip_script_src = $sqlm->quote_smart($_GET["datasitetooltipscriptsrc"]);
         $datasite_base = $sqlm->quote_smart($_GET["datasitebase"]);
         $datasite_name = $sqlm->quote_smart($_GET["datasitename"]);
         $datasite_item = $sqlm->quote_smart($_GET["datasiteitem"]);
@@ -646,6 +657,7 @@ function general()
         $datasite_go = $sqlm->quote_smart($_GET["datasitego"]);
         $datasite_achieve = $sqlm->quote_smart($_GET["datasiteachieve"]);
 
+        $result = $sqlm->query("UPDATE config_misc SET Value='".$datasite_tooltip_script_src."' WHERE `Key`='Tooltip_Script_Src'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$datasite_base."' WHERE `Key`='Datasite_Base'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$datasite_name."' WHERE `Key`='Datasite_Name'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$datasite_item."' WHERE `Key`='Datasite_Item'");

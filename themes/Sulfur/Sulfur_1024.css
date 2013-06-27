@@ -1781,6 +1781,8 @@ tr td.rep0
   width: 97%;
   margin-top: 0px;
   margin-bottom: 5px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* FORUM.PHP */

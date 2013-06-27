@@ -55,30 +55,29 @@
 
   if ( ( !$debug && $index_show_realms ) && ( $cur_filename != "error.php" ) )
   {
-    $result = $sql["mgr"]->query("SELECT `Index` AS id, Name AS name FROM `config_servers`");
+    $result = $sql["mgr"]->query("SELECT * FROM `config_servers`");
 
     if ( ( $sql["mgr"]->num_rows($result) > 1 ) && ( count($server) > 1 ) && ( $cur_filename == "index.php" ) )
     {
       $output .= '
         <div class="bubble">
-          <center>
             <div class="fieldset_border realm_fieldset">
               <span class="legend">'.lang("header", "realms").'</span>
               <table class="lined" style="width: 97%;">
                 <tr>
                   <th>'.lang("realm", "name").'</th>
-                  <th width="15%">'.lang("realm", "status").'</th>
-                  <th width="15%">'.lang("realm", "online").'</th>
+                  <th style="width: 15%;">'.lang("realm", "status").'</th>
+                  <th style="width: 15%;">'.lang("realm", "online").'</th>
                 </tr>';
 
       while ( $row = $sql["mgr"]->fetch_assoc($result) )
       {
         $output .= '
                 <tr>
-                  <td><a href="realm.php?action=set_def_realm&amp;id='.$row["id"].'&amp;url='.$_SERVER["PHP_SELF"].'">'.htmlentities($row["name"], ENT_COMPAT, $site_encoding).'</a></td>';
+                  <td><a href="realm.php?action=set_def_realm&amp;id='.$row["Index"].'&amp;url='.$_SERVER["PHP_SELF"].'">'.htmlentities($row["Name"], ENT_COMPAT, $site_encoding).'</a></td>';
 
         // show server status
-        if ( test_port($server[$row["id"]]["addr"], $server[$row["id"]]["game_port"]) )
+        if ( test_port($server[$row["Index"]]["addr"], $server[$row["Index"]]["game_port"]) )
           $output .= '
                   <td><img src="img/up.gif" alt="" /></td>';
         else
@@ -86,7 +85,7 @@
                   <td><img src="img/down.gif" alt="" /></td>';
 
         $sqlt = new SQL;
-        $sqlt->connect($characters_db[$row["id"]]["addr"], $characters_db[$row["id"]]["user"], $characters_db[$row["id"]]["pass"], $characters_db[$row["id"]]["name"], $characters_db[$row["id"]]["encoding"]);
+        $sqlt->connect($characters_db[$row["Index"]]["addr"], $characters_db[$row["Index"]]["user"], $characters_db[$row["Index"]]["pass"], $characters_db[$row["Index"]]["name"], $characters_db[$row["Index"]]["encoding"]);
 
         // get max characters for this realm
         if ( $core == 1 )
@@ -116,7 +115,6 @@
       $output .= '
               </table>
             </div>
-          </center>
         </div>';
     }
   }

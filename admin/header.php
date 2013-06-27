@@ -87,21 +87,28 @@ if ( strlen($current) == 0 )
 }
 
 // detect latest revision
-// first, we ask assembla's trac for the latest changeset
+// first, we ask assembla for the latest changeset
 // and parse it into an array
-$handle = fopen("https://subversion.assembla.com/svn/coremanager/", "r");
-$data = fread($handle, 256);
+$handle = curl_init("http://subversion.assembla.com/svn/coremanager3/");
+curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+$data = curl_exec($handle);
+$errno = curl_errno($handle);
+
+if ( $errno != 0 )
+  $data = "Revision -1:";
+
+curl_close($handle);
 $data = explode("\n", $data);
 
 // search the array for the blessed line
 for ( $i = 0; $i < count($data); $i++ )
 {
-  if ( strpos($data[$i], "Revision") <> false )
+  if ( strpos($data[$i], "Revision") !== false )
     break;
 }
 
 // if we got the line containing the revision then we need just the number
-if ( strpos($data[$i], "Revision") <> false )
+if ( strpos($data[$i], "Revision") !== false )
 {
   // convert the line into an array
   $revision = explode(" ", $data[$i]);
@@ -117,7 +124,7 @@ if ( strpos($data[$i], "Revision") <> false )
   }
 
   // compare
-  if ( !isset($current) )
+  if ( !isset($current) || ( $current == -1 ) )
     $current = "ERROR";
 
   if ( $current <> $revision[$j] )

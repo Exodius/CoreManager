@@ -111,6 +111,8 @@ function pointsystem()
         $race_credits = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Race_Change_Credits'"));
         $trans_credits = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Transfer_Credits'"));
         $hearth_credits = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Hearthstone_Credits'"));
+        $achievement_point_points = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Achievement_Point_Points'"));
+        $achievement_point_credits = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM config_misc WHERE `Key`='Achievement_Point_Credits'"));
 
         $output .= '
         <form action="admin.php" method="get" id="form">
@@ -254,6 +256,22 @@ function pointsystem()
                 <input type="text" name="hearthcredits" value="'.$hearth_credits["Value"].'"/>
               </td>
             </tr>
+            <tr>
+              <td colspan="2">
+                <b>'.lang("admin", "achievement_points").'</b>
+              </td>
+            </tr>
+            <tr>
+              <td class="help">
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "creds_per_achieve_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "creds_per_achieve").'</a>:
+              </td>
+              <td>
+                <input type="text" name="achievement_point_points" value="'.$achievement_point_points["Value"].'" size="6"/>
+                <span>'.lang("admin", "points").'&nbsp;=&nbsp;</span>
+                <input type="text" name="achievement_point_credits" value="'.$achievement_point_credits["Value"].'" size="6"/>
+                <span>'.lang("admin", "credits").'</span>
+              </td>
+            </tr>
           </table>
           <div>
             <input type="submit" name="save" value="'.lang("admin", "save").'" />
@@ -289,6 +307,8 @@ function pointsystem()
         $race_credits = $sqlm->quote_smart($_GET["racecredits"]);
         $trans_credits = $sqlm->quote_smart($_GET["transcredits"]);
         $hearth_credits = $sqlm->quote_smart($_GET["hearthcredits"]);
+        $achievement_point_points = $sqlm->quote_smart($_GET["achievement_point_points"]);
+        $achievement_point_credits = $sqlm->quote_smart($_GET["achievement_point_credits"]);
 
         $result = $sqlm->query("UPDATE config_misc SET Value='".$allow_fractional."' WHERE `Key`='Credits_Fractional'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$credits_per_recruit."' WHERE `Key`='Credits_Per_Recruit'");
@@ -302,6 +322,8 @@ function pointsystem()
         $result = $sqlm->query("UPDATE config_misc SET Value='".$race_credits."' WHERE `Key`='Race_Change_Credits'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$trans_credits."' WHERE `Key`='Transfer_Credits'");
         $result = $sqlm->query("UPDATE config_misc SET Value='".$hearth_credits."' WHERE `Key`='Hearthstone_Credits'");
+        $result = $sqlm->query("UPDATE config_misc SET Value='".$achievement_point_points."' WHERE `Key`='Achievement_Point_Points'");
+        $result = $sqlm->query("UPDATE config_misc SET Value='".$achievement_point_credits."' WHERE `Key`='Achievement_Point_Credits'");
 
         redirect("admin.php?section=pointsystem&subsection=basic");
       }

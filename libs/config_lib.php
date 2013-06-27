@@ -724,6 +724,26 @@ while ( $misc_row = $sqlm->fetch_assoc($misc) )
       $ultra_vendor_max_item_req_level = $misc_row["Value"];
       break;
     }
+    case "Ultra_Vendor_Max_Item_Req_Level":
+    {
+      $ultra_vendor_max_item_req_level = $misc_row["Value"];
+      break;
+    }
+    case "Achievement_Point_Points":
+    {
+      $achievement_point_points = $misc_row["Value"];
+      break;
+    }
+    case "Achievement_Point_Credits":
+    {
+      $achievement_point_credits = $misc_row["Value"];
+      break;
+    }
+    case "Tooltip_Script_Src":
+    {
+      $tooltip_script_src = $misc_row["Value"];
+      break;
+    }
   }
 }
 

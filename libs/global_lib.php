@@ -138,21 +138,16 @@ function time_offset_to_zone($offset)
 
 
 //#############################################################################
-// wowhead tooltip script location
-$tt_script = "http://www.wowhead.com/widgets/power.js";
-
-
-//#############################################################################
 // loading of wowhead tool tip script
 function wowhead_tt()
 {
-  global $output, $tt_script;
+  global $output, $name_datasite, $tooltip_script_src;
 
-  // check that we can reach wowhead
+  // check that we can reach the tooltip
   // this should improve page load times when wowhead is unreachable
-  if ( test_port("www.wowhead.com", 80) )
+  if ( test_port($name_datasite, 80) )
     $output .='
-    <script type="text/javascript" src="'.$tt_script.'"></script>';
+    <script type="text/javascript" src="'.$tooltip_script_src.'"></script>';
 
 }
 
