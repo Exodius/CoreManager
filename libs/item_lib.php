@@ -149,7 +149,7 @@ function get_item_quality_color($quality)
 
 function get_item_tooltip($item, $ench, $prop, $creator, $durability, $flags)
 {
-  global $world_db, $realm_id, $locales_search_option, $sql, $core;
+  global $world_db, $realm_id, $locales_search_option, $site_encoding, $sql, $core;
 
   if ( $item )
   {

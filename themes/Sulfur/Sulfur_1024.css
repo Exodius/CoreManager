@@ -456,6 +456,31 @@ tr td div.gradient_pp
   background-color: #333;
   width: 50px;
 }
+/* DIV replacements for TABLEs used for layout */
+.div_lined
+{
+  width: 770px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.div_lined_head
+{
+  background-color: #484848;
+  border-bottom: 1px solid  #383838;
+  font-weight: bold;
+  font-size: /font_size_2/;
+  color: /focus_color/;
+  padding: 5px;
+}
+.div_lined_line
+{
+  border-bottom: 1px solid  #383838;
+  padding: 5px;
+  background-color: /btn_background_color/;
+}
+/* END OF DIVs for TABLEs */
+
 img.bag_icon
 {
   float: left;
@@ -464,7 +489,6 @@ img.bag_icon
   border: 1px solid #585858;
   margin-left: 5px;
 }
-
 .bag
 {
   position: relative;
@@ -552,7 +576,7 @@ tr th a.DESC
 .small
 {
   font-size: /font_size_1/;
-}  
+}
 .large_bold
 {
   font-size: /font_size_4/;
@@ -624,13 +648,19 @@ i.br
   font: /font_size_2/ /font_1/;
   text-align: center;
   color: /default_text_color/;
+  background: /table_background_color/;
+  border: 1px solid /input_border_color/;
+  width: 798px;
+  height: 128x;
+  padding-top: 3px;
 }
 .table_bottom
 {
   background: /table_background_color/;
-  border: 1px solid /input_border_color/;
-  width: 800px;
-  height: 100px;
+  width: 798px;
+  height: 128px;
+  margin-top: 0px;
+  margin-bottom: 10px;
 }
 .table_bottom_left
 {
@@ -653,12 +683,20 @@ i.br
 #body_bottom a:hover, #body_bottom a:focus
 {
     text-decoration: underline;
-} 
+}
 .logo_border
 {
   border: 1px solid /input_border_color/;
   background-color: /input_background_color/;
   padding: 6px;
+}
+.logo_border:hover
+{
+  border: 1px solid /hilite_color/;
+}
+.footer_badges
+{
+  display: inline-block;
 }
 
 .icon_border_0
@@ -1028,7 +1066,7 @@ tr td.rep0
   -moz-opacity: .80;
   opacity: 0.80;
 }
-.info_tooltip  td
+.info_tooltip td
 {
   float: none;
   font-size: /font_size_2/;
@@ -1104,6 +1142,30 @@ tr td.rep0
   height: 13px;
 }
 
+.item_tooltip_div
+{
+  visibility: hidden;
+  position: absolute;
+  z-index: 99;
+  text-align: left;
+  background-color: #000000;
+  border: 1px solid #F0D070;
+  color: #ffffff;
+  width: 300px;
+  background-color: #000000;
+  padding: 3px;
+}
+.item_tooltip_div .item_tooltip_socket
+{
+  width: 14px;
+  height: 14px;
+}
+.item_tooltip_div .item_tooltip_price
+{
+  width: 13px;
+  height: 13px;
+}
+
 .answerbox
 {
   font-size: /font_size_2/;
@@ -1133,6 +1195,14 @@ tr td.rep0
 .no_display
 {
   display: none;
+}
+.left_text
+{
+  text-align: left;
+}
+.right_text
+{
+  text-align: right;
 }
 .center_text
 {
@@ -1533,6 +1603,8 @@ tr td.rep0
 #ch_fri_unk_1
 {
   width: 1%;
+  margin-left: auto;
+  margin-right: auto;
 }
 #ch_fri_unk_2
 {
@@ -2079,8 +2151,12 @@ tr td.rep0
 /* CHAR_LIST.PHP */
 #char_list_bubble
 {
-  width: 835px;
-  left: -17px;
+  width: 1022px;
+  margin-left: -112px; /* half of the difference in width */
+}
+#char_list_table
+{
+  width: 100%;
 }
 #char_list_delete_wrap
 {

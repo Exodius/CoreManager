@@ -54,6 +54,9 @@ $output .= '
   </head>
   <body>';
 
+// pre-set, seems to be required for SVN 1.8+
+$current = "";
+
 // get our current revision
 if ( is_readable(".svn/entries") )
 {
@@ -89,7 +92,7 @@ if ( strlen($current) == 0 )
 // detect latest revision
 // first, we ask assembla for the latest changeset
 // and parse it into an array
-$handle = curl_init("http://subversion.assembla.com/svn/coremanager3/");
+$handle = curl_init("http://subversion.assembla.com/svn/coremanager/");
 curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
 $data = curl_exec($handle);
 $errno = curl_errno($handle);

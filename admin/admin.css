@@ -18,6 +18,10 @@
 */
 
 /* General */
+.bold
+{
+  font-weight: bold;
+}
 a:link img, a:visited img
 {
   text-decoration: none;
@@ -453,6 +457,10 @@ table.hidden
   font: 14px Verdana, sans-serif;
   font-weight: bold;
   pointer-events: none;
+}
+#admin_achievement_contest_list
+{
+	width: 750px;
 }
 
 /* End Tooltips */

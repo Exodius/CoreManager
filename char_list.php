@@ -304,7 +304,7 @@ function browse_chars()
 
   $this_page = $sql["char"]->num_rows($query);
 
-  //==========================top tage navigaion starts here========================
+  //==========================top page navigaion starts here========================
   $output .= '
         <script type="text/javascript" src="libs/js/check.js"></script>
           <table class="top_hidden">
@@ -365,14 +365,14 @@ function browse_chars()
               </td>
             </tr>
           </table>';
-  //==========================top tage navigaion ENDS here ========================
+  //==========================top page navigaion ENDS here ========================
   $output .= '
           <form method="get" action="char_list.php" id="form1">
             <div>
               <input type="hidden" name="action" value="del_char_form" />
               <input type="hidden" name="start" value="'.$start.'" />
             </div>
-            <table class="lined">
+            <table class="lined" id="char_list_table">
               <tr>
                 <td colspan="6" align="left" class="hidden">';
   if ( ( $user_lvl >= $action_permission["delete"] ) || ( $owner_acc_name == $user_name ) )
@@ -387,20 +387,20 @@ function browse_chars()
                 <th style="width: 1%;">
                   <a href="char_list.php?order_by=guid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "guid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "id").'</a>
                 </th>
-                <th style="width: 1%;">
+                <th style="width: 10%;">
                   <a href="char_list.php?order_by=name&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "name" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "char_name").'</a>
                 </th>
-                <th style="width: 1%;">
+                <th style="width: 10%;">
                   <a href="char_list.php?order_by=acct&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "acct" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "account").'</a>
                 </th>
                 <th style="width: 1%;">
-                  <a href="char_list.php?order_by=race&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "race" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "race").'</a>
+                  <a href="char_list.php?order_by=race&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "race" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "race_short").'</a>
                 </th>
                 <th style="width: 1%;">
-                  <a href="char_list.php?order_by=class&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "class" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "class").'</a>
+                  <a href="char_list.php?order_by=class&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "class" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "class_short").'</a>
                 </th>
                 <th style="width: 1%;">
-                  <a href="char_list.php?order_by=level&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "level" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "level").'</a>
+                  <a href="char_list.php?order_by=level&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "level" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "level_short").'</a>
                 </th>
                 <th style="width: 10%;">
                   <a href="char_list.php?order_by=mapid&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "mapid, zoneid" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "map").'</a>
@@ -414,11 +414,13 @@ function browse_chars()
                 <th style="width: 10%;">
                   <!-- a href="char_list.php?order_by=guild&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'" -->'.( ( $order_by == "guild" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "guild").'<!-- /a -->
                 </th>
-                <th style="width: 1%;">
+                <th style="width: 10%;">
                   <a href="char_list.php?order_by=timestamp&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "logout_time" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "lastseen").'</a>
                 </th>
                 <th style="width: 1%;">
-                  <a href="char_list.php?order_by=online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "online" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).lang("char_list", "online").'</a>
+                  <a href="char_list.php?order_by=online&amp;start='.$start.( ( $search_value && $search_by ) ? '&amp;search_by='.$search_by.'&amp;symbol='.$_GET["symbol"].'&amp;search_value='.$search_value : '' ).'&amp;dir='.$dir.'">'.( ( $order_by == "online" ) ? '<img src="img/arr_'.( ( $dir ) ? "dw" : "up" ).'.gif" alt="" /> ' : '' ).'
+                    <img src="img/lightning.png" onmousemove="oldtoolTip(\''.lang("char_list", "online").'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" '.( ( $order_by == "online" ) ? '' : 'style="position: relative; top: 7px;"' ).' />
+                  </a>
                 </th>';
 
   if ( $showcountryflag )
@@ -427,7 +429,7 @@ function browse_chars()
 
     $output .= '
                 <th style="width: 1%;">
-                  <span>'.lang("global", "country").'</span>
+                  <img src="img/world.png" onmousemove="oldtoolTip(\''.lang("global", "country").'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()" alt="" />
                 </th>';
   }
 
@@ -464,7 +466,13 @@ function browse_chars()
     $time_offset = $timezone_offset * 3600;
       
     if ( $char["timestamp"] <> 0 )
-      $lastseen = date("F j, Y @ Hi", $char["timestamp"] + $time_offset);
+    {
+      // we only show hours if it was today
+      if ( date("M j, Y", $char["timestamp"] + $time_offset) == date("M j, Y", $time_offset) )
+        $lastseen = date(lang("char_list", "today")." @ Hi", $char["timestamp"] + $time_offset);
+      else
+        $lastseen = date("M j, Y", $char["timestamp"] + $time_offset);
+    }
     else
       $lastseen = "-";
 
@@ -525,19 +533,19 @@ function browse_chars()
                 <td>
                   <span>'.char_get_level_color($char["level"]).'</span>
                 </td>
-                <td class="small">
+                <td>
                   <span onmousemove="oldtoolTip(\'MapID:'.$char["mapid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_map_name($char["mapid"]).'</span>
                 </td>
-                <td class="small">
+                <td>
                   <span onmousemove="oldtoolTip(\'ZoneID:'.$char["zoneid"].'\',\'old_item_tooltip\')" onmouseout="oldtoolTip()">'.get_zone_name($char["zoneid"]).'</span>
                 </td>
                 <td>
                   <span>'.$char["highest_rank"].'</span>
                 </td>
-                <td class="small">
+                <td>
                   <a href="guild.php?action=view_guild&amp;error=3&amp;id='.$guild_id.'">'.htmlentities($guild_name, ENT_COMPAT, $site_encoding).'</a>
                 </td>
-                <td class="small">
+                <td>
                   <span>'.$lastseen.'</span>
                 </td>
                 <td>

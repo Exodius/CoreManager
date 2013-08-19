@@ -61,28 +61,38 @@
     {
       $output .= '
         <div class="bubble">
-            <div class="fieldset_border realm_fieldset">
-              <span class="legend">'.lang("header", "realms").'</span>
-              <table class="lined" style="width: 97%;">
-                <tr>
-                  <th>'.lang("realm", "name").'</th>
-                  <th style="width: 15%;">'.lang("realm", "status").'</th>
-                  <th style="width: 15%;">'.lang("realm", "online").'</th>
-                </tr>';
+          <div class="fieldset_border realm_fieldset">
+            <span class="legend">'.lang("header", "realms").'</span>
+            <table class="lined" style="width: 97%;">
+              <tr>
+                <th>'.lang("realm", "name").'</th>
+                <th style="width: 15%;">'.lang("realm", "status").'</th>
+                <th style="width: 15%;">'.lang("realm", "online").'</th>
+              </tr>';
 
       while ( $row = $sql["mgr"]->fetch_assoc($result) )
       {
         $output .= '
                 <tr>
-                  <td><a href="realm.php?action=set_def_realm&amp;id='.$row["Index"].'&amp;url='.$_SERVER["PHP_SELF"].'">'.htmlentities($row["Name"], ENT_COMPAT, $site_encoding).'</a></td>';
+                  <td>
+                    <a href="realm.php?action=set_def_realm&amp;id='.$row["Index"].'&amp;url='.$_SERVER["PHP_SELF"].'">'.htmlentities($row["Name"], ENT_COMPAT, $site_encoding).'</a>
+                  </td>';
 
         // show server status
         if ( test_port($server[$row["Index"]]["addr"], $server[$row["Index"]]["game_port"]) )
+        {
           $output .= '
-                  <td><img src="img/up.gif" alt="" /></td>';
+                  <td>
+                    <img src="img/up.gif" alt="" />
+                  </td>';
+        }
         else
+        {
           $output .= '
-                  <td><img src="img/down.gif" alt="" /></td>';
+                  <td>
+                    <img src="img/down.gif" alt="" />
+                  </td>';
+        }
 
         $sqlt = new SQL;
         $sqlt->connect($characters_db[$row["Index"]]["addr"], $characters_db[$row["Index"]]["user"], $characters_db[$row["Index"]]["pass"], $characters_db[$row["Index"]]["name"], $characters_db[$row["Index"]]["encoding"]);
@@ -120,11 +130,8 @@
   }
 
   $output .= '
-        <div id="body_bottom">
-          <table class="table_bottom">
-            <tr>
-              <td class="table_bottom_left"></td>
-              <td class="table_bottom_middle">';
+        <div id="body_bottom">';
+
   // we can't get the newest user if we are in debug mode
   if ( $show_newest_user && !$debug )
   {
@@ -145,41 +152,58 @@
       $new = $sql["logon"]->fetch_assoc($new_result);
     }
 
-    $output .= 
-                lang("footer", "newest").': '.( ( $user_lvl >= $action_permission["insert"] ) ? '<a href="user.php?action=edit_user&error=11&acct='.$new["acct"].'">' : '' ).$new["Login"].( ( $user_lvl >= $action_permission["insert"] ) ? '</a>' : '' ).'
-                <br />';
+    $output .= '
+          <span>'.lang("footer", "newest").':&nbsp;</span>';
+
+    if ( $user_lvl >= $action_permission["insert"] )
+      $output .= '
+          <a href="user.php?action=edit_user&error=11&acct='.$new["acct"].'">';
+
+    $output .= '
+            <span>'.$new["Login"].'</span>';
+
+    if ( $user_lvl >= $action_permission["insert"] )
+      $output .= '
+          </a>';
+
+    $output .= '
+          <br />';
   }
 
-  $output .=
-                lang("footer", "bugs_to_admin").' <a href="mailto:'.$admin_mail.'">'.lang("footer", "site_admin").'</a><br />';
+  $output .= '
+          <span>'.lang("footer", "bugs_to_admin").':</span>
+          <a href="mailto:'.$admin_mail.'">'.lang("footer", "site_admin").'</a>
+          <br />';
 
   unset($admin_mail);
-  $output .= sprintf(lang("footer", "execute").': %.5f', (microtime(true) - $time_start)).' '.lang("footer", "seconds").'.';
+  $output .= sprintf(lang("footer", "execute").":&nbsp;%.5f", (microtime(true) - $time_start))."&nbsp;".lang("footer", "seconds").'.';
   unset($time_start);
 
   // if any debug mode is activated, show memory usage
   if ( $debug )
   {
     $output .= '
-                Queries: '.$tot_queries.' on '.$_SERVER["SERVER_SOFTWARE"];
+          <span>Queries:&nbsp;'.$tot_queries.'&nbsp;on&nbsp;'.$_SERVER["SERVER_SOFTWARE"].'</span>';
     unset($tot_queries);
-    if ( function_exists('memory_get_usage') )
-      $output .= sprintf('<br />Mem. Usage: %.0f/%.0fK Peek: %.0f/%.0fK Global: %.0fK Limit: %s', memory_get_usage()/1024, memory_get_usage(true)/1024, memory_get_peak_usage()/1024, memory_get_peak_usage(true)/1024, sizeof($GLOBALS), ini_get('memory_limit'));
+    if ( function_exists("memory_get_usage") )
+      $output .= sprintf("<br />Mem. Usage: %.0f/%.0fK Peek: %.0f/%.0fK Global: %.0fK Limit: %s", memory_get_usage()/1024, memory_get_usage(true)/1024, memory_get_peak_usage()/1024, memory_get_peak_usage(true)/1024, sizeof($GLOBALS), ini_get("memory_limit"));
   }
 
   //---------------------Version Information-------------------------------------
 
   $output .= '
-                <div id="version">'.lang("footer", "powered").': ';
+          <div id="version">
+            <span>'.lang("footer", "powered").':&nbsp;</span>';
+
   if ( $show_version["show"] && $user_lvl >= $show_version["version_lvl"] )
   {
     if ( ( 1 < $show_version["show"] ) && ( $user_lvl >= $show_version["svnrev_lvl"] ) )
     {
       $show_version["svnrev"] = '';
-      // get our current revision
-      if ( is_readable('.svn/entries') )
+      // if file exists and readable
+      if ( is_readable(".svn/entries") )
       {
-        $file_obj = new SplFileObject('.svn/entries');
+        $file_obj = new SplFileObject(".svn/entries");
         // line 4 is where svn revision is stored
         $file_obj->seek(3);
         $show_version["svnrev"] = rtrim($file_obj->current());
@@ -208,89 +232,94 @@
         }
       }
 
-      $output .= 
-        $show_version["version"].lang("footer", "revision").': <a href="http://trac6.assembla.com/coremanager/changeset/'.$show_version["svnrev"].'">'.$show_version["svnrev"].'</a>';
+      $output .= '
+            <span>'.$show_version["version"].lang("footer", "revision").':</span>
+            <a href="https://www.assembla.com/code/coremanager/subversion/changesets/'.$show_version["svnrev"].'">'.$show_version["svnrev"].'</a>';
     }
     else
     {
-      $output .= 
-        lang("footer", "version").': '.$show_version["version"].lang("footer", "revision").' '.$show_version["svnrev"];
+      $output .= '
+            <span>'.lang("footer", "version").':&nbsp;'.$show_version["version"].lang("footer", "revision").'&nbsp;'.$show_version["svnrev"].'</span>';
     }
   }
   $output .= '
-                </div>';
+          </div>';
 
   // links at footer
   $output .= '
-                <p>';
+          <div style="margin-top: 10px; margin-bottom: 11px;">
+            <div class="footer_badges">';
   
   switch ( $core )
   {
     case 1:
     {
       $output .= '
-                  <a href="http://www.arcemu.org/" rel="external">
-                    <img src="img/logo-arcemu.png" class="logo_border" alt="arcemu" />
-                  </a>';
+              <a href="http://www.arcemu.org/" rel="external">
+                <img src="img/logo-arcemu.png" class="logo_border" alt="arcemu" />
+              </a>';
       break;
     }
     case 2:
     {
       $output .= '
-                  <a href="http://getmangos.com/" rel="external">
-                    <img src="img/logo-mangos.png" class="logo_border" alt="mangos" />
-                  </a>';
+              <a href="http://getmangos.com/" rel="external">
+                <img src="img/logo-mangos.png" class="logo_border" alt="mangos" />
+              </a>';
       break;
     }
     case 3:
     {
       $output .= '
-                  <a href="http://www.trinitycore.org/" rel="external">
-                    <img src="img/logo-trinity.png" class="logo_border" alt="trinity" />
-                  </a>';
+              <a href="http://www.trinitycore.org/" rel="external">
+                <img src="img/logo-trinity.png" class="logo_border" alt="trinity" />
+              </a>';
       break;
     }
   }
   $output .= '
-                  <a href="http://www.php.net/" rel="external">
-                    <img src="img/logo-php.png" class="logo_border" alt="php" />
-                  </a>
-                  <a href="http://www.mysql.com/" rel="external">
-                    <img src="img/logo-mysql.png" class="logo_border" alt="mysql" />
-                  </a>
-                  <!-- a href="http://validator.w3.org/check?uri=referer" rel="external">
-                    <img src="img/logo-css.png" class="logo_border" alt="w3" />
-                  </a -->
-                  <br />
-                  <a href="http://www.mozilla.com/" rel="external">
-                    <img src="img/logo-firefox.png" class="logo_border" alt="firefox" />
-                  </a>
-                  <a href="http://www.google.com/chrome?hl=en&amp;brand=CHMI" rel="external">
-                    <img src="img/logo-chrome.png" class="logo_border" alt="firefox" />
-                  </a>
-                  <a href="http://www.apple.com/safari/" rel="external">
-                    <img src="img/logo-safari.png" class="logo_border" alt="firefox" />
-                  </a>
-                  <a href="http://www.opera.com/" rel="external">
-                    <img src="img/logo-opera.png" class="logo_border" alt="opera" />
-                  </a>
-                </p>
-              </td>
-              <td class="table_bottom_right"></td>
-            </tr>
-          </table>
-          <br />';
+            </div>
+            <div class="footer_badges">
+              <a href="http://www.php.net/" rel="external">
+                <img src="img/logo-php.png" class="logo_border" alt="php" />
+              </a>
+            </div>
+            <div class="footer_badges">
+              <a href="http://www.mysql.com/" rel="external">
+                <img src="img/logo-mysql.png" class="logo_border" alt="mysql" />
+              </a>
+            </div>
+            <!-- validator link is disabled because it is not possible for remote validator to check secured content -->
+            <!-- a href="http://validator.w3.org/check?uri=referer" rel="external">
+              <img src="img/logo-css.png" class="logo_border" alt="w3" />
+            </a -->
+            <br />
+            <div class="footer_badges">
+              <a href="http://www.mozilla.com/" rel="external">
+                <img src="img/logo-firefox.png" class="logo_border" alt="firefox" />
+              </a>
+            </div>
+            <div class="footer_badges">
+              <a href="http://www.google.com/chrome?hl=en&amp;brand=CHMI" rel="external">
+                <img src="img/logo-chrome.png" class="logo_border" alt="firefox" />
+              </a>
+            </div>
+            <div class="footer_badges">
+              <a href="http://www.apple.com/safari/" rel="external">
+                <img src="img/logo-safari.png" class="logo_border" alt="firefox" />
+              </a>
+            </div>
+            <div class="footer_badges">
+              <a href="http://www.opera.com/" rel="external">
+                <img src="img/logo-opera.png" class="logo_border" alt="opera" />
+              </a>
+            </div>
+          </div>';
+
   if ( $page_bottom_ad )
   {
     $output .= '
-          <table class="table_bottom">
-            <tr>
-              <td>'
-                .$page_bottom_ad_content.'
-              </td>
-            </tr>
-          </table>
-          <br />';
+          <div class="table_bottom">'.$page_bottom_ad_content.'</div>';
   }
 
   echo $output;
@@ -301,18 +330,22 @@
   if ( $debug > 2 )
   {
     echo '
-          <table>
-            <tr>
-              <td align="left">';
+          <div>
+            <div style="text-align: left;">';
+
     $arrayObj = new ArrayObject(get_defined_vars());
     for ( $iterator = $arrayObj->getIterator(); $iterator->valid(); $iterator->next() )
     {
       if ( is_array($iterator->current()) )
+      {
         echo '
-                <br />'.$iterator->key().' => '.print_r($iterator->current());
+              <br />'.$iterator->key().' => '.print_r($iterator->current());
+      }
       elseif ( !is_a($iterator->current(), "SQL") )
+      {
         echo '
-                <br />'.$iterator->key().' => '.$iterator->current();
+              <br />'.$iterator->key().' => '.$iterator->current();
+      }
     }
     unset($iterator);
     unset($arrayObj);
@@ -321,15 +354,16 @@
     if ( $debug > 3 )
     {
       echo '
-                <pre>';
-                  print_r($GLOBALS);
+              <code>';
+
+      print_r($GLOBALS);
+
       echo '
-                </pre>';
+              </code>';
     }
     echo '
-              </td>
-            </tr>
-          </table>';
+            </div>
+          </div>';
   }
 
 ?>

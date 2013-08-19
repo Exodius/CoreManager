@@ -74,7 +74,7 @@ function redeem_coupon()
     }
 
     $output .= '
-      <div class="tab_content">';
+      <div class="tab_content center">';
 
     // make sure we're allowed to use this coupon
     if ( ( ( $coupon["target"] != 0 ) && ( $coupon["target"] != $user_id ) ) || ( ( $usage_count >= $coupon["usage_limit"] ) && ( $coupon["usage_limit"] != -1 ) ) )
@@ -434,7 +434,7 @@ function redeem_coupon()
   else
   {
     $output .= '
-      <div class="tab_content">';
+      <div class="tab_content center">';
 
     $output .= '
         <span>'.lang("points", "redeemed").'</span>';
@@ -731,7 +731,7 @@ function coupons()
 
   $output .= '
         <!-- start of point_system.php COUPONS -->
-        <div class="tab_content">';
+        <div class="tab_content center">';
 
   $coupon_query = "SELECT * FROM point_system_coupons WHERE (target='0' OR target='".$user_id."') AND enabled='1'";
   $coupon_result = $sql["mgr"]->query($coupon_query);
@@ -991,6 +991,13 @@ function coupons()
     $output .= '
           </table>';
   }
+  else
+  {
+    $output .= '
+            <div style="text-align: center;">
+              <span>'.lang("points", "no_coupons").'</span>
+            </div>';
+  }
 
   $output .= '
         </div>
@@ -1005,7 +1012,7 @@ function raffles()
   points_tabs();
 
   $output .= '
-          <div class="tab_content">';
+          <div class="tab_content center">';
 
   $raffle_query = "SELECT * FROM point_system_raffles WHERE enabled='1'";
   $raffle_result = $sql["mgr"]->query($raffle_query);
@@ -1245,6 +1252,13 @@ function raffles()
     $output .= '
             </table>';
   }
+  else
+  {
+    $output .= '
+            <div style="text-align: center;">
+              <span>'.lang("points", "no_raffles").'</span>
+            </div>';
+  }
 
   $output .= '
           </div>
@@ -1254,12 +1268,91 @@ function raffles()
 
 function contests()
 {
-  global  $output, $sql, $core;
+  global  $output, $sql, $core, $timezone_offset, $realm_id;
 
   points_tabs();
 
   $output .= '
-          <div class="tab_content">';
+          <div class="tab_content center">';
+
+  // note: we only display contests for the current realm
+  $query = "SELECT *, UNIX_TIMESTAMP(date_issued) AS issued_stamp, UNIX_TIMESTAMP(expiration) AS expire_stamp
+            FROM point_system_achievement_contests WHERE enabled='1' AND realm='".$realm_id."' AND expiration>=NOW()";
+  $result = $sql["mgr"]->query($query);
+
+  if ( $sql["mgr"]->num_rows($result) )
+  {
+    $output .= '
+            <table id="coupon_table" class="lined">
+              <tr>
+                <th style="width: 50%;">'.lang("points", "achievement").'</th>
+                <th>'.lang("points", "expire_date").'</th>
+                <th>'.lang("points", "winner").'</th>
+                <th>'.lang("points", "award").'</th>
+              </tr>';
+
+    $time_offset = $timezone_offset * 3600;
+
+    while ( $row = $sql["mgr"]->fetch_assoc($result) )
+    {
+      $ach_name_query = "SELECT name FROM achievement WHERE id='".$row["achievement"]."'";
+      $ach_name_result = $sql["dbc"]->query($ach_name_query);
+      $ach_name_result = $sql["dbc"]->fetch_assoc($ach_name_result);
+        
+      if ( $row["issued_stamp"] <> 0 )
+        $date_issued = date("M j, Y @ Hi", $row["issued_stamp"] + $time_offset);
+      else
+        $date_issued = "-";
+        
+      if ( $row["expire_stamp"] <> 0 )
+        $date_expires = date("M j, Y @ Hi", $row["expire_stamp"] + $time_offset);
+      else
+        $date_expires = "-";
+
+      // get the contest's winner
+      $winner_query = "SELECT name FROM characters WHERE guid='".$row["winner_guid"]."'";
+      $winner_result = $sql["char"]->query($winner_query);
+      $winner_result = $sql["char"]->fetch_assoc($winner_result);
+
+      $output .= '
+              <tr>
+                <td>'.$ach_name_result["name"].'</td>
+                <td>'.$date_expires.'</td>
+                <td>'.$winner_result["name"].'</td>
+                <td>';
+
+      if ( $row["prize_bag"] < 0 )
+      {
+        $coupon_query = "SELECT title FROM point_system_coupons WHERE entry='".($row["prize_bag"]*-1)."'";
+        $coupon_result = $sql["mgr"]->query($coupon_query);
+        $coupon_result = $sql["mgr"]->fetch_assoc($coupon_result);
+
+        $output .= '
+                  <span>'.lang("points", "coupon").':</span>
+                  <br />
+                  <a href="point_system.php?action=coupons">'.$coupon_result["title"].'</a>';
+      }
+      else
+      {
+        $output .= '
+                  <a href="point_system.php?action=view_bag&amp;bag_id='.$row["prize_bag"].'">'.lang("points", "prize_bag").'</a>';
+      }
+
+      $output .= '
+                </td>
+              </tr>';
+    }
+
+    $output .= '
+            </table>';
+  }
+  else
+  {
+    $output .= '
+            <div style="text-align: center;">
+              <span>'.lang("points", "no_contests").'</span>
+            </div>';
+  }
 
   $output .= '
           </div>
@@ -1279,7 +1372,7 @@ function view_bag()
   $bag = $sql["mgr"]->fetch_assoc($bag_result);
 
   $output .= '
-          <div class="tab_content">
+          <div class="tab_content center">
             <form method="get" action="point_system.php" id="form">
               <input type="hidden" name="action" value="edit_bag" />
               <input type="hidden" name="bag_id" value="'.$bag_id.'" />
@@ -1562,7 +1655,7 @@ function view_raffle()
     $usage_count = $sql["mgr"]->num_rows($usage_result);
 
     $output .= '
-          <div class="tab_content">';
+          <div class="tab_content center">';
 
     // make sure we're allowed to use this coupon
     if ( ( ( $raffle["tickets_per_user"] <= $my_usage_count ) && ( $raffle["tickets_per_user"] != -1 ) ) || ( ( $usage_count >= $raffle["ticket_limit"] ) && ( $raffle["ticket_limit"] != -1 ) ) )
@@ -1894,7 +1987,7 @@ function view_raffle()
   else
   {
     $output .= '
-          <div class="tab_content">';
+          <div class="tab_content center">';
 
     $output .= '
             <span>'.lang("points", "purchased").'</span>';
@@ -2013,21 +2106,33 @@ function points_tabs()
         <!-- start of point_system.php TABS -->
         <div class="tab">
           <ul>
-            <li'.( ( $action == "coupons" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=coupons'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "coupons").'</a></li>
-            <li'.( ( $action == "raffles" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=raffles'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "raffles").'</a></li>
-            <!-- li'.( ( $action == "contests" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=contests">'.lang("points", "contests").'</a></li -->';
+            <li'.( ( $action == "coupons" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=coupons'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "coupons").'</a>
+            </li>
+            <li'.( ( $action == "raffles" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=raffles'.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "raffles").'</a>
+            </li>
+            <li'.( ( $action == "contests" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=contests">'.lang("points", "contests").'</a>
+            </li>';
 
   if ( ( $action == "redeem_coupon" ) || ( $coupon_id != 0 ) )
     $output .= '
-            <li'.( ( $action == "redeem_coupon" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "redeem_coupon").'</a></li>';
+            <li'.( ( $action == "redeem_coupon" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=redeem_coupon&amp;coupon_id='.$coupon_id.( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "redeem_coupon").'</a>
+            </li>';
 
   if ( $action == "view_bag" )
     $output .= '
-            <li'.( ( $action == "view_bag" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_bag&amp;bag_id='.$bag_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "view_bag").'</a></li>';
+            <li'.( ( $action == "view_bag" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=view_bag&amp;bag_id='.$bag_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $raffle_id != 0 ) ? '&amp;raffle_id='.$raffle_id : '' ).'">'.lang("points", "view_bag").'</a>
+            </li>';
 
   if ( ( $action == "view_raffle" ) || ( $raffle_id != 0 ) )
     $output .= '
-            <li'.( ( $action == "view_raffle" ) ? ' class="selected"' : '' ).'><a href="point_system.php?action=view_raffle&amp;raffle_id='.$raffle_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.lang("points", "view_raffle").'</a></li>';
+            <li'.( ( $action == "view_raffle" ) ? ' class="selected"' : '' ).'>
+              <a href="point_system.php?action=view_raffle&amp;raffle_id='.$raffle_id.( ( $coupon_id != 0 ) ? '&amp;coupon_id='.$coupon_id : '' ).( ( $bag_id != 0 ) ? '&amp;bag_id='.$bag_id : '' ).'">'.lang("points", "view_raffle").'</a>
+            </li>';
 
   $output .= '
           </ul>

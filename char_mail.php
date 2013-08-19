@@ -41,7 +41,7 @@ function char_mail()
   {
     $realmid = $sql["logon"]->quote_smart($_GET["realm"]);
     if ( is_numeric($realmid) )
-      $sql["char"]->connect($characters_db[$realmid]['addr'], $characters_db[$realmid]['user'], $characters_db[$realmid]['pass'], $characters_db[$realmid]['name'], $characters_db[$realmid]["encoding"]);
+      $sql["char"]->connect($characters_db[$realmid]["addr"], $characters_db[$realmid]["user"], $characters_db[$realmid]["pass"], $characters_db[$realmid]["name"], $characters_db[$realmid]["encoding"]);
     else
       $realmid = $realm_id;
   }
@@ -122,15 +122,22 @@ function char_mail()
       else
         $result = $sql["char"]->query("SELECT *, sender AS sender_guid, checked AS read_flag, id AS message_id FROM mail WHERE receiver='".$id."'");
 
-      if ( $sql["char"]->num_rows($result) )
-      {
-        $output .= '
+      $output .= '
                 <table class="lined" id="ch_mail_table">
                   <tr>
-                    <th width="10%">'.lang("char", "status").'</th>
-                    <th>'.lang("char", "sender").'</th>
-                    <th width="55%">'.lang("char", "subject").'</th>
+                    <th width="10%">
+                      <span>'.lang("char", "status").'</span>
+                    </th>
+                    <th>
+                      <span>'.lang("char", "sender").'</span>
+                    </th>
+                    <th width="55%">
+                      <span>'.lang("char", "subject").'</span>
+                    </th>
                   </tr>';
+
+      if ( $sql["char"]->num_rows($result) )
+      {
         while ( $mail = $sql["char"]->fetch_assoc($result) )
         {
           $c_query = "SELECT name FROM characters WHERE guid = '".$mail["sender_guid"]."'";
@@ -160,14 +167,27 @@ function char_mail()
           }
           $output .= '
                     </td>
-                    <td><a href="char.php?id='.$mail["sender_guid"].'">'.$c_name["name"].'</a></td>
-                    <td><a href="char_mail.php?id='.$id.'&amp;realm='.$realm_id.'&amp;action=readmail&amp;message='.$mail["message_id"].'">'.$mail["subject"].'</a></td>
+                    <td>
+                      <a href="char.php?id='.$mail["sender_guid"].'">'.$c_name["name"].'</a>
+                    </td>
+                    <td>
+                      <a href="char_mail.php?id='.$id.'&amp;realm='.$realm_id.'&amp;action=readmail&amp;message='.$mail["message_id"].'">'.$mail["subject"].'</a>
+                    </td>
                   </tr>';
         }
-        $output .= '
-                </table>';
       }
+      else
+      {
+        $output .= '
+                  <tr>
+                    <td colspan="3">
+                      <span>'.lang("char", "no_mail").'</span>
+                    </td>
+                  </tr>';
+      }
+
       $output .= '
+                </table>
               </div>
             </div>
             <br />
@@ -175,7 +195,7 @@ function char_mail()
               <tr>
                 <td>';
       // button to user account page, user account page has own security
-      makebutton(lang("char", "chars_acc"), 'user.php?action=edit_user&amp;id='.$owner_acc_id.'', 130);
+      makebutton(lang("char", "chars_acc"), 'user.php?action=edit_user&amp;id='.$owner_acc_id, 130);
       $output .= '
                 </td>
                 <td>';

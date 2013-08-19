@@ -124,7 +124,7 @@ function pointsystem()
           <table class="simple" id="admin_more">
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "fractional_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "fractional").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "fractional_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "fractional").':</a>
               </td>
               <td>
                 <input type="checkbox" name="allowfractional" '.( ( $allow_fractional["Value"] == 1 ) ? 'checked="checked"' : '' ).' />
@@ -137,7 +137,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "credits_per_recruit_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "credits_per_recruit").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "credits_per_recruit_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "credits_per_recruit").':</a>
               </td>
               <td>
                 <input type="text" name="creditsperrecruit" value="'.$credits_per_recruit["Value"].'"/>
@@ -145,7 +145,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "recruit_reward_auto_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "recruit_reward_auto").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "recruit_reward_auto_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "recruit_reward_auto").':</a>
               </td>
               <td>
                 <input type="checkbox" name="recruitrewardauto" '.( ( $recruit_reward_auto["Value"] == 1 ) ? 'checked="checked"' : '' ).' />
@@ -158,7 +158,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "initial_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "initial_credits").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "initial_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "initial_credits").':</a>
               </td>
               <td>
                 <input type="text" name="initialcredits" value="'.$initial_credits["Value"].'"/>
@@ -171,11 +171,11 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "qiv_credits_per_gold_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "qiv_credits_per_gold").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "qiv_credits_per_gold_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "qiv_credits_per_gold").':</a>
               </td>
               <td>
                 <input type="text" name="qiv_creditspergold_credits" value="'.$qiv_credits["Value"].'" size="6"/>
-                '.lang("admin", "credits").'&nbsp;=&nbsp;
+                <span>'.lang("admin", "credits").'&nbsp;=&nbsp;</span>
                 <input type="text" name="qiv_creditspergold_gold" value="'.$qiv_g.'" size="6"/>
                 <img src="../img/gold.gif" alt="gold" />
                 <input type="text" name="qiv_creditspergold_silver" value="'.$qiv_s.'" maxlength="2" size="6"/>
@@ -191,11 +191,11 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "uv_credits_per_gold_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "uv_credits_per_gold").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "uv_credits_per_gold_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "uv_credits_per_gold").':</a>
               </td>
               <td>
                 <input type="text" name="uv_creditspergold_credits" value="'.$uv_credits["Value"].'" size="6"/>
-                '.lang("admin", "credits").'&nbsp;=&nbsp;
+                <span>'.lang("admin", "credits").'&nbsp;=&nbsp;</span>
                 <input type="text" name="uv_creditspergold_gold" value="'.$uv_g.'" size="6"/>
                 <img src="../img/gold.gif" alt="gold" />
                 <input type="text" name="uv_creditspergold_silver" value="'.$uv_s.'" maxlength="2" size="6"/>
@@ -211,7 +211,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "name_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "name_credits").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "name_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "name_credits").':</a>
               </td>
               <td>
                 <input type="text" name="namecredits" value="'.$name_credits["Value"].'"/>
@@ -224,7 +224,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "race_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "race_credits").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "race_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "race_credits").':</a>
               </td>
               <td>
                 <input type="text" name="racecredits" value="'.$race_credits["Value"].'"/>
@@ -237,7 +237,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "trans_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "trans_credits").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "trans_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "trans_credits").':</a>
               </td>
               <td>
                 <input type="text" name="transcredits" value="'.$trans_credits["Value"].'"/>
@@ -250,7 +250,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "hearth_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "hearth_credits").'</a>:
+               <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "hearth_credits_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "hearth_credits").':</a>
               </td>
               <td>
                 <input type="text" name="hearthcredits" value="'.$hearth_credits["Value"].'"/>
@@ -263,7 +263,7 @@ function pointsystem()
             </tr>
             <tr>
               <td class="help">
-                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "creds_per_achieve_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "creds_per_achieve").'</a>:
+                <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "creds_per_achieve_tip").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "creds_per_achieve").':</a>
               </td>
               <td>
                 <input type="text" name="achievement_point_points" value="'.$achievement_point_points["Value"].'" size="6"/>
@@ -375,20 +375,26 @@ function pointsystem()
         $color = "#EEEEEE";
         while ( $coupon = $sqlm->fetch_assoc($result) )
         {
-          // determine target
-          if ( $coupon["target"] != 0 )
+          // If the coupon belongs to an Achievement Contest, it overrides any specific target
+          if ( $coupon["contest"] == 0 )
           {
-            if ( $core == 1 )
-              $target_query = "SELECT login FROM accounts WHERE acct='".$coupon["target"]."'";
-            else
-              $target_query = "SELECT username AS login FROM account WHERE id='".$coupon["target"]."'";
+            // determine target
+            if ( $coupon["target"] != 0 )
+            {
+              if ( $core == 1 )
+                $target_query = "SELECT login FROM accounts WHERE acct='".$coupon["target"]."'";
+              else
+                $target_query = "SELECT username AS login FROM account WHERE id='".$coupon["target"]."'";
 
-            $target_result = $sqll->query($target_query);
-            $target_result = $sqll->fetch_assoc($target_result);
-            $target = $target_result["login"];
+              $target_result = $sqll->query($target_query);
+              $target_result = $sqll->fetch_assoc($target_result);
+              $target = $target_result["login"];
+            }
+            else
+              $target = lang("admin", "coupon_public");
           }
           else
-            $target = lang("admin", "coupon_public");
+            $target = '<a href="admin.php?section=pointsystem&subsection=achieve&sel_contest='.$coupon["contest"].'&editcontest=editcontest">'.lang("admin", "coupon_contest_id").': '.$coupon["contest"].'</a>';
 
           // determine usage
           $usage_query = "SELECT COUNT(*) FROM point_system_coupon_usage WHERE coupon='".$coupon["entry"]."'";
@@ -404,54 +410,28 @@ function pointsystem()
           $output .= '
             <tr>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;editcoupon=editcoupon" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/edit.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;editcoupon=editcoupon" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/edit.png" alt="" />
+                </a>
               </td>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;delcoupon=deletecoupon" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/aff_cross.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=coupons&amp;sel_coupon='.$coupon["entry"].'&amp;delcoupon=deletecoupon" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
               </td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["entry"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["title"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$target.'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["date_issued"].'</td>
+              <!-- td style="background-color:'.$color.'">'.$coupon["expiration"].'</td -->
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["credits"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["money"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["item_id"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["item_count"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$coupon["raffle_id"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$usage.'</td>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["entry"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["title"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$target.'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["date_issued"].'</span>
-              </td>
-              <!-- td style="background-color:'.$color.'">
-                <span>'.$coupon["expiration"].'</span>
-              </td -->
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["credits"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["money"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["item_id"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["item_count"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$coupon["raffle_id"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$usage.'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span><img src="img/'.( ( $coupon["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
+                <img src="img/'.( ( $coupon["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" />
               </td>
             </tr>';
 
@@ -531,11 +511,28 @@ function pointsystem()
                     </div>
                     <table>
                       <tr>
-                        <td>'.lang("admin", "coupon_id").': </td>
+                        <td>'.lang("admin", "coupon_id").':</td>
                         <td>'.$coupon["entry"].'</td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "coupon_target").': </td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_issued_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_issued").':</a>
+                        </td>
+                        <td>'.$coupon["date_issued"].'</td>
+                      </tr>
+                      <tr>
+                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_usage_limit_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_usage_limit").'</a>:</td>
+                        <td>
+                          <input type="text" name="coupon_usage_limit" value="'.$coupon["usage_limit"].'" class="admin_edit_coupon_fields" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "coupon_target").':</td>
                         <td>
                           <select name="coupon_target">
                             <option value="0">'.lang("admin", "coupon_public").'</option>
@@ -552,13 +549,11 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_issued_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_issued").'</a>: </td>
-                        <td>'.$coupon["date_issued"].'</td>
-                      </tr>
-                      <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_usage_limit_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_usage_limit").'</a>: </td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_contest_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_contest").':</a>
+                        </td>
                         <td>
-                          <input type="text" name="coupon_usage_limit" value="'.$coupon["usage_limit"].'" class="admin_edit_coupon_fields" />
+                          <input type="text" name="coupon_contest" value="'.$coupon["contest"].'" class="admin_edit_coupon_fields" />
                         </td>
                       </tr>
                       <!-- tr>
@@ -580,13 +575,15 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_credits_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_credits").'</a>: </td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_credits_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_credits").':</a>
+                        </td>
                         <td>
                           <input type="text" name="coupon_credits" value="'.$coupon["credits"].'" class="admin_edit_coupon_fields" />
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "coupon_money").': </td>
+                        <td>'.lang("admin", "coupon_money").':</td>
                         <td>
                           <input type="text" name="coupon_money_gold" value="'.$coupon_g.'" maxlength="6" size="6" />
                           <img src="../img/gold.gif" alt="gold" />
@@ -603,7 +600,9 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_item").'</a>:</td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_item").':</a>
+                        </td>
                         <td>
                           <input type="text" name="coupon_item" value="'.$coupon["item_id"].'" class="admin_edit_coupon_fields" />
                         </td>
@@ -620,13 +619,15 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_raffle_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_raffle").'</a>:</td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_raffle_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "coupon_raffle").':</a>
+                        </td>
                         <td>
                           <input type="text" name="coupon_raffle_id" value="'.$coupon["raffle_id"].'" class="admin_edit_coupon_fields" />
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "coupon_redemption_option").': </td>
+                        <td>'.lang("admin", "coupon_redemption_option").':</td>
                         <td>
                           <input type="radio" name="coupon_method" value="0" '.( ( $coupon["redemption_option"] == 0 ) ? 'checked="checked"' : '' ).' />'.lang("admin", "coupon_redemption_option_both").'<br />
                           <input type="radio" name="coupon_method" value="1" '.( ( $coupon["redemption_option"] == 1 ) ? 'checked="checked"' : '' ).'/>'.lang("admin", "coupon_redemption_option_single").'
@@ -644,7 +645,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "coupon_text").': </td>
+                        <td>'.lang("admin", "coupon_text").':</td>
                         <td>
                           <textarea name="coupon_text" rows="2" cols="32">'.$coupon["text"].'</textarea>
                         </td>
@@ -655,7 +656,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "enabled").': </td>
+                        <td>'.lang("admin", "enabled").':</td>
                         <td>
                           <input type="checkbox" name="coupon_enabled" value="1" '.( ( $coupon["enabled"] == 1 ) ? 'checked="checked"' : '' ).' />
                         </td>
@@ -673,6 +674,7 @@ function pointsystem()
               // save coupon
               $coupon = $sqlm->quote_smart($_GET["sel_coupon"]);
               $coupon_target = $sqlm->quote_smart($_GET["coupon_target"]);
+              $coupon_contest = $sqlm->quote_smart($_GET["coupon_contest"]);
               $coupon_usage_limit = $sqlm->quote_smart($_GET["coupon_usage_limit"]);
               $coupon_old_creation = $sqlm->quote_smart($_GET["oldcreation"]);
               //$coupon_expiration = $sqlm->quote_smart($_GET["coupon_expiration"]);
@@ -704,7 +706,7 @@ function pointsystem()
 
               $query = "UPDATE point_system_coupons
                           SET target='".$coupon_target."', ".( ( $coupon_enabled && $coupon_not_enabled ) ? "date_issued=NOW()," : "" )." usage_limit='".$coupon_usage_limit."',
-                          expiration=NOW(), credits='".$coupon_credits."', money='".$coupon_money."',
+                          contest='".$coupon_contest."', expiration=NOW(), credits='".$coupon_credits."', money='".$coupon_money."',
                           item_id='".$coupon_item."', item_count='".$coupon_count."', raffle_id='".$coupon_raffle_id."',
                           redemption_option='".$coupon_method."', title='".$coupon_title."', text='".$coupon_text."',
                           enabled='".$coupon_enabled."'
@@ -790,48 +792,28 @@ function pointsystem()
           $output .= '
             <tr>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;editraffle=editraffle" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/edit.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;editraffle=editraffle" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/edit.png" alt="" />
+                </a>
               </td>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;delraffle=deleteraffle" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/aff_cross.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=raffles&amp;sel_raffle='.$raffle["entry"].'&amp;delraffle=deleteraffle" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["entry"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["title"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["drawing"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["credits"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["money"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["item_id"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$raffle["item_count"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$tickets_sold.'</td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <img src="img/'.( ( $raffle["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" />
               </td>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["entry"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["title"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["drawing"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["credits"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["money"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["item_id"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$raffle["item_count"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$tickets_sold.'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span><img src="img/'.( ( $raffle["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span><img src="img/'.( ( $raffle["completed"] ) ? 'aff_tick.png' : '' ).'" alt="" /></span>
+                <img src="img/'.( ( $raffle["completed"] ) ? 'aff_tick.png' : '' ).'" alt="" />
               </td>
             </tr>';
 
@@ -909,7 +891,7 @@ function pointsystem()
                     </div>
                     <table>
                       <tr>
-                        <td>'.lang("admin", "raffle_id").': </td>
+                        <td>'.lang("admin", "raffle_id").':</td>
                         <td>'.$raffle["entry"].'</td>
                       </tr>
                       <tr>
@@ -918,11 +900,11 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_drawing").': </td>
+                        <td>'.lang("admin", "raffle_drawing").':</td>
                         <td>'.$raffle["drawing"].'</td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_drawing_year").'-'.lang("admin", "raffle_drawing_month").'-'.lang("admin", "raffle_drawing_day").': </td>
+                        <td>'.lang("admin", "raffle_drawing_year").'-'.lang("admin", "raffle_drawing_month").'-'.lang("admin", "raffle_drawing_day").':</td>
                         <td>
                           <input type="text" name="drawing_year" value="'.$drawing_year.'" maxlength="4" size="4" />&nbsp;-&nbsp;
                           <input type="text" name="drawing_month" value="'.$drawing_month.'" maxlength="2" size="2" />&nbsp;-&nbsp;
@@ -930,7 +912,9 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "raffle_time_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_drawing_hour").'&nbsp;:&nbsp;'.lang("admin", "raffle_drawing_minute").'</a>: </td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "raffle_time_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_drawing_hour").'&nbsp;:&nbsp;'.lang("admin", "raffle_drawing_minute").':</a>
+                        </td>
                         <td>
                           <input type="text" name="drawing_hour" value="'.$drawing_hour.'" maxlength="4" size="4" />&nbsp;:&nbsp;
                           <input type="text" name="drawing_minute" value="'.$drawing_minute.'" maxlength="2" size="2" />
@@ -947,13 +931,13 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_credits").': </td>
+                        <td>'.lang("admin", "raffle_credits").':</td>
                         <td>
                           <input type="text" name="raffle_credits" value="'.$raffle["credits"].'" size="6" />
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_money").': </td>
+                        <td>'.lang("admin", "raffle_money").':</td>
                         <td>
                           <input type="text" name="raffle_money_gold" value="'.$raffle_g.'" maxlength="6" size="6"/>
                           <img src="../img/gold.gif" alt="gold" />
@@ -964,7 +948,9 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td class="help"><a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_item").':</a></td>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "coupon_item_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "raffle_item").':</a>
+                        </td>
                         <td>
                           <input type="text" name="raffle_item" value="'.$raffle["item_id"].'" size="6" />
                         </td>
@@ -982,17 +968,19 @@ function pointsystem()
                       </tr>
                       <tr>
                         <td colspan="2" class="help">
-                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "raffle_cost_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()"><b>'.lang("admin", "raffle_cost").'</b></a>
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "raffle_cost_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">
+                            <b>'.lang("admin", "raffle_cost").'</b>
+                          </a>
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_credits").': </td>
+                        <td>'.lang("admin", "raffle_credits").':</td>
                         <td>
                           <input type="text" name="raffle_cost_credits" value="'.$raffle["cost_credits"].'" size="6" />
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_money").': </td>
+                        <td>'.lang("admin", "raffle_money").':</td>
                         <td>
                           <input type="text" name="raffle_cost_gold" value="'.$raffle_cost_g.'" maxlength="6" size="6"/>
                           <img src="../img/gold.gif" alt="gold" />
@@ -1014,7 +1002,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_text").': </td>
+                        <td>'.lang("admin", "raffle_text").':</td>
                         <td>
                           <textarea name="raffle_text" rows="2" cols="32">'.$raffle["text"].'</textarea>
                         </td>
@@ -1031,7 +1019,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_per_user").': </td>
+                        <td>'.lang("admin", "raffle_per_user").':</td>
                         <td>
                           <input type="text" name="raffle_per_user" value="'.$raffle["tickets_per_user"].'" size="6" />
                         </td>
@@ -1053,14 +1041,16 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "enabled").': </td>
+                        <td>'.lang("admin", "enabled").':</td>
                         <td>
                           <input type="checkbox" name="raffle_enabled" value="1" '.( ( $raffle["enabled"] == 1 ) ? 'checked="checked"' : '' ).' />
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "raffle_completed").': </td>
-                        <td><img src="img/'.( ( $raffle["completed"] ) ? 'aff_tick.png' : 'aff_cross.png' ).'" alt="" /></td>
+                        <td>'.lang("admin", "raffle_completed").':</td>
+                        <td>
+                          <img src="img/aff_'.( ( $raffle["completed"] ) ? 'tick' : 'cross' ).'.png" alt="" />
+                        </td>
                       </tr>
                     </table>
                   </fieldset>
@@ -1176,7 +1166,7 @@ function pointsystem()
         <form action="admin.php" method="get" id="form">
           <div>
             <input type="hidden" name="section" value="pointsystem" />
-            <input type="hidden" name="subsection" value="raffle" />
+            <input type="hidden" name="subsection" value="bags" />
           </div>
           <table class="simple" id="admin_point_bag_list">
             <tr>
@@ -1208,38 +1198,26 @@ function pointsystem()
           $output .= '
             <tr>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;editbag=editbag" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/edit.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;editbag=editbag" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/edit.png" alt="" />
+                </a>
               </td>
               <td style="background-color:'.$color.'; text-align: center;">
-                <span>
-                  <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;delbag=deletebag" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
-                    <img src="img/aff_cross.png" alt="" />
-                  </a>
-                </span>
+                <a href="admin.php?section=pointsystem&amp;subsection=bags&amp;sel_bag='.$bag["entry"].'&amp;delbag=deletebag" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
               </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$bag["entry"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$bag["slots"].'</span>
-              </td>
-              <td style="background-color:'.$color.'; text-align: center;">
-                <span>'.$owner.'</span>
-              </td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$bag["entry"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$bag["slots"].'</td>
+              <td style="background-color:'.$color.'; text-align: center;">'.$owner.'</td>
               <td style="background-color:'.$color.'; text-align: center;">';
 
         if ( $bag["is_template"] )
           $output .= '
-                <span>
-                  <img src="img/star.png" alt="" />
-                </span>';
+                <img src="img/star.png" alt="" />';
         else
           $output .= '
-                &nbsp;';
+                <span>&nbsp;</span>';
 
         $output .= '
               </td>
@@ -1300,15 +1278,15 @@ function pointsystem()
                     </div>
                     <table id="admin_edit_coupon">
                       <tr>
-                        <td>'.lang("admin", "bag_id").': </td>
+                        <td>'.lang("admin", "bag_id").':</td>
                         <td>'.$bag["entry"].'</td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "bag_owner").': </td>
+                        <td>'.lang("admin", "bag_owner").':</td>
                         <td>'.$owner.'</td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "bag_template").': </td>
+                        <td>'.lang("admin", "bag_template").':</td>
                         <td>
                           <input type="checkbox" name="is_template" value="1"'.( ( $bag["is_template"] ) ? ' checked="checked"' : '' ).' />
                         </td>
@@ -1319,7 +1297,7 @@ function pointsystem()
                         </td>
                       </tr>
                       <tr>
-                        <td>'.lang("admin", "bag_slots").': </td>
+                        <td>'.lang("admin", "bag_slots").':</td>
                         <td>
                           <select name="slots">
                             <option value="4" '.( ( $bag["slots"] == 4 ) ? 'selected="selected"' : '' ).'>4</option>
@@ -1350,7 +1328,7 @@ function pointsystem()
                       <tr>
                         <td valign="top" align="center">
                           <span>'.lang("admin", "bag_simulation").'</span>
-                          <div class="bag" style="width:'.(4*43).'px;height:'.(ceil($bag["slots"]/4)*41).'px;">';
+                          <div class="bag" style="width:'.(4*43).'px; height:'.(ceil($bag["slots"]/4)*41).'px;">';
 
               $dsp = $bag["slots"]%4;
 
@@ -1400,7 +1378,7 @@ function pointsystem()
               {
                 $output .= '
                             <tr>
-                              <td>'.($i + 1).': </td>
+                              <td>'.($i + 1).':</td>
                               <td>
                                 <input type="text" name="slot_'.$i.'" value="'.$items[$i]["item_id"].'" size="7" />
                               </td>
@@ -1443,7 +1421,6 @@ function pointsystem()
               // update bag
               $query = "UPDATE point_system_prize_bags SET slots='".$slots."', is_template='".$is_template."' WHERE entry='".$bag_id."'";
               $sqlm->query($query);
-              
 
               // delete existing items
               $query = "DELETE FROM point_system_prize_bag_items WHERE bag='".$bag_id."'";
@@ -1484,7 +1461,326 @@ function pointsystem()
     }
     case "achieve":
     {
-      $output .= 'TO DO';
+      $query = "SELECT * FROM point_system_achievement_contests";
+      $result = $sqlm->query($query);
+
+      $contest_action = 0;
+      if ( isset($_GET["editcontest"]) )
+        $contest_action = "edit";
+      if ( isset($_GET["delcontest"]) )
+        $contest_action = "del";
+      if ( isset($_GET["addcontest"]) )
+        $contest_action = "add";
+
+      $sub_action = ( ( isset($_GET["subaction"]) ) ? $_GET["subaction"] : '' );
+
+      $sqll = new SQL;
+      $sqll->connect($logon_db["addr"], $logon_db["user"], $logon_db["pass"], $logon_db["name"], $logon_db["encoding"]);
+
+      if ( !$contest_action )
+      {
+        $output .= '
+        <form action="admin.php" method="get" id="form">
+          <div>
+            <input type="hidden" name="section" value="pointsystem" />
+            <input type="hidden" name="subsection" value="contests" />
+          </div>
+          <table class="simple" id="admin_achievement_contest_list">
+            <tr>
+              <th style="width: 3%;"></th>
+              <th style="width: 3%;"></th>
+              <th style="width: 7%;">'.lang("admin", "contest_id").'</th>
+              <th style="width: 7%;">'.lang("admin", "contest_realm").'</th>
+              <th style="width: 19%;">'.lang("admin", "contest_achieve_id").'</th>
+              <th style="width: 20%;">'.lang("admin", "contest_issued").'</th>
+              <th style="width: 15%;">'.lang("admin", "contest_prize_bag").'</th>
+              <th style="width: 16%;">'.lang("admin", "contest_winner").'</th>
+              <th style="width: 10%;">'.lang("admin", "contest_enabled").'</th>
+            </tr>';
+        $color = "#EEEEEE";
+        while ( $contest = $sqlm->fetch_assoc($result) )
+        {
+          $output .= '
+            <tr>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <a href="admin.php?section=pointsystem&amp;subsection=achieve&amp;sel_contest='.$contest["entry"].'&amp;editcontest=editcontest" onmouseover="oldtoolTip(\''.lang("admin", "edit").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/edit.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <a href="admin.php?section=pointsystem&amp;subsection=achieve&amp;sel_contest='.$contest["entry"].'&amp;delcontest=deletecontest" onmouseover="oldtoolTip(\''.lang("admin", "remove").'\', \'info_tooltip\')" onmouseout="oldtoolTip()">
+                  <img src="img/aff_cross.png" alt="" />
+                </a>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["entry"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["realm"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["achievement"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["date_issued"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["prize_bag"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span>'.$contest["winner_guid"].'</span>
+              </td>
+              <td style="background-color:'.$color.'; text-align: center;">
+                <span><img src="img/'.( ( $contest["enabled"] ) ? 'up' : 'down' ).'.gif" alt="" /></span>
+              </td>
+            </tr>';
+
+          $color = ( ( $color == "#EEEEEE" ) ? "#FFFFFF" : "#EEEEEE" );
+        }
+        $output .= '
+              <tr>
+                <td style="background-color:'.$color.'">
+                  <a href="admin.php?section=pointsystem&amp;subsection=achieve&amp;addcontest=addcontest">
+                    <img src="img/add.png" alt="" />
+                  </a>
+                </td>
+                <td style="background-color:'.$color.'" colspan="13">
+                  <a href="admin.php?section=pointsystem&amp;subsection=achieve&amp;addcontest=addcontest">'.lang("admin", "contest_add").'</a>
+                </td>
+              </tr>
+          </table>
+        </form>';
+      }
+      else
+      {
+        if ( $contest_action == "edit" )
+        {
+          $contest_id = $sqlm->quote_smart($_GET["sel_contest"]);
+          if ( is_numeric($contest_id) )
+          {
+            if ( !$sub_action )
+            {
+              $contest = $sqlm->fetch_assoc($sqlm->query("SELECT * FROM point_system_achievement_contests WHERE `entry`='".$contest_id."'"));
+
+              $expires = strtotime($contest["expiration"]);
+              $expires_year = date("Y", $expires);
+              $expires_month = date("m", $expires);
+              $expires_day = date("d", $expires);
+              $expires_hour = date("H", $expires);
+              $expires_minute = date("i", $expires);
+
+              if ( $expires_year == 1969 )
+                $expires_year = date("Y");
+
+              $output .= '
+              <script type="text/javascript">
+                // <![CDATA[
+                  function check_realm()
+                  {
+                    realm_field = document.getElementById("contest_realm");
+                    warn = document.getElementById("warn");
+                    if ( realm_field.value == 0 )
+                      warn.style="color: #CF0000;";
+                    else
+                      warn.style="display: none; color: #CF0000;";
+                  }
+                // ]]>
+              </script>
+              <div>
+                <form action="admin.php" method="get" id="form">
+                  <fieldset>
+                    <div>
+                      <input type="hidden" name="section" value="pointsystem" />
+                      <input type="hidden" name="subsection" value="achieve" />
+                      <input type="hidden" name="editcontest" value="editcontest" />
+                      <input type="hidden" name="subaction" value="savecontest" />
+                      <input type="hidden" name="sel_contest" value="'.$contest["entry"].'" />
+                    </div>
+                    <table id="admin_edit_contest">
+                      <tr>
+                        <td>'.lang("admin", "contest_id").':</td>
+                        <td>'.$contest["entry"].'</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_realm_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_realm").':</a>
+                        </td>
+                        <td>
+                          <input type="text" id="contest_realm" name="contest_realm" value="'.$contest["realm"].'" maxlength="6" style="width: 75px;" onblur="check_realm()" />
+                          <span id="warn" style="display: none; color: #CF0000">'.lang("admin", "contest_realm_warn").'</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "contest_issued").':</td>
+                        <td>'.$contest["date_issued"].'</td>
+                      </tr>
+                      <tr>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_after_only_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_after_only").':</a>
+                        </td>
+                        <td>
+                          <input type="checkbox" name="contest_after_only" '.( ( $contest["after_only"] == 1 ) ? 'checked="checked"' : '' ).' />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "contest_ach_id").':</td>
+                        <td>
+                          <input type="text" name="contest_ach_id" value="'.$contest["achievement"].'" maxlength="6" style="width: 75px;" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <span class="bold">'.lang("admin", "contest_expiration").'</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "contest_expires_year").'-'.lang("admin", "contest_expires_month").'-'.lang("admin", "contest_expires_day").':</td>
+                        <td>
+                          <input type="text" name="expires_year" value="'.$expires_year.'" maxlength="4" size="4" /><span>&nbsp;-&nbsp;</span>
+                          <input type="text" name="expires_month" value="'.$expires_month.'" maxlength="2" size="2" /><span>&nbsp;-&nbsp;</span>
+                          <input type="text" name="expires_day" value="'.$expires_day.'" maxlength="2" size="2" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_expires_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_expires_hour").':&nbsp;'.lang("admin", "contest_expires_minute").':</a>
+                        </td>
+                        <td>
+                          <input type="text" name="expires_hour" value="'.$expires_hour.'" maxlength="4" size="4" /><span>&nbsp;:&nbsp;</span>
+                          <input type="text" name="expires_minute" value="'.$expires_minute.'" maxlength="2" size="2" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_prize_bag_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_prize_bag").':</a>
+                        </td>
+                        <td>
+                          <input type="text" name="contest_prize_bag" value="'.$contest["prize_bag"].'" size="6" />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "contest_winner").':</td>
+                        <td>'.$contest["winner_guid"].'</td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help" rowspan="2">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_announce_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_announce").':</a>
+                        </td>
+                        <td>
+                          <input type="radio" name="contest_announce" value="0" '.( ( $contest["announce"] == 0 ) ? ' checked="checked"' : '' ).' size="6" />
+                          <span>'.lang("admin", "contest_announce_global").'</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <input type="radio" name="contest_announce" value="1" '.( ( $contest["announce"] == 1 ) ? ' checked="checked"' : '' ).' size="6" />
+                          <span>'.lang("admin", "contest_announce_private").'</span>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="help">
+                          <a href="#" onmouseover="oldtoolTip(\''.lang("admin", "contest_announce_msg_tip").'\',\'info_tooltip\')" onmouseout="oldtoolTip()">'.lang("admin", "contest_announce_msg").':</a>
+                        </td>
+                        <td>
+                          <textarea name="contest_announce_msg" rows="3" cols="20">'.$contest["announce_msg"].'</textarea>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="2">
+                          <hr />
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>'.lang("admin", "contest_enabled").':</td>
+                        <td>
+                          <input type="checkbox" name="contest_enabled" '.( ( $contest["enabled"] == 1 ) ? 'checked="checked"' : '' ).' />
+                        </td>
+                      </tr>
+                    </table>
+                  </fieldset>
+                  <div>
+                    <input type="submit" name="savecontest" value="'.lang("admin", "save").'" />
+                  </div>
+                </form>
+              </div>';
+            }
+            else
+            {
+              // save achievement contest
+              $contest_id = $_GET["sel_contest"];
+
+              $contest_ach_id = $sqlm->quote_smart($_GET["contest_ach_id"]);
+              $contest_realm = $sqlm->quote_smart($_GET["contest_realm"]);
+              $contest_after_only = ( ( isset($_GET["contest_after_only"]) ) ? 1 : 0 );
+              $expires_year = $sqlm->quote_smart($_GET["expires_year"]);
+              $expires_month = $sqlm->quote_smart($_GET["expires_month"]);
+              $expires_day = $sqlm->quote_smart($_GET["expires_day"]);
+              $expires_hour = $sqlm->quote_smart($_GET["expires_hour"]);
+              $expires_minute = $sqlm->quote_smart($_GET["expires_minute"]);
+              $contest_prize_bag = $sqlm->quote_smart($_GET["contest_prize_bag"]);
+              $contest_announce = $sqlm->quote_smart($_GET["contest_announce"]);
+              $contest_announce_msg = $sqlm->quote_smart($_GET["contest_announce_msg"]);
+              $contest_enabled = ( ( isset($_GET["contest_enabled"]) ) ? 1 : 0 );
+
+              $expires = $expires_year."-".$expires_month."-".$expires_day." ".$expires_hour.":".$expires_minute.":00";
+
+              $query = "UPDATE point_system_achievement_contests SET realm='".$contest_realm."', achievement='".$contest_ach_id."', after_only='".$contest_after_only."', expiration='".$expires."', prize_bag='".$contest_prize_bag."', announce='".$contest_announce."', announce_msg='".$contest_announce_msg."', enabled='".$contest_enabled."' WHERE entry='".$contest_id."'";
+              $sqlm->query($query);
+
+              redirect("admin.php?section=pointsystem&subsection=achieve&editcontest=editcontest&sel_contest=".$contest_id);
+            }
+          }
+          else
+            redirect("admin.php?section=pointsystem&subsection=achieve&error=1");
+        }
+        elseif ( $contest_action == "del" )
+        {
+          $contest_id = $sqlm->quote_smart($_GET["sel_contest"]);
+          if ( is_numeric($contest_id) )
+          {
+            $result = $sqlm->query("DELETE FROM point_system_achievement_contests WHERE `entry`='".$contest_id."'");
+            redirect("admin.php?section=pointsystem&subsection=achieve");
+          }
+          else
+            redirect("admin.php?section=pointsystem&subsection=achieve&error=1");
+        }
+        else
+        {
+          $result = $sqlm->query("INSERT INTO point_system_achievement_contests (date_issued) VALUES (NOW())");
+
+          redirect("admin.php?section=pointsystem&subsection=achieve");
+        }
+      }
     }
   }
 
