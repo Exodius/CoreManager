@@ -1,9 +1,11 @@
 CoreManager
 ===========
 
-Clone of CoreManager.
 Original Repository on Assembla.
-https://www.assembla.com/code/coremanager/subversion/nodes
+https://www.assembla.com/spaces/coremanager
+
+Clone of CoreManager repository. You can find original by following the link provided 2 lines above.
+I made the clone because it's easier for me to work with Git.
 
 CoreManager is a Web Front End for ArcEmu, MaNGOS, and TrinityCore servers.
 Providing useful tools and information to Players and Administrators. It is based on ArcManager.
