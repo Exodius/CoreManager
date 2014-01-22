@@ -46,11 +46,11 @@ class SQL //MySQL
         if ( @mysql_select_db($db_name, $this->link_id) )
           return $this->link_id;
         else
-          die(error($db_name."<br />".mysql_error()."<br />".$lang_global['err_sql_open_db']." ('".$db_name."')"));
+          die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global['err_sql_open_db']." ('".$db_name."')"));
       }
     }
     else
-      die($db_name."<br />".mysql_error()."<br />".$lang_global['err_sql_conn_db']);
+      die($db_name."\r\n".mysql_error()."\r\n".$lang_global['err_sql_conn_db']);
   }
 
   function db($db_name)
@@ -62,10 +62,10 @@ class SQL //MySQL
       if ( @mysql_select_db($db_name, $this->link_id) )
         return $this->link_id;
       else
-        die(error($db_name."<br />".mysql_error()."<br />".$lang_global['err_sql_open_db']." ('".$db_name."')"));
+        die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global['err_sql_open_db']." ('".$db_name."')"));
     }
     else
-      die($db_name."<br />".mysql_error()."<br />".$lang_global['err_sql_conn_db']);
+      die($db_name."\r\n".mysql_error()."\r\n".$lang_global['err_sql_conn_db']);
   }
 
   function query($sql)
@@ -79,7 +79,7 @@ class SQL //MySQL
     }
     else
     {
-      die($sql."<br />".mysql_error($this->link_id));
+      die($sql."\r\n".mysql_error($this->link_id));
       return false;
     }
   }

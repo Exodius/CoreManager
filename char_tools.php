@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2013  CoreManager Project
+    Copyright (C) 2011-2014  CoreManager Project
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,9 +17,11 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once 'header.php';
-require_once 'libs/char_lib.php';
+
+require_once("header.php");
+require_once("libs/char_lib.php");
 require_once("libs/map_zone_lib.php");
+
 valid_login($action_permission["view"]);
 
 //########################################################################################################################

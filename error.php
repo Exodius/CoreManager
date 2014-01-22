@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2013  CoreManager Project
+    Copyright (C) 2010-2014  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -22,6 +22,10 @@
 // because error needs a header but header.php requires databases,
 // we make our own page header, and get any additional required libraries
 session_start();
+
+// instead of sanitizing our errors, which breaks inserted line breaks, <br />,
+// we will use BBCODE.
+require_once("libs/bb2html_lib.php");
 
 $time_start = microtime(true);
 
@@ -121,7 +125,7 @@ $output .= '
                       <br />'.lang("error", "error").'!
                     </span>
                   </h1>
-                  <br />'.htmlspecialchars($err).'<br />
+                  <br />'.bb2html($err).'<br />
                 </td>
               </tr>
             </table>

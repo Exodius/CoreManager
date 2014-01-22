@@ -1,7 +1,8 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2013  CoreManager Project
+    Copyright (C) 2012-2014  CoreManager Project
+    Copyright (C) 2009-2012  ArcManager Project (in /admin.php)
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

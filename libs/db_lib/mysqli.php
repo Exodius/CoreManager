@@ -1,7 +1,7 @@
 <?php
 /*
     CoreManager, PHP Front End for ArcEmu, MaNGOS, and TrinityCore
-    Copyright (C) 2010-2013  CoreManager Project
+    Copyright (C) 2010-2014  CoreManager Project
     Copyright (C) 2009-2010  ArcManager Project
 
     This program is free software: you can redistribute it and/or modify
@@ -28,7 +28,8 @@ class SQL //MySQLi
 	var $query_result;
 	var $num_queries = 0;
 
-	function connect($db_host, $db_username, $db_password, $db_name = NULL, $use_names = "", $pconnect = true, $newlink = false) {
+	function connect($db_host, $db_username, $db_password, $db_name = NULL, $use_names = "", $pconnect = true, $newlink = false)
+  {
 		global $lang_global;
 
 		if ( strpos($db_host, ":" ) !== false )
@@ -45,7 +46,7 @@ class SQL //MySQLi
        $this->query("SET NAMES '".$use_names."'");
 		}
     else
-      die(error($lang_global["err_sql_conn_db"]));
+      die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_conn_db"]));
 	}
 
 	function db($db_name)
@@ -56,10 +57,10 @@ class SQL //MySQLi
 			if ( @mysqli_select_db($this->link_id, $db_name) )
         return $this->link_id;
       else
-        die(error($lang_global["err_sql_open_db"]." ('".$db_name."')"));
+        die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_open_db"]));
 		}
     else
-      die(error($lang_global["err_sql_conn_db"]));
+      die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_conn_db"]));
 	}
 
 	function query($sql)
@@ -72,7 +73,10 @@ class SQL //MySQLi
 			return $this->query_result;
 		}
     else
+    {
+      die($sql."\r\n".mysql_error($this->link_id));
       return false;
+    }
 	}
 
 	function result($query_id = 0, $row = 0, $field = NULL)
