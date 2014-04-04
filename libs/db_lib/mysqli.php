@@ -46,7 +46,7 @@ class SQL //MySQLi
        $this->query("SET NAMES '".$use_names."'");
 		}
     else
-      die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_conn_db"]));
+      die(error($db_name."\r\n".mysqli_error()."\r\n".$lang_global["err_sql_conn_db"]));
 	}
 
 	function db($db_name)
@@ -57,10 +57,10 @@ class SQL //MySQLi
 			if ( @mysqli_select_db($this->link_id, $db_name) )
         return $this->link_id;
       else
-        die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_open_db"]));
+        die(error($db_name."\r\n".mysqli_error()."\r\n".$lang_global["err_sql_open_db"]));
 		}
     else
-      die(error($db_name."\r\n".mysql_error()."\r\n".$lang_global["err_sql_conn_db"]));
+      die(error($db_name."\r\n".mysqli_error()."\r\n".$lang_global["err_sql_conn_db"]));
 	}
 
 	function query($sql)
@@ -74,7 +74,7 @@ class SQL //MySQLi
 		}
     else
     {
-      die($sql."\r\n".mysql_error($this->link_id));
+      die($sql."\r\n".mysqli_error($this->link_id));
       return false;
     }
 	}
